@@ -1,0 +1,48 @@
+@font-face {
+  font-family: "League_Gothic-webfont";
+  src: url("../fonts/League_Gothic-webfont.woff");
+  font-weight: bold;
+}
+
+html, body{
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font: 18pt League_Gothic-webfont;
+  font-weight: normal;
+  color: #fff;
+  background: #000;
+}
+
+#big-message-wrapper{
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  display: table;
+}
+
+#big-message{
+  display: inline-block;
+  display: table-cell;
+  vertical-align: middle;
+  width: 100%;
+  text-align: center;
+  font-size: 30pt;
+}
+
+#main-canvas{
+  position: fixed;
+}
+
+.can-fade{
+  -moz-transition: opacity 1s ease-in-out;
+  -webkit-transition: opacity 1s ease-in-out;
+  transition: opacity 1s ease-in-out;
+  opacity: 0;
+}
+
+.fade-in{
+  opacity: 1;
+}
