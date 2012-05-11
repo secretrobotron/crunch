@@ -25,7 +25,7 @@
  *   };
  *   
  */
-var Sprites = (function() {
+define(function() {
     var module = {};
 
     // ------------------------------ things that are common to both canvas and webgl backends
@@ -246,7 +246,7 @@ var Sprites = (function() {
             var currentFrame = Math.floor(obj.animation.time * animDescriptor.frameCount);
             
             RenderAnimatedSpriteQuad( dc.shader
-                , Sprites.WebGL.projectionMatrix, obj.modelViewMatrix
+                , webgl_submodule.projectionMatrix, obj.modelViewMatrix
                 , dc.texture
                 , line, currentFrame
                 , dc.tileWidth_tex, dc.tileHeight_tex );
@@ -340,4 +340,4 @@ var Sprites = (function() {
     module.WebGL    = WebGL;
     
     return module;
-}()); // module Sprites
+}); // module Sprites
