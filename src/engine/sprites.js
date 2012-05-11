@@ -6,8 +6,10 @@
  * 
  * SpriteDesc = {
  *     resource:"hero.png",
- *     tileWidth: 90,
- *     tileHeight: 90,
+ *     tileWidth: 32,
+ *     tileHeight: 32,
+ *     imageWidth: 256,
+ *     imageHeight: 256,
  *     animations : {
  *         idle : {
  *             frameCount: 2,
@@ -26,7 +28,7 @@
 var Sprites = (function() {
     var module = {};
 
-    // -------------------- things that are common to both canvas and webgl backends
+    // ------------------------------ things that are common to both canvas and webgl backends
     var Common = (function() {
         var common_submodule = {};
 
@@ -67,7 +69,7 @@ var Sprites = (function() {
 
 
 
-    // ------------------- canvas backend
+    // ------------------------------------------------------------- canvas backend
     var Canvas2d = (function() {
         var canvas_submodule = {};
 
@@ -128,7 +130,7 @@ var Sprites = (function() {
 
 
 
-    // -------------------- WebGL backend
+    // -------------------------------------------------------------- WebGL backend
     var WebGL = (function(){
         webgl_submodule = {};
 
@@ -147,7 +149,6 @@ var Sprites = (function() {
                   str += k.textContent;
               k = k.nextSibling;
             }
-            //alert(str);
 
             var shader;
             if (shaderScript.type == "x-shader/x-fragment") {
@@ -197,46 +198,13 @@ var Sprites = (function() {
 
             gl.enableVertexAttribArray(shaderProgram.aVertexPosition);
             gl.enableVertexAttribArray(shaderProgram.aTexCoordinates);
-
-            shaderProgram.setUniforms = function(projMatrix, modelViewMatrix, tex) {
-                var quadVBO = webgl_submodule.quadVBO;
-                var texCoordsABO = webgl_submodule.texCoordsABO;
-                // uniforms
-                gl.uniformMatrix4fv(shaderProgram.uPMatrix, false, projMatrix);
-                gl.uniformMatrix4fv(shaderProgram.uMVMatrix, false, modelViewMatrix);
-                // vertex pos attrib
-                gl.bindBuffer(gl.ARRAY_BUFFER, quadVBO);
-                gl.vertexAttribPointer(shaderProgram.aVertexPosition, quadVBO.itemSize, gl.FLOAT, false, 0, 0);
-                // tex coords attrib
-                gl.bindBuffer(gl.ARRAY_BUFFER, texCoordsABO);
-                gl.vertexAttribPointer(shaderProgram.aTexCoordinates, texCoordsABO.itemSize, gl.FLOAT, false, 0, 0);
-                if (tex) {
-                    gl.activeTexture(gl.TEXTURE0);
-                    gl.bindTexture(gl.TEXTURE_2D, tex);
-                    shaderProgram.bind();
-                    gl.uniform1i(shaderProgram.uTexture, 0);
-                } else {
-                    console.log("ne texture");
-                }
-            }
-
+            
             shaderProgram.bind = function() {
                 gl.useProgram(shaderProgram);  
             }
 
             return shaderProgram;
 
-        }
-
-        function DisplayAnimationFrame(ctx, displayComponent, proj, modelView, time, line, animDesc) {
-            var currentFrame = Math.floor(time * animDesc.frameCount);
-            var dc = displayComponent;
-
-            RenderAnimatedSpriteQuad( dc.shader
-                , proj, modelView
-                , dc.texture
-                , line, currentFrame
-                , dc.tileWidth_tex, dc.tileHeight_tex );
         }
 
         function RenderAnimatedSpriteQuad(shaderProgram, projMatrix, modelViewMatrix, tex, line, row, tw, th) {
@@ -269,34 +237,19 @@ var Sprites = (function() {
             gl.drawArrays(gl.TRIANGLE_STRIP, 0, webgl_submodule.quadVBO.numItems);
         }
 
-        function DrawQuad(projMatrix, modelViewMatrix, tex) {
-            var gl = webgl_submodule.ctx;
-
-            gl.enableVertexAttribArray(0);
-            gl.useProgram(webgl_submodule.animatedSpriteShaderProgram);
-            
-            if (tex) {
-                gl.activeTexture(gl.TEXTURE0);
-                gl.bindTexture(gl.TEXTURE_2D, tex);
-            }
-
-            webgl_submodule.animatedSpriteShaderProgram.setUniforms(projMatrix,modelViewMatrix, tex);
-            
-            gl.drawArrays(gl.TRIANGLE_STRIP, 0, webgl_submodule.quadVBO.numItems);
-        }
-
         function AnimatedSpriteDisplay(ctx, obj) {
             if (ctx !== webgl_submodule.ctx) alert("error, wrong context");
-            var spriteDescriptor = obj.displayComponent.spriteDescriptor;
+            var dc = obj.displayComponent;
+            var spriteDescriptor = dc.spriteDescriptor;
             var animDescriptor = spriteDescriptor.animations[obj.animation.name];
             var line = animDescriptor.index * 2 + obj.animation.direction;
-            // TODO
-            DisplayAnimationFrame( ctx 
-                , obj.displayComponent
+            var currentFrame = Math.floor(obj.animation.time * animDescriptor.frameCount);
+            
+            RenderAnimatedSpriteQuad( dc.shader
                 , Sprites.WebGL.projectionMatrix, obj.modelViewMatrix
-                , obj.animation.time
-                , line
-                , animDescriptor );
+                , dc.texture
+                , line, currentFrame
+                , dc.tileWidth_tex, dc.tileHeight_tex );
         }
 
         function CreateAnimatedScriptDisplayComponent(descriptor) {
@@ -372,7 +325,6 @@ var Sprites = (function() {
 
     //public:
         webgl_submodule.Init        = InitGL;
-        webgl_submodule.DrawQuad    = DrawQuad;
         webgl_submodule.GetShader   = CreateShader;
         webgl_submodule.CreateShaderProgram = CreateShaderProgram;
         webgl_submodule.CreateAnimatedScriptDisplayComponent = CreateAnimatedScriptDisplayComponent;
