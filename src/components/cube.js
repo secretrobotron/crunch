@@ -60,11 +60,6 @@ define(["engine/component", "engine/schedule"], function(Component, Schedule){
       _sceneObject.position = setupOptions.position;
     }
 
-    // Attach a listener to the "update" event on the Schedule
-    Schedule.event.add("update", function(e){
-      _sceneObject.rotation[2] += e.data.dt / 10;
-    });
-
     _this.event.add("entity-changed", function(e){
       var entity = e.data;
       entity.sceneObject.bindChild(_sceneObject);

@@ -1,9 +1,12 @@
 require([ "engine/schedule", "engine/hud",
           "engine/graphics", "engine/scene",
           "entities/test-entity",
+          "entities/player",
+          "entities/point-light",
           "engine/loader",
+          "editor"
         ], 
-        function(Schedule, HUD, Graphics, Scene, TestEntity, Loader){
+        function(Schedule, HUD, Graphics, Scene, TestEntity, PlayerEntity, PointLightEntity, Loader, Editor){
 
   var _hud = new HUD();
 
@@ -13,30 +16,32 @@ require([ "engine/schedule", "engine/hud",
     
     var scene = new Scene();
 
-    var testEntity = new TestEntity({
-      position: [0, 0.1, 0],
-      size: 0.4
+    var playerEntity = new PlayerEntity({
+      position: [0, 0, 0],
+      size: 1
     });
 
-    var testChildEntity = new TestEntity({
-      position: [0.2, 0.2, 1],
-      size: 0.2
+    var testEntity = new TestEntity({
+      position: [0, 0, 1.5],
+      size: 1
+    });
+
+    var pointlightEntity = new PointLightEntity({
+      position: [0, 0, -2]
     });
 
     scene.addEntity(testEntity);
-
-    testChildEntity.parent = testEntity;
+    scene.addEntity(playerEntity);
+    scene.addEntity(pointlightEntity);
 
     scene.cubicvr.camera.target = [0, 0, 0];
-    scene.cubicvr.camera.position = [1, 1, 1];
+    scene.cubicvr.camera.position = [.5, 1, -2];
+
+    //scene.cubicvr.bind(pointlightEntity.components["light"].cubicvr);
 
     var cameraIndex = 0;
 
     Schedule.event.add("update", function(e){
-      cameraIndex += e.data.dt / 1000;
-      var cameraPos = scene.cubicvr.camera.position;
-      cameraPos[0] = 2*Math.sin(cameraIndex);
-      cameraPos[2] = 2*Math.cos(cameraIndex);
     });
     
     return scene;
