@@ -107,6 +107,9 @@ function start() {
           }
         , families : ["Player","Foo"]
         , boundingBox : {x:-5,y:-5,width:10,height:10}
+        , sceneObj: {
+            getAABB : function() { return [[-5,-5,0],[5,5,0]]; } // just for testing
+          }
       };// objSprite 
      
       var objSpriteGL = {
@@ -120,6 +123,9 @@ function start() {
           }
         , families : ["Bar","Foo"]
         , boundingBox : {x:-5,y:-5,width:10,height:10}
+        , sceneObj: {
+            getAABB : function() { return [[-5,-5,0],[5,5,0]]; } // just for testing
+          }
       };// objSprite 
       
       mat4.identity(objSpriteGL.modelViewMatrix);
@@ -132,6 +138,7 @@ function start() {
       GameLogic.AddGameObject(objSprite);
       
       GameLogic.OnBoxCollision("Player","Bar").push( function(player,bar){ console.log("collision! :)") }  );
+      GameLogic.EachFrame("Player").push( function(player){ console.log("player.x (EachFrame): "+ player.x); } );
 
       var startTime = new Date().getTime();
       var lastTime = 0;

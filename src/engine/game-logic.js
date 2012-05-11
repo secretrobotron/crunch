@@ -60,7 +60,26 @@ define( function(){
     return obj;
   }
 
-  // usage OnBoxCollision("hero","enemy").push( function(hero,enemy) {hero.kill();} );
+  // usage: EachFrame("BadGuys").push( function(bad) { bad.doNastyThings();} );
+  // Register a gameplay rule callback for a given family name
+  module.EachFrame = function(familyName) {
+    if ( !module.logic.eachFrame[familyName]){
+      module.logic.eachFrame[familyName] = [];
+    }
+    return module.logic.eachFrame[familyName];
+  }
+
+  ProcessEachFrame = function(elapsedTime) {
+    for (var familyName in module.logic.eachFrame) {
+      var family = module.GetFamily(familyName);
+      for( var objIdx = 0; objIdx < family.length; ++objIdx ) {
+        for( var i=0; i<module.logic.eachFrame[familyName].length;++i )
+        module.logic.eachFrame[familyName][i](family[objIdx],elapsedTime);
+      }
+    }
+  }
+
+  // usage: OnBoxCollision("hero","enemy").push( function(hero,enemy) {hero.kill();} );
   // Register a gameplay rule callback between two families of objects
   module.OnBoxCollision = function(f1, f2) {
     if ( !module.logic.boxCollisions[f1]){
@@ -80,15 +99,10 @@ define( function(){
       for( var i1 = 0; i1 < module.GetFamily(f1).length;++i1 ){
         for( var f2 in module.logic.boxCollisions[f1] ){
           for( var i2 = 0; i2 < module.GetFamily(f2).length;++i2 ){
-            var b1 = { width:objByFamily[f1][i1].boundingBox.width
-                , height:objByFamily[f1][i1].boundingBox.height},
-                b2 = {width:objByFamily[f2][i2].boundingBox.width
-                , height:objByFamily[f2][i2].boundingBox.height};
-            b1.x = objByFamily[f1][i1].x;
-            b1.y = objByFamily[f1][i1].y;
-            b2.x = objByFamily[f2][i2].x;
-            b2.y = objByFamily[f2][i2].y;
+            var b1 = objByFamily[f1][i1].sceneObj.getAABB()
+              , b2 = objByFamily[f2][i2].sceneObj.getAABB();
             if( module.BoxCollisionTest( b1, b2 ) ){
+              // invoke every callback for collision evt between these two folks
               module.logic.boxCollisions[f1][f2].forEach(function(cb){
                 cb( objByFamily[f1][i1], objByFamily[f2][i2], elapsedTime );
               });
@@ -99,7 +113,7 @@ define( function(){
     }
   };
 
-  module.BoxCollisionTest = function ( box1, box2 ) {
+  module.BoxCollisionTest_old = function ( box1, box2 ) {
       var ax1 = box1.x,
           ax2 = box1.x + box1.width,
           bx1 = box2.x,
@@ -114,8 +128,23 @@ define( function(){
       );
   };
 
-  // helper function to test if a game object touches the ground
+  module.BoxCollisionTest = function ( box1, box2 ) {
+      var ax1 = box1[0][0]
+        , ax2 = box1[1][0]
+        , bx1 = box2[0][0]
+        , bx2 = box2[1][0]
+        , ay1 = box1[0][1]
+        , ay2 = box1[1][1]
+        , by1 = box2[0][1]
+          by2 = box2[1][1];
+      return (
+          (ax2 > bx1) && (bx2 > ax1)
+          &&(ay2 > by1) && (by2 > ay1)
+      );
+  };
+
   // TODO
+  // helper function to test if a game object touches the ground
   module.IsGrounded = function(gameObject){
     if(gameObject.collisionPoints && gameObject.collisionPoints.feet2){
         return (gameObject.collisionPoints.feet2.state >= 0)
@@ -150,6 +179,7 @@ define( function(){
 
     // precompute all boxCollisions
     ProcessBoxCollisions(elapsedTime);
+    ProcessEachFrame(elapsedTime)
 
     if (module.logic.eachFrame) {
       module.logic.eachFrame.forEach(function(callback) {
@@ -157,21 +187,6 @@ define( function(){
       });
     }
     module.lastFrameTime = now;
-  };
-  
-  // simple 2D bounding box collision test
-  module.TestCollision = function(x, y, layer, mapData) {
-    var tx = Math.floor(x / Carre.Tile.map.tilewidth),
-        ty = Math.floor(y / Carre.Tile.map.tileheight),
-        id = tx + ty * layer.width,
-        tId = layer.data[id],
-        tileData = mapData[id];
-    if (typeof tId !== "undefined" && tId !== 0 &&
-        tx >= 0 && ty >= 0 &&
-        tx <= layer.width && ty <= layer.height) {
-      return Carre.colorConv[tileData.color];
-    }
-    return -1;
   };
 
   return module;
