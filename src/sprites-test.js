@@ -121,7 +121,11 @@ function start() {
             , direction: Sprites.ANIM_RIGHT
             , time:0
           }
-        , families : ["Bar","Foo"]
+        , families : ["Bar","Foo","HasCollisionPoints"]
+        , collisionPoints: {
+            down1:[0,-5,0]
+          , down2:[0,-7,0]
+        }
         , boundingBox : {x:-5,y:-5,width:10,height:10}
         , sceneObj: {
             getAABB : function() { return [[-5,-5,0],[5,5,0]]; } // just for testing

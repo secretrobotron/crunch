@@ -101,7 +101,7 @@ define( function(){
           for( var i2 = 0; i2 < module.GetFamily(f2).length;++i2 ){
             var b1 = objByFamily[f1][i1].sceneObj.getAABB()
               , b2 = objByFamily[f2][i2].sceneObj.getAABB();
-            if( module.BoxCollisionTest( b1, b2 ) ){
+            if( module.BoxCollisionTest2d( b1, b2 ) ){
               // invoke every callback for collision evt between these two folks
               module.logic.boxCollisions[f1][f2].forEach(function(cb){
                 cb( objByFamily[f1][i1], objByFamily[f2][i2], elapsedTime );
@@ -128,30 +128,43 @@ define( function(){
       );
   };
 
-  module.BoxCollisionTest = function ( box1, box2 ) {
-      var ax1 = box1[0][0]
-        , ax2 = box1[1][0]
-        , bx1 = box2[0][0]
-        , bx2 = box2[1][0]
-        , ay1 = box1[0][1]
-        , ay2 = box1[1][1]
-        , by1 = box2[0][1]
-          by2 = box2[1][1];
-      return (
-          (ax2 > bx1) && (bx2 > ax1)
-          &&(ay2 > by1) && (by2 > ay1)
-      );
+  module.BoxCollisionTest2d = function ( box1, box2 ) {
+    var ax1 = box1[0][0]
+      , ax2 = box1[1][0]
+      , bx1 = box2[0][0]
+      , bx2 = box2[1][0]
+      , ay1 = box1[0][1]
+      , ay2 = box1[1][1]
+      , by1 = box2[0][1]
+        by2 = box2[1][1];
+    return (
+        (ax2 > bx1) && (bx2 > ax1)
+        &&(ay2 > by1) && (by2 > ay1)
+    );
   };
 
-  // TODO
+  module.PointCollisionTest2d = function ( point, box ) {
+    return (
+        point[0]>box[0][0] && point[0]<box[1][0] && //x
+        point[1]>box[0][1] && point[1]<box[1][1]    //y
+    );
+  };
+
+  ProcessPointCollisions = function (backdropList) {
+    var objList = module.GetFamily("HasCollisionPoints");
+    for(var i=0; i<objList.length;++i ) {
+      for(var j=0; j<backdropList.length;++j ) {
+        for(var cp in objList[i].collisionPoints) {
+          cp.state = module.PointCollisionTest2d(cp.pos, backdropList[j]);
+        }
+      }
+    }
+  }
+
   // helper function to test if a game object touches the ground
   module.IsGrounded = function(gameObject){
-    if(gameObject.collisionPoints && gameObject.collisionPoints.feet2){
-        return (gameObject.collisionPoints.feet2.state >= 0)
-    } else return false;
+    return (gameObject.collisionPoints && (gameObject.collisionPoints.down2===true));
   };
-
-  
   
   module.DoOneFrame = function() {
     
@@ -162,22 +175,10 @@ define( function(){
     }
 
     var elapsedTime = module.elapsedTime = now - module.lastFrameTime;
-    
-    /*
-    // precomute all point collisions
-    for (var o = 0; o < physical.length; o++) {
-      for(var cp in physical[o].collisionPoints) {
-        physical[o].collisionPoints[cp].state = this.testCollision(
-          physical[o].x + physical[o].collisionPoints[cp].x,
-          physical[o].y + physical[o].collisionPoints[cp].y,
-          Carre.Tile.layers.solid,
-          Carre.Tile.solidMapData
-        );
-      }
-    }
-    */
 
-    // precompute all boxCollisions
+    // precompute all pointCollisions, the state is cached in entity.collisionPoints["pointName"].state
+    ProcessPointCollisions([]);
+    // process all boxCollision
     ProcessBoxCollisions(elapsedTime);
     ProcessEachFrame(elapsedTime)
 
