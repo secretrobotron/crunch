@@ -19,7 +19,7 @@ define([], function(){
       var gl = CubicVR.GLCore.gl;
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
       for (var i = __scenes.length - 1; i >= 0; i--) {
-        __scenes[i].render();
+        __scenes[i].cubicvr.render();
       };
     },
 

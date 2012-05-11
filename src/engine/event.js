@@ -51,9 +51,13 @@ define([], function(){
 
   function Event(object){
 
+    if(object.event){
+      return;
+    }
+
     var _callbacks = {};
 
-    object._event = {
+    object.event = {
       add: function(name, callback){
         add(name, callback, _callbacks);
       },

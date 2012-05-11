@@ -41,7 +41,7 @@ define([], function(){
 
     var _callbacks = {};
 
-    object._observe = {
+    object.observe = {
       subscribe: function(name, callback){
         subscribe(name, callback, _callbacks);
       },

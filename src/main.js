@@ -1,49 +1,36 @@
-require(["engine/observe", "engine/event", "engine/raf-loop", "engine/hud", "engine/graphics"], 
-        function(Observe, Event, RAFLoop, HUD, Graphics){
+require([ "engine/schedule", "engine/hud",
+          "engine/graphics", "engine/scene",
+          "entities/test-entity",
+          "engine/loader",
+        ], 
+        function(Schedule, HUD, Graphics, Scene, TestEntity, Loader){
 
   var _hud = new HUD();
 
-  // Create a mainLoop
-  var _mainLoop = new RAFLoop(function(){
-    Event.flush();
-    Graphics.render();
-    _mainLoop._event.dispatch("update");
-  });
+  Loader.lock();
 
-  // Give _mainLoop event capabilities
-  Event(_mainLoop);
-
-  // Create a scene using CubicVR
   function createTestScene(){
-    var scene = new CubicVR.Scene(Graphics.viewport.width, Graphics.viewport.height, 60);
-    var boxMesh = new CubicVR.Mesh({ 
-      primitive: {
-        type: "box",
-        size: 1.0,
-        material: {
-          textures: {
-              color: "assets/images/2282-diffuse.jpg"
-          }
-        },
-        uv: {
-          projectionMode: "cubic",
-          scale: [1, 1, 1]
-        }
-      },
-      compile: true
+    
+    var scene = new Scene();
+
+    var testEntity = new TestEntity({
+      position: [0, 0.1, 0]
     });
 
-    var boxObject = new CubicVR.SceneObject(boxMesh);
-    scene.bind(boxObject);
+    scene.addEntity(testEntity);
+  
+    scene.cubicvr.camera.target = [0, 0, 0];
+    scene.cubicvr.camera.position = [1, 1, 1];
 
-    scene.camera.position = [1, 1, 1];
-    scene.camera.target = [0, 0, 0];
+    var cameraIndex = 0;
 
-    // Attach a listener to the "update" event on the _mainLoop
-    _mainLoop._event.add("update", function(){
-      boxObject.rotation[2] += 2;
+    Schedule.event.add("update", function(e){
+      cameraIndex += e.data.dt / 1000;
+      var cameraPos = scene.cubicvr.camera.position;
+      cameraPos[0] = 2*Math.sin(cameraIndex);
+      cameraPos[2] = 2*Math.cos(cameraIndex);
     });
-
+    
     return scene;
   }
 
@@ -52,7 +39,10 @@ require(["engine/observe", "engine/event", "engine/raf-loop", "engine/hud", "eng
     success: function(){
       _hud.showBigMessage("Loading...");
       Graphics.addScene(createTestScene());
-      _mainLoop.start();
+      Schedule.start();
+      Loader.unlock(function(){
+        _hud.hideBigMessage();
+      });
     },
     failure: function(){
       _hud.showBigMessage("Startup Error: Please make sure your browser is WebGL-capable.");
