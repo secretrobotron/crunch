@@ -39,7 +39,10 @@ define(["engine/observe"], function(Observe){
       Graphics.viewport.width = mainCanvas.width = window.innerWidth;
       Graphics.viewport.height = mainCanvas.height = window.innerHeight;
 
-      CubicVR.start(mainCanvas, events.success, events.failure);
+      CubicVR.start(mainCanvas, function(){
+          CubicVR.setSoftShadows(true);
+          events.success();
+        }, events.failure);
     },
 
     viewport: {

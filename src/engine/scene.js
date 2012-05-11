@@ -13,19 +13,22 @@ define(["./event", "./graphics"], function(Event, Graphics){
 
     var cubicvrScene = new CubicVR.Scene(width, height, fov);
 
+    CubicVR.addResizeable(cubicvrScene);
+
     this.cubicvr = cubicvrScene;
 
-    this.addEntity = function(entity){
-      entity.scene = _this;
-      cubicvrScene.bind(entity.sceneObject);
-      _this.event.dispatch("entity-added", entity);
+    this.add = function(obj){
+      obj.scene = _this;
+      cubicvrScene.bind(obj.sceneObject);
+      _this.event.dispatch("entity-added", obj);
     };
 
-    this.removeEntity = function(entity){
-      entity.scene = null;
-      cubicvrScene.unbind(entity.sceneObject);
-      _this.event.dispatch("entity-removed", entity);
+    this.remove = function(obj){
+      obj.scene = null;
+      cubicvrScene.unbind(obj.sceneObject);
+      _this.event.dispatch("entity-removed", obj);
     };
+
   };
 
 });

@@ -2,29 +2,30 @@ define(["engine/component", "engine/schedule"], function(Component, Schedule){
 
   var mat4 = CubicVR.mat4;
 
-  return Component("cube", function(setupOptions){
+  return Component("box", function(setupOptions){
     
     setupOptions = setupOptions || {};
 
     var _this = this;
 
     var mesh = new CubicVR.Mesh();
-    var size = setupOptions.size || 0.5;
+    var size = setupOptions.size || [0.5, 0.5, 0.5];
 
     var uv = new CubicVR.UVMapper({
       projectionMode: "cubic",
-      scale: [1, 1, 1]
+      scale: [1, 1, 1],
+      center: [-size, 0, -size]
     });
-    
+
     mesh.addPoint([
-      [size, -size, size],
-      [size, size, size],
-      [-size, size, size],
-      [-size, -size, size],
-      [size, -size, -size],
-      [size, size, -size],
-      [-size, size, -size],
-      [-size, -size, -size]
+      [size[0], -size[1], size[2]],
+      [size[0], size[1], size[2]],
+      [-size[0], size[1], size[2]],
+      [-size[0], -size[1], size[2]],
+      [size[0], -size[1], -size[2]],
+      [size[0], size[1], -size[2]],
+      [-size[0], size[1], -size[2]],
+      [-size[0], -size[1], -size[2]]
     ]);
 
     mesh.addFace([
@@ -47,6 +48,7 @@ define(["engine/component", "engine/schedule"], function(Component, Schedule){
       var material = new CubicVR.Material({
         textures: cubicvrTextures
       });
+      
       mesh.setFaceMaterial(material);
       mesh.calcFaceNormals();
       uv.apply(mesh, material);

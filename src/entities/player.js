@@ -15,7 +15,8 @@ define(["engine/entity", "components/sprite", "engine/loader", "text!sprites/pla
           sprite: SPRITE_JSON
         }),
       ],
-      position: setupOptions.position
+      position: setupOptions.position,
+      rotation: setupOptions.rotation
     });
 
     Loader.load(Loader.Image(SPRITE_JSON.resource), function(image){

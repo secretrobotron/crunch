@@ -15,9 +15,8 @@ define(["engine/event"], function(Event){
 
     var _sceneObject = this.sceneObject = new CubicVR.SceneObject();
 
-    if(description.position){
-      _sceneObject.position = description.position;
-    }
+    _sceneObject.position = description.position || _sceneObject.position;
+    _sceneObject.rotation = description.rotation || _sceneObject.rotation;
 
     this.addComponent = function(component){
       var oldComponent = _this.components[component.name];
@@ -52,6 +51,7 @@ define(["engine/event"], function(Event){
         },
         set: function(newParent){
           _parentEntity = newParent;
+          _this.scene = _parentEntity.scene;
           _parentEntity.sceneObject.bindChild(_sceneObject);
           _this.event.dispatch("parent-changed", _parentEntity);
         }
@@ -62,8 +62,10 @@ define(["engine/event"], function(Event){
           return _scene;
         },
         set: function(newScene){
-          _scene = newScene;
-          _this.event.dispatch("scene-changed", _scene);
+          if(newScene !== _scene){
+            _scene = newScene;
+            _this.event.dispatch("scene-changed", _scene);
+          }
         }
       }
     });
