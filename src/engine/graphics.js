@@ -1,4 +1,4 @@
-define([], function(){
+define(["engine/observe"], function(Observe){
 
   var __scenes = [];
   
@@ -17,10 +17,19 @@ define([], function(){
 
     render: function(){
       var gl = CubicVR.GLCore.gl;
-      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+      var renderContext = {
+        gl: gl,
+        clear: true
+      };
+      Graphics.observe.notify("start-render", renderContext);
+      if(renderContext.clear){
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);  
+      }
+      Graphics.observe.notify("render", renderContext);
       for (var i = __scenes.length - 1; i >= 0; i--) {
         __scenes[i].cubicvr.render();
       };
+      Graphics.observe.notify("end-render", renderContext);
     },
 
     setup: function(events){
@@ -39,6 +48,8 @@ define([], function(){
     }
 
   };
+
+  Observe(Graphics);
 
   return Graphics;
 

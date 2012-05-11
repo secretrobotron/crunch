@@ -3,12 +3,14 @@ define(["engine/component", "engine/schedule"], function(Component, Schedule){
   var mat4 = CubicVR.mat4;
 
   // Create a scene using CubicVR
-  return Component("cube", function(){
+  return Component("cube", function(setupOptions){
     
+    setupOptions = setupOptions || {};
+
     var _this = this;
 
     var mesh = new CubicVR.Mesh();
-    var size = 0.5;
+    var size = setupOptions.size || 0.5;
 
     var uv = new CubicVR.UVMapper({
       projectionMode: "cubic",
@@ -52,21 +54,20 @@ define(["engine/component", "engine/schedule"], function(Component, Schedule){
       mesh.prepare();
     };
 
-    var sceneObject = _this.sceneObject = new CubicVR.SceneObject(mesh);
+    var _sceneObject = _this.sceneObject = new CubicVR.SceneObject(mesh);
+
+    if(setupOptions.position){
+      _sceneObject.position = setupOptions.position;
+    }
 
     // Attach a listener to the "update" event on the Schedule
     Schedule.event.add("update", function(e){
-      sceneObject.rotation[2] += e.data.dt / 10;
+      _sceneObject.rotation[2] += e.data.dt / 10;
     });
 
     _this.event.add("entity-changed", function(e){
       var entity = e.data;
-      if(entity.scene){
-        entity.scene.cubicvr.bind(sceneObject);
-      }
-      else {
-
-      }
+      entity.sceneObject.bindChild(_sceneObject);
     });
 
   });

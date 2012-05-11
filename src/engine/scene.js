@@ -17,11 +17,13 @@ define(["./event", "./graphics"], function(Event, Graphics){
 
     this.addEntity = function(entity){
       entity.scene = _this;
+      cubicvrScene.bind(entity.sceneObject);
       _this.event.dispatch("entity-added", entity);
     };
 
     this.removeEntity = function(entity){
       entity.scene = null;
+      cubicvrScene.unbind(entity.sceneObject);
       _this.event.dispatch("entity-removed", entity);
     };
   };

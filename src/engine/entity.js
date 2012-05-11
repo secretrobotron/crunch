@@ -5,14 +5,19 @@ define(["engine/event"], function(Event){
     description = description || {};
 
     var _this = this;
-
     var _scene = null;
-
-    this.name = description.name || null;
+    var _parentEntity = null;
 
     Event(this);
 
     this.components = {};
+    this.name = description.name || null;
+
+    var _sceneObject = this.sceneObject = new CubicVR.SceneObject();
+
+    if(description.position){
+      _sceneObject.position = description.position;
+    }
 
     this.addComponent = function(component){
       var oldComponent = _this.components[component.name];
@@ -40,6 +45,17 @@ define(["engine/event"], function(Event){
     }
 
     Object.defineProperties(_this, {
+      parent: {
+        enumerable: true,
+        get: function(){
+          return _parentEntity;
+        },
+        set: function(newParent){
+          _parentEntity = newParent;
+          _parentEntity.sceneObject.bindChild(_sceneObject);
+          _this.event.dispatch("parent-changed", _parentEntity);
+        }
+      },
       scene: {
         enumerable: true,
         get: function(){
