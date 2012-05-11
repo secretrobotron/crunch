@@ -1,6 +1,4 @@
-
-
-define( function(){
+define(["engine/schedule"], function(Schedule){
 
   var module = {
       // lists of the game objects 
@@ -167,7 +165,6 @@ define( function(){
   };
   
   module.DoOneFrame = function() {
-    
     var now = Date.now();
     // to avoid weird stuff in first frame
     if (module.lastFrameTime === 0) {
@@ -189,6 +186,8 @@ define( function(){
     }
     module.lastFrameTime = now;
   };
+
+  Schedule.event.add("update", module.DoOneFrame);
 
   return module;
 });//module GameLogic

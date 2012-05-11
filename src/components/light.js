@@ -1,7 +1,5 @@
 define(["engine/component", "engine/schedule"], function(Component, Schedule){
 
-  var mat4 = CubicVR.mat4;
-
   // Create a scene using CubicVR
   return Component("light", function(setupOptions){
     

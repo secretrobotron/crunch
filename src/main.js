@@ -4,9 +4,9 @@ require([ "engine/schedule", "engine/hud",
           "entities/player",
           "entities/point-light",
           "engine/loader",
-          "editor"
+          "engine/game-logic"
         ], 
-        function(Schedule, HUD, Graphics, Scene, TestEntity, PlayerEntity, PointLightEntity, Loader, Editor){
+        function(Schedule, HUD, Graphics, Scene, TestEntity, PlayerEntity, PointLightEntity, Loader, GameLogic){
 
   var _hud = new HUD();
 
