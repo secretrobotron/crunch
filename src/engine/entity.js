@@ -14,6 +14,8 @@ define(["engine/event"], function(Event){
 
     this.components = {};
 
+    this.sceneObject = new CubicVR.SceneObject();
+
     this.addComponent = function(component){
       var oldComponent = _this.components[component.name];
       if(oldComponent){

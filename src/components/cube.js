@@ -61,12 +61,7 @@ define(["engine/component", "engine/schedule"], function(Component, Schedule){
 
     _this.event.add("entity-changed", function(e){
       var entity = e.data;
-      if(entity.scene){
-        entity.scene.cubicvr.bind(sceneObject);
-      }
-      else {
-
-      }
+      entity.sceneObject.bindChild(sceneObject);
     });
 
   });
