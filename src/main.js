@@ -14,11 +14,19 @@ require([ "engine/schedule", "engine/hud",
     var scene = new Scene();
 
     var testEntity = new TestEntity({
-      position: [0, 0.1, 0]
+      position: [0, 0.1, 0],
+      size: 0.4
+    });
+
+    var testChildEntity = new TestEntity({
+      position: [0.2, 0.2, 1],
+      size: 0.2
     });
 
     scene.addEntity(testEntity);
-  
+
+    testChildEntity.parent = testEntity;
+
     scene.cubicvr.camera.target = [0, 0, 0];
     scene.cubicvr.camera.position = [1, 1, 1];
 
