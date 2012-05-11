@@ -11,6 +11,7 @@ window.requestAnimFrame = (function(){
           };
 })();
 
+var GameLogic = {};
 
 // Sprite descriptor, should be in a separate file
 SpriteDesc = {
@@ -63,24 +64,15 @@ function doOneFrame(ctx,gl, gameTime, elapsedTime, objSprite, objSpriteGL) {
 
     objSpriteGL.displayComponent.advance(objSpriteGL, elapsedTime);
     objSpriteGL.displayComponent.display(gl, objSpriteGL);
-/*    
-    var pmat = [];
-    var mvmat = [];
-    mat4.identity(pmat);
-    mat4.identity(mvmat); 
-    //Sprites.WebGL.DrawQuad(pmat, mvmat, objSpriteGL.displayComponent.texture);
-    Sprites.WebGL.RenderAnimatedSpriteQuad(Sprites.WebGL.animatedSpriteShaderProgram
-      , pmat, mvmat
-      , objSpriteGL.displayComponent.texture
-      , 3, 1 // line, row
-      , 0.25, 0.25); // tw, th
-    //
-*/
+
+    GameLogic.DoOneFrame();
 }
 
 
 function start() {
-  require(["src/engine/sprites"], function(Sprites) {
+  require(["src/engine/sprites", "src/engine/game-logic"], function(Sprites, _GameLogic) {
+
+    GameLogic = _GameLogic;
 
     var canvas1 = document.getElementById('canvas01');
     var canvas2 = document.getElementById('canvas02');
@@ -106,13 +98,15 @@ function start() {
 
      
       var objSprite = {
-        x:0, y:0, z:0
+        x:1, y:1, z:0
         , displayComponent: Sprites.Canvas2d.CreateAnimatedScriptDisplayComponent(SpriteDesc)
         , animation: {
             name:"walking"
             , direction: Sprites.ANIM_RIGHT
             , time:0
           }
+        , families : ["Player","Foo"]
+        , boundingBox : {x:-5,y:-5,width:10,height:10}
       };// objSprite 
      
       var objSpriteGL = {
@@ -124,9 +118,20 @@ function start() {
             , direction: Sprites.ANIM_RIGHT
             , time:0
           }
+        , families : ["Bar","Foo"]
+        , boundingBox : {x:-5,y:-5,width:10,height:10}
       };// objSprite 
       
       mat4.identity(objSpriteGL.modelViewMatrix);
+
+      GameLogic.AddGameObject(objSprite);
+      GameLogic.AddGameObject(objSpriteGL);
+      console.log("added objects");
+      GameLogic.RemoveGameObject(objSprite);
+      console.log("removed objSprite");
+      GameLogic.AddGameObject(objSprite);
+      
+      GameLogic.OnBoxCollision("Player","Bar").push( function(player,bar){ console.log("collision! :)") }  );
 
       var startTime = new Date().getTime();
       var lastTime = 0;

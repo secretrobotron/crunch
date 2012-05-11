@@ -11,7 +11,7 @@ define( function(){
       // lists of gameplay rules
     , logic: {
           eachFrame : []
-        , onBoxCollision : []
+        , boxCollisions : []
       }
     , lastFrameTime:0
   };
@@ -27,14 +27,38 @@ define( function(){
   // registers a game object
   module.AddGameObject = function(obj) {
     for (var i in obj.families) {
-      if (GetFamily(obj.families[i]) === undefined) {
+      if (module.GetFamily(obj.families[i]) === undefined) {
         module.logic.byFamily[obj.families[i]] = [];
       }
-      GetFamily(obj.families[i]).push(obj);
+      module.GetFamily(obj.families[i]).push(obj);
     }
     module.gameObjects.all.push(obj);
     return obj;
   };
+
+  module.RemoveGameObject = function(obj) {
+    // remove from gameObjects.all
+    var all = module.gameObjects.all;
+    for(var k=0; k<all.length;++k) {
+      if (all[k]===obj) {
+        all.splice(k,1);
+        break;
+      }
+    }
+    // remove from byfamily arrays
+    for (var i in obj.families) { 
+      var fam = module.GetFamily(obj.families[i]);
+      if ( fam !== undefined) {
+        for(var j=0; j<fam.length;++j) {
+          if (fam[j]===obj) {
+            fam.splice(j,1);
+          }
+        }
+      }
+    }
+    module.gameObjects.all.push(obj);
+    return obj;
+  }
 
   // usage OnBoxCollision("hero","enemy").push( function(hero,enemy) {hero.kill();} );
   // Register a gameplay rule callback between two families of objects
@@ -65,7 +89,7 @@ define( function(){
             b2.x = objByFamily[f2][i2].x;
             b2.y = objByFamily[f2][i2].y;
             if( module.BoxCollisionTest( b1, b2 ) ){
-              module.logic.BoxCollisions[f1][f2].forEach(function(cb){
+              module.logic.boxCollisions[f1][f2].forEach(function(cb){
                 cb( objByFamily[f1][i1], objByFamily[f2][i2], elapsedTime );
               });
             }
@@ -100,7 +124,7 @@ define( function(){
 
   
   
-  module.DoOneFrame = function(c) {
+  module.DoOneFrame = function() {
     
     var now = Date.now();
     // to avoid weird stuff in first frame
@@ -125,7 +149,7 @@ define( function(){
     */
 
     // precompute all boxCollisions
-    module.ProcessBoxCollisions(elapsedTime);
+    ProcessBoxCollisions(elapsedTime);
 
     if (module.logic.eachFrame) {
       module.logic.eachFrame.forEach(function(callback) {
