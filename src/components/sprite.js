@@ -127,7 +127,7 @@ define([  "engine/component", "engine/schedule", "engine/loader",
 
     _this.event.add("entity-changed", function(e){
       var entity = e.data;
-      entity.sceneObject.bindChild(_sceneObject);
+      entity.sceneObject.bindChild( _sceneObject );
     });
 
   });
