@@ -19,6 +19,8 @@ require([ "engine/schedule", "engine/hud",
 
   Loader.lock();
 
+  DebugCanvas.SetEnabled(false);
+
   function createTestScene(){
     
     var scene = new Scene();
