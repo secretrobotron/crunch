@@ -44,14 +44,6 @@ require([ "engine/schedule", "engine/hud",
     GameLogic.AddGameObject(playerEntity);
     scene.add(playerEntity);
 
-    GameLogic.OnBoxCollision("Player","floor").push(
-      function(hero,floor) {
-        //dump("Col  " + (hero == playerEntity) + "\n");
-        dump(playerEntity.sceneObject.position[1] + "\n");
-        hero.isCollisionFloor = true;
-      }
-    );
-
     GameLogic.EachFrame("Player").push( function(p, elapsedTime) {
       if(!p.collisionPoints.right2.state) {
         p.sceneObject.position[0] += 0.1;
@@ -78,6 +70,10 @@ require([ "engine/schedule", "engine/hud",
       scene.cubicvr.camera.target = [p.sceneObject.position[0],9, 0];
       scene.cubicvr.camera.position = [p.sceneObject.position[0], 14+Math.sin(p.sceneObject.position[0]*0.1)*3, 15];
 
+    } );
+
+    GameLogic.KeyDownEachFrame("Player").push( function(keyCode, elapsedTime) {
+      console.log("player key down\n");
     } );
 
     GameLogic.EachFrame("Physical").push( function(p,elapsedTime) {

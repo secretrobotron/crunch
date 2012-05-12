@@ -1,5 +1,7 @@
 define(["engine/schedule", "engine/debug-canvas"], function(Schedule,DebugCanvas){
 
+  var KEY_UP = 38;
+
   var module = {
       // lists of the game objects 
       gameObjects: {
@@ -8,11 +10,26 @@ define(["engine/schedule", "engine/debug-canvas"], function(Schedule,DebugCanvas
       }
       // lists of gameplay rules
     , logic: {
-          eachFrame : []
+          keyDownEachFrame : []
+        , eachFrame : []
         , boxCollisions : []
       }
     , lastFrameTime:0
+    , keyState : {}
   };
+
+  { // watch the key state
+    module.onKeyDown = function (ev) {
+      module.keyState[ev.keyCode] = true;
+    };
+
+    module.onKeyUp = function (ev) {
+      module.keyState[ev.keyCode] = false;
+    };
+
+    window.addEventListener('keydown', module.onKeyDown, false);
+    window.addEventListener('keyup', module.onKeyUp, false);
+  }
 
   // return the array of all the game objects belonging to family 
   module.GetFamily = function(family) {
@@ -67,12 +84,31 @@ define(["engine/schedule", "engine/debug-canvas"], function(Schedule,DebugCanvas
     return module.logic.eachFrame[familyName];
   }
 
+  module.KeyDownEachFrame = function(familyName) {
+    if ( !module.logic.keyDownEachFrame[familyName]){
+      module.logic.keyDownEachFrame[familyName] = [];
+    }
+    return module.logic.keyDownEachFrame[familyName];
+  }
+
   ProcessEachFrame = function(elapsedTime) {
     for (var familyName in module.logic.eachFrame) {
       var family = module.GetFamily(familyName);
       for( var objIdx = 0; objIdx < family.length; ++objIdx ) {
         for( var i=0; i<module.logic.eachFrame[familyName].length;++i )
         module.logic.eachFrame[familyName][i](family[objIdx],elapsedTime);
+      }
+    }
+  }
+
+  ProcessKeyDownEachFrame = function(keyCode, elapsedTime) {
+    if (module.keyState[keyCode] !== true)
+      return;
+    for (var familyName in module.logic.keyDownEachFrame) {
+      var family = module.GetFamily(familyName);
+      for( var objIdx = 0; objIdx < family.length; ++objIdx ) {
+        for( var i=0; i<module.logic.keyDownEachFrame[familyName].length;++i )
+        module.logic.keyDownEachFrame[familyName][i](keyCode, family[objIdx],elapsedTime);
       }
     }
   }
@@ -217,7 +253,8 @@ define(["engine/schedule", "engine/debug-canvas"], function(Schedule,DebugCanvas
     ProcessPointCollisions([]);
     // process all boxCollision
     ProcessBoxCollisions(elapsedTime);
-    ProcessEachFrame(elapsedTime)
+    ProcessEachFrame(elapsedTime);
+    ProcessKeyDownEachFrame(KEY_UP, elapsedTime);
 
     //if (module.logic.eachFrame) {
     //  module.logic.eachFrame.forEach(function(callback) {
