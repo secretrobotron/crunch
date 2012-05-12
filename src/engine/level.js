@@ -7,7 +7,7 @@ define(["./game-logic", "entities/platform"], function(GameLogic, PlatformEntity
       var x = setupOptions.levelOrigin[0];
       while (x < setupOptions.goalAtY) {
         var h = 2 + Math.random() * 2;
-        var w = 1 + Math.random() * 1;
+        var w = 3 + Math.random() * 4;
         x += w * 2;
         var floorEntity = new PlatformEntity({
           position: [x, setupOptions.levelOrigin[1] + h, 0],

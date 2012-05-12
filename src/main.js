@@ -67,8 +67,11 @@ require([ "engine/schedule", "engine/hud",
     scene.cubicvr.bind(testLight);
 
     var level = new Level({
+      // Where the levle starts in space
       levelOrigin: [-20, 1, 0],
-      goalAtY: 100,
+      // How long the level is
+      goalAtY: 60,
+      // The families given to the floor used for GameLogic
       floorFamilies: ["floor", "PointCollision"],
     });
 
