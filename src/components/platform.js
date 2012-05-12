@@ -1,7 +1,36 @@
-define(["engine/component", "engine/schedule", "text!shaders/screen-coordinates.frag", "text!shaders/screen-coordinates.vert"], 
-  function(Component, Schedule, SCRN_COORDS_FRAG_SRC, SCRN_COORDS_VERT_SRC){
+define([  "engine/observe",
+          "engine/graphics",
+          "engine/component", "engine/schedule", 
+          "text!shaders/screen-coordinates.frag", "text!shaders/screen-coordinates.vert",
+          "engine/hud"], 
+  function(Observe, Graphics, Component, Schedule, SCRN_COORDS_FRAG_SRC, SCRN_COORDS_VERT_SRC, HUD){
 
   var mat4 = CubicVR.mat4;
+
+  var datguiFolder = HUD.datgui.addFolder("Platform");
+
+  var __datguiModel = {"uYFactor":16.400000000000002,"uYOffset":-0.07};
+
+  var __datguiView = {
+    uYFactor: datguiFolder.add(__datguiModel, 'uYFactor', -20, 20).step(0.1),
+    uYOffset: datguiFolder.add(__datguiModel, 'uYOffset', -3, 3).step(0.01),
+  };
+
+  datguiFolder.add({
+    bam: function(){
+      console.log(JSON.stringify(__datguiModel));
+    }
+  }, 'bam');
+
+  for(var prop in __datguiModel){
+    if(__datguiModel.hasOwnProperty(prop)){
+      (function(p){__datguiView[p].onChange(function(value){
+        __datguiView.observe.notify(p, value);
+      })}(prop));
+    }
+  }
+
+  Observe(__datguiView);
 
   return Component("platform", function(setupOptions){
     
@@ -38,14 +67,38 @@ define(["engine/component", "engine/schedule", "text!shaders/screen-coordinates.
       [7, 4, 0, 3]
     ]);
 
-    var _screenCoordsShader = new CubicVR.CustomShader({
+    var _shadowIndex = 0;
+
+    var _screenCoordsShader;
+    _screenCoordsShader = new CubicVR.CustomShader({
       vertex: SCRN_COORDS_VERT_SRC,
       fragment: SCRN_COORDS_FRAG_SRC,
       init: function(shader){
+        shader.uShadowIndex.set(0);
+        for(var prop in __datguiModel){
+          if(__datguiModel.hasOwnProperty(prop)){
+            shader[prop].set(__datguiModel[prop]);            
+          }
+        }
       }
     });
 
-    var _shadowIndex = 0;
+    var __shadowIndex = 0;
+
+    for(var prop in __datguiModel){
+      if(__datguiModel.hasOwnProperty(prop)){
+        (function(p){__datguiView.observe.subscribe(p, function(e){
+          _screenCoordsShader[p].set(e.data);
+        })}(prop));
+      }
+    }
+
+    Schedule.event.add("update", function(e){
+      if(_screenCoordsShader.ready()){
+        __shadowIndex += e.data.dt/1000;
+        _screenCoordsShader.uShadowIndex.set(__shadowIndex);
+      }
+    });
 
     _this.compile = function(textures){
       var cubicvrTextures = {};
@@ -58,11 +111,6 @@ define(["engine/component", "engine/schedule", "text!shaders/screen-coordinates.
       var sideMaterial = new CubicVR.Material({
         textures: cubicvrTextures,
         shader: _screenCoordsShader
-      });
-
-      Schedule.event.add("update", function(){
-        _shadowIndex += 0.01;
-        _screenCoordsShader.uShadowIndex.set(_shadowIndex);
       });
 
       var topMaterial = new CubicVR.Material({

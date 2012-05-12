@@ -10,12 +10,10 @@ require([ "engine/schedule", "engine/hud",
         ], 
         function(Schedule, HUD, Graphics, Scene, TestEntity, PlayerEntity, Loader, GameLogic, PlatformEntity){
 
-  var DEFAULT_FLOOR_Y = 1;
+  var DEFAULT_FLOOR_Y = 0;
   var DEFAULT_FLOOR_X = -20;
-  var DEFAULT_FLOOR_H = 2;
+  var DEFAULT_FLOOR_H = 3;
   var DEFAULT_FLOOR_H_VAR = 2;
-
-  var _hud = new HUD();
 
   Loader.lock();
 
@@ -80,18 +78,14 @@ require([ "engine/schedule", "engine/hud",
       if (!p.collisionPoints.down2.state){
         p.speed[1] -= 0.03;
         p.sceneObject.position[1] += p.speed[1];
-        console.log("in the air");
       } else {
         p.speed[1] = 0;
-        console.log("grounded");
       }
 
       if (p.collisionPoints.down1.state) {
         p.sceneObject.position[1] += 0.1;
-        console.log("into the ground!");
       }
 
-      console.log(p.sceneObject.position[1]);
     });
 
     var testLight = new CubicVR.Light({
@@ -145,15 +139,15 @@ require([ "engine/schedule", "engine/hud",
   // Start graphics subsystem
   Graphics.setup({
     success: function(){
-      _hud.showBigMessage("Loading...");
+      HUD.showBigMessage("Loading...");
       Graphics.addScene(createTestScene());
       Schedule.start();
       Loader.unlock(function(){
-        _hud.hideBigMessage();
+        HUD.hideBigMessage();
       });
     },
     failure: function(){
-      _hud.showBigMessage("Startup Error: Please make sure your browser is WebGL-capable.");
+      HUD.showBigMessage("Startup Error: Please make sure your browser is WebGL-capable.");
     }
   });
 
