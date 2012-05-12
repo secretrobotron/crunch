@@ -47,7 +47,7 @@ define([  "engine/observe",
       vertex: SCRN_COORDS_VERT_SRC,
       fragment: SCRN_COORDS_FRAG_SRC,
       init: function(shader){
-        shader.uShadowIndex.set(0);
+        if(shader.uShadowIndex) shader.uShadowIndex.set(0);
         for(var prop in __datguiModel){
           if(__datguiModel.hasOwnProperty(prop)){
             shader[prop].set(__datguiModel[prop]);            
@@ -69,7 +69,7 @@ define([  "engine/observe",
     Schedule.event.add("update", function(e){
       if(screenCoordsShader.ready()){
         __shadowIndex += e.data.dt/1000;
-        screenCoordsShader.uShadowIndex.set(__shadowIndex);
+        if(screenCoordsShader.uShadowIndex)screenCoordsShader.uShadowIndex.set(__shadowIndex);
       }
     });
 
