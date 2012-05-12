@@ -5,11 +5,10 @@ require([ "engine/schedule", "engine/hud",
           "entities/test-entity",
           "entities/player",
           "engine/loader",
-          "engine/level",
           "engine/game-logic",
           "entities/platform"
         ], 
-        function(Schedule, HUD, Graphics, Scene, TestEntity, PlayerEntity, Loader, Level, GameLogic, PlatformEntity){
+        function(Schedule, HUD, Graphics, Scene, TestEntity, PlayerEntity, Loader, GameLogic, PlatformEntity){
 
   var DEFAULT_FLOOR_Y = 0;
   var DEFAULT_FLOOR_X = -20;
