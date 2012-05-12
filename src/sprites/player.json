@@ -1,10 +1,10 @@
 {
-  "resource":"assets/images/test_sprite_sheet.png",
-  "numRows": 4,
-  "numCols": 4,
+  "resource":"assets/images/main-character.png",
+  "numRows": 8,
+  "numCols": 8,
   "animation" : {
-    "frameCount": 4,
-    "speed": 2,
+    "frameCount": 8,
+    "speed": 10,
     "index": 0
   }
 }

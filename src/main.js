@@ -22,10 +22,10 @@ require([ "engine/schedule", "engine/hud",
     var scene = new Scene();
 
     var playerEntity = new PlayerEntity({
-      position: [0, 0, 0],
+      position: [0, 8, 3],
       rotation: [0, 180, 0],
       families : ["Player", "HasCollisionPoints"],
-      size: 1
+      size: 3
     });
     GameLogic.AddGameObject(playerEntity);
     scene.add(playerEntity);
