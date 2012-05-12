@@ -25,12 +25,40 @@ require([ "engine/schedule", "engine/hud",
       families : ["Player", "HasCollisionPoints"],
       size: 1
     });
+    playerEntity.move = function(dx) {
+      //dump("move\n");
+      var startY = playerEntity.sceneObject.position[1];
+      for (var i = 0.001; i < dx; i+=0.001) {
+        playerEntity.isCollisionFloor = false;
+        playerEntity.sceneObject.position[1] = startY - i;
+        GameLogic.DoOneFrame();
+        if (playerEntity.isCollisionFloor) {
+          dump("break\n");
+          break;
+        }
+      }
+      //dump("Pre: " + playerEntity.sceneObject.children[0].getAABB() + "\n");
+      while (playerEntity.isCollisionFloor === true) {
+        //dump("Enter\n");
+        playerEntity.isCollisionFloor = false;
+        playerEntity.sceneObject.position[1] = playerEntity.sceneObject.position[1] + 0.1;
+        playerEntity.sceneObject.dirty = true;
+        playerEntity.sceneObject.children[0].dirty = true;
+        GameLogic.DoOneFrame();
+        break;
+      }
+      playerEntity.sceneObject.position[0] += dx;
+      //GameLogic.DoOneFrame();
+      //if (
+    };
     GameLogic.AddGameObject(playerEntity);
     scene.add(playerEntity);
 
     GameLogic.OnBoxCollision("Player","floor").push(
-      function(hero,enemy) {
-        console.log("col");
+      function(hero,floor) {
+        //dump("Col  " + (hero == playerEntity) + "\n");
+        dump(playerEntity.sceneObject.position[1] + "\n");
+        hero.isCollisionFloor = true;
       }
     );
 
@@ -74,7 +102,7 @@ require([ "engine/schedule", "engine/hud",
       scene.cubicvr.camera.position[0] += dx;
       scene.cubicvr.camera.target[0] += dx;
       //pointLight.position[0] += dx;
-      playerEntity.sceneObject.position[0] += dx;
+      playerEntity.move(dx);
       GameLogic.DoOneFrame();
     });
     
