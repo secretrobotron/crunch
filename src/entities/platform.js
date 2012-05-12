@@ -18,12 +18,6 @@ define(["engine/entity", "components/platform", "engine/loader"],
       position: setupOptions.position
     });
 
-    Loader.load(Loader.Image("assets/images/2282-diffuse.jpg"), function(image){
-      entity.components["platform"].compile({
-        color: image,
-      });
-    });
-
     return entity;
 
   };

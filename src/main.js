@@ -12,10 +12,10 @@ require([ "engine/schedule", "engine/hud",
         ], 
         function(Schedule, HUD, Graphics, Scene, TestEntity, PlayerEntity, Loader, Level, GameLogic, PlatformEntity, DebugCanvas){
 
-  var DEFAULT_FLOOR_Y = 0;
+  var DEFAULT_FLOOR_Y = -5;
   var DEFAULT_FLOOR_X = -20;
-  var DEFAULT_FLOOR_H = 3;
-  var DEFAULT_FLOOR_H_VAR = 2;
+  var DEFAULT_FLOOR_H = 10;
+  var FLOOR_Y_VAR = 2;
 
   Loader.lock();
 
@@ -125,8 +125,6 @@ require([ "engine/schedule", "engine/hud",
     // Transform the setup options into platforms entity
     // and add them to the scene.
     level.buildToScene(scene);
-
-
 
     scene.cubicvr.camera.target = [0, 0, 0];
     scene.cubicvr.camera.position = [0, 8, 20];
