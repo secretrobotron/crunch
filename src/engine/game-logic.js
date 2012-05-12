@@ -148,12 +148,14 @@ define(["engine/schedule"], function(Schedule){
     );
   };
 
-  ProcessPointCollisions = function (backdropList) {
-    var objList = module.GetFamily("HasCollisionPoints");
-    for(var i=0; i<objList.length;++i ) {
-      for(var j=0; j<backdropList.length;++j ) {
-        for(var cp in objList[i].collisionPoints) {
-          cp.state = module.PointCollisionTest2d(cp.pos, backdropList[j]);
+  ProcessPointCollisions = function () {
+    var pointList = module.GetFamily("HasCollisionPoints");
+    var boxList = module.GetFamily("PointCollision");
+    for(var i=0; i<pointList.length;++i ) {
+      for(var j=0; j<boxList.length;++j ) {
+        for(var cp in pointList[i].collisionPoints) {
+          var currPoint = pointList[i].collisionPoints[cp];
+          currPoint.state = module.PointCollisionTest2d(currPoint.pos, boxList[j].sceneObject.children[0].getAABB());
         }
       }
     }

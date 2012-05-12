@@ -22,7 +22,7 @@ require([ "engine/schedule", "engine/hud",
     var playerEntity = new PlayerEntity({
       position: [0, 0, 0],
       rotation: [0, 180, 0],
-      families : ["Player"],
+      families : ["Player", "HasCollisionPoints"],
       size: 1
     });
     GameLogic.AddGameObject(playerEntity);
@@ -52,7 +52,7 @@ require([ "engine/schedule", "engine/hud",
       x += w * 2;
       var floorEntity = new FloorEntity({
         position: [x, DEFAULT_FLOOR_Y + h, 0],
-        families : ["floor"],
+        families : ["floor", "PointCollision"],
         width: w,
         height: h
       });
