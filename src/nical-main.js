@@ -38,19 +38,19 @@ require([ "engine/sprites", "engine/game-logic"
       }
     };
     SpriteDescGL = {
-      resource:"assets/images/test_sprite_sheet.png",
-      tileWidth: 64,
-      tileHeight: 64,
-      imageWidth: 256,
-      imageHeight: 256,
+      resource:"assets/images/main-character.png",
+      tileWidth: 128,
+      tileHeight: 128,
+      imageWidth: 1024,
+      imageHeight: 1024,
       animations : {
           numbers : {
-              frameCount: 4,
+              frameCount: 8,
               speed: 1.5,
               index: 0
           },
           symbols : {
-              frameCount: 4,
+              frameCount: 7,
               speed: 2,
               index: 1
           }

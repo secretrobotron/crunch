@@ -71,6 +71,12 @@ define([  "engine/component", "engine/schedule",
     };
 
     var _sceneObject = _this.sceneObject = new CubicVR.SceneObject(mesh);
+    _this.collisionPoints = [
+      {
+        name: "b1",
+        pos: [0, 0]
+      }
+    ];
 
     if(setupOptions.position){
       _sceneObject.position = setupOptions.position;

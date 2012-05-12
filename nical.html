@@ -51,7 +51,7 @@
       float f = 0.5*sin(viewSpacePos.y);
       float g = texCoords.x;
       vec4 texColor = texture2D(uTexture, vec2(texCoords.x, texCoords.y));
-      gl_FragColor = (texColor + vec4(0.0,f,g,1.0))/2.0;
+      gl_FragColor = texColor;
       //gl_FragColor = vec4(0.0, 0.5+f, g*1.0, 1.0);
     }
   </script>

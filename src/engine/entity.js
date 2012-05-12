@@ -12,6 +12,7 @@ define(["engine/event"], function(Event){
 
     this.components = {};
     this.name = description.name || null;
+    this.families = description.families;
 
     var _sceneObject = this.sceneObject = new CubicVR.SceneObject();
 

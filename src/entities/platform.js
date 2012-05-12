@@ -9,6 +9,7 @@ define(["engine/entity", "components/platform", "engine/loader"],
 
     var entity = new Entity({
       name: "platform",
+      families: setupOptions.families,
       components: [
         new PlatformComponent({
           size: [setupOptions.width, setupOptions.height, DEFAULT_FLOOR_DEPTH],
