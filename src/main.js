@@ -5,10 +5,11 @@ require([ "engine/schedule", "engine/hud",
           "entities/test-entity",
           "entities/player",
           "engine/loader",
+          "engine/level",
           "engine/game-logic",
           "entities/platform"
         ], 
-        function(Schedule, HUD, Graphics, Scene, TestEntity, PlayerEntity, Loader, GameLogic, PlatformEntity){
+        function(Schedule, HUD, Graphics, Scene, TestEntity, PlayerEntity, Loader, Level, GameLogic, PlatformEntity){
 
   var DEFAULT_FLOOR_Y = 1;
   var DEFAULT_FLOOR_X = -20;
@@ -24,7 +25,7 @@ require([ "engine/schedule", "engine/hud",
     var scene = new Scene();
 
     var playerEntity = new PlayerEntity({
-      position: [3, 8, 3],
+      position: [3, 8, 0],
       rotation: [0, 180, 0],
       families : ["Player", "HasCollisionPoints","Physical"],
       collisionPoints: {
@@ -34,46 +35,12 @@ require([ "engine/schedule", "engine/hud",
       speed:[0,0,0],
       size: 3
     });
-    playerEntity.move = function(dx) {
-      //dump("move\n");
-      var startY = playerEntity.sceneObject.position[1];
-      for (var i = 0.001; i < dx; i+=0.001) {
-        playerEntity.isCollisionFloor = false;
-        playerEntity.sceneObject.position[1] = startY - i;
-        //GameLogic.DoOneFrame();
-        if (playerEntity.isCollisionFloor) {
-          dump("break\n");
-          break;
-        }
-      }
-      //dump("Pre: " + playerEntity.sceneObject.children[0].getAABB() + "\n");
-      while (playerEntity.isCollisionFloor === true) {
-        //dump("Enter\n");
-        playerEntity.isCollisionFloor = false;
-        playerEntity.sceneObject.position[1] = playerEntity.sceneObject.position[1] + 0.1;
-        playerEntity.sceneObject.dirty = true;
-        playerEntity.sceneObject.children[0].dirty = true;
-        //GameLogic.DoOneFrame();
-        break;
-      }
-      playerEntity.sceneObject.position[0] += dx;
-      //GameLogic.DoOneFrame();
-      //if (
-    };
 
     GameLogic.AddGameObject(playerEntity);
     scene.add(playerEntity);
 
-    GameLogic.OnBoxCollision("Player","floor").push(
-      function(hero,floor) {
-        //dump("Col  " + (hero == playerEntity) + "\n");
-        dump(playerEntity.sceneObject.position[1] + "\n");
-        hero.isCollisionFloor = true;
-      }
-    );
-
     GameLogic.EachFrame("Player").push( function(p) {
-      p.sceneObject.position[0] += 0.12;
+      p.sceneObject.position[0] += 0.05;
     } );
 
     GameLogic.EachFrame("Physical").push( function(p,elapsedTime) {
