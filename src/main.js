@@ -22,8 +22,17 @@ require([ "engine/schedule", "engine/hud",
     var playerEntity = new PlayerEntity({
       position: [0, 0, 0],
       rotation: [0, 180, 0],
+      families : ["Player"],
       size: 1
     });
+    GameLogic.AddGameObject(playerEntity);
+    scene.add(playerEntity);
+
+    GameLogic.OnBoxCollision("Player","Foo").push(
+      function(hero,enemy) {
+        console.log("col");
+      }
+    );
 
     var testLight = new CubicVR.Light({
       type: "area",
@@ -34,7 +43,6 @@ require([ "engine/schedule", "engine/hud",
       areaAxis: [25,5] // specified in degrees east/west north/south
     });
     
-    scene.add(playerEntity);
     scene.cubicvr.bind(testLight);
 
     var x = DEFAULT_FLOOR_X;
@@ -65,6 +73,7 @@ require([ "engine/schedule", "engine/hud",
       scene.cubicvr.camera.target[0] += dx;
       //pointLight.position[0] += dx;
       playerEntity.sceneObject.position[0] += dx;
+      GameLogic.DoOneFrame();
     });
     
     return scene;

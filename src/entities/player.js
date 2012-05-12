@@ -15,6 +15,7 @@ define(["engine/entity", "components/sprite", "engine/loader", "text!sprites/pla
           sprite: SPRITE_JSON
         }),
       ],
+      families: setupOptions.families,
       position: setupOptions.position,
       rotation: setupOptions.rotation
     });
