@@ -80,6 +80,10 @@ require([ "engine/schedule", "engine/hud",
 
     } );
 
+    GameLogic.KeyDownEachFrame("Player").push( function(keyCode, elapsedTime) {
+      console.log("player key down\n");
+    } );
+
     GameLogic.EachFrame("Physical").push( function(p,elapsedTime) {
       if (!p.collisionPoints.downA2.state || !p.collisionPoints.downB2.state ){
         p.speed[1] -= 0.03;
