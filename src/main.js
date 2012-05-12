@@ -41,7 +41,7 @@ require([ "engine/schedule", "engine/hud",
         right1: [0.5, -0.3, 0],
         right2: [0.6, -0.3, 0]
       },
-      speed:[0,0,0],
+      speed:[0,0.5,0],
       size: 2
     });
 
@@ -58,7 +58,11 @@ require([ "engine/schedule", "engine/hud",
 
     GameLogic.EachFrame("Player").push( function(p, elapsedTime) {
       if(!p.collisionPoints.right2.state) {
-        p.sceneObject.position[0] += 0.1;
+        elapsedTime=elapsedTime/20;
+        p.sceneObject.position[0] += p.speed[0] * elapsedTime;
+        p.speed[0] += 0.0004 * elapsedTime;
+      } else {
+        //speed[0] = 0.8;
       }
 
       if(p.speed[1] < -0.001) {
@@ -85,23 +89,10 @@ require([ "engine/schedule", "engine/hud",
       scene.cubicvr.camera.position = [p.sceneObject.position[0], 14, 15];  
       //scene.cubicvr.camera.position = [p.sceneObject.position[0], 14+Math.sin(p.sceneObject.position[0]*0.1)*3, 15];
       if (p.sceneObject.position[1] < 0) {
-        if(p.isDead) {
-
-        } else {
-          var sound = document.getElementById("wilhelm");
-
-          //alert("you are about to hear something 3");
-          if (sound) {
-             //alert("you are about to hear something 2");
-            if(sound.play) {
-              //alert("you are about to hear something 1");
-            }
-            sound.play();
-          }
-          //else alert(" audio did nah work man...");
-        
-          p.isDead = true;
-        }
+        var sound = document.getElementById("wilhelm");
+        if (sound) {
+          sound.cloneNode().play();
+        }        
       }
 
     } );
@@ -110,7 +101,7 @@ require([ "engine/schedule", "engine/hud",
       // Slow down the elapsedTime
       elapsedTime = elapsedTime / 20;
       if (isPressed) {
-        if (isOnGround(p)) {
+        if (GameLogic.IsGrounded(p)) {
           p.canJump = true;
           p.jumpForceRemaining = 0.9;
         }
