@@ -2,7 +2,6 @@ window.dump = window.dump || function(){};
 
 require([ "engine/schedule", "engine/hud",
           "engine/graphics", "engine/scene",
-          "entities/test-entity",
           "entities/player",
           "engine/loader",
           "engine/level",
@@ -10,7 +9,9 @@ require([ "engine/schedule", "engine/hud",
           "entities/platform",
           "engine/debug-canvas"
         ], 
-        function(Schedule, HUD, Graphics, Scene, TestEntity, PlayerEntity, Loader, Level, GameLogic, PlatformEntity, DebugCanvas){
+        function( Schedule, HUD, Graphics, Scene, 
+                  PlayerEntity, Loader, 
+                  Level, GameLogic, PlatformEntity, DebugCanvas){
 
   var DEFAULT_FLOOR_Y = -5;
   var DEFAULT_FLOOR_X = -20;
@@ -31,15 +32,16 @@ require([ "engine/schedule", "engine/hud",
       families : ["Player", "HasCollisionPoints","Physical"],
       collisionPoints: { // TODO fix the collisionPoints positions
         downA1: [-0.3, -0.6, 0], 
-        downA2: [-0.3, -0.7, 0],
+        downA2: [-0.3, -0.85, 0],
         downB1: [ 0.3, -0.6, 0], 
-        downB2: [ 0.3, -0.7, 0],
+        downB2: [ 0.3, -0.85, 0],
         right1: [0.5, -0.3, 0],
         right2: [0.6, -0.3, 0]
       },
       speed:[0,0,0],
       size: 2
     });
+
 
     GameLogic.AddGameObject(playerEntity);
     scene.add(playerEntity);
@@ -96,6 +98,26 @@ require([ "engine/schedule", "engine/hud",
 
       }
 
+    });
+
+
+    var _playerHurtFunction;
+    GameLogic.OnBoxCollision("Monster", "Player").push(function(m, p, e){
+      if(!_playerHurtFunction){
+        _playerHurtFunction = (function(startTime){
+          return function(e){
+            var elapsed = Date.now() - startTime;
+            p.sceneObject.position[0] -= Math.max(0, (1000 - elapsed)/8000);
+            p.sceneObject.visible = Math.round(Math.sin(elapsed/20)*.5 + .5) === 0;
+            if(elapsed > 2000){
+              p.sceneObject.visible = true;
+              Schedule.event.remove("update",_playerHurtFunction);
+              _playerHurtFunction = null;
+            }
+          };
+        }(Date.now()));
+        Schedule.event.add("update",_playerHurtFunction);
+      }
     });
 
     var testLight = new CubicVR.Light({

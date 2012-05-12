@@ -1,0 +1,33 @@
+{
+  "resource":"assets/images/main-character.png",
+  "numRows": 8,
+  "numCols": 8,
+  "defaultAnimation":"run",
+  "animation" : {
+    "frameCount": 8,
+    "speed": 10,
+    "index": 0
+  },
+  "animations": {
+    "run": {
+      "index":0,
+      "frameCount":8,
+      "speed":10
+    },
+    "jumpUp": {
+      "index":1,
+      "frameCount":1,
+      "speed":10
+    },
+    "jumpDown": {
+      "index":2,
+      "frameCount":1,
+      "speed":10
+    },
+    "slide": {
+      "index":3,
+      "frameCount":1,
+      "speed":10
+    }
+  }
+}

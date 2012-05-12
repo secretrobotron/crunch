@@ -1,6 +1,6 @@
-define([  "engine/component", "engine/schedule", 
+define([  "engine/component", "engine/schedule", "engine/loader",
           "text!shaders/animated_sprite.frag", "text!shaders/animated_sprite.vert"], 
-  function(Component, Schedule, FRAG_SRC, VERT_SRC){
+  function(Component, Schedule, Loader, FRAG_SRC, VERT_SRC){
 
   var mat4 = CubicVR.mat4;
 
@@ -53,12 +53,9 @@ define([  "engine/component", "engine/schedule",
       }
     });
 
-    _this.compile = function(textures){
-      var cubicvrTextures = {};
-      for(var t in textures){
-        if(textures.hasOwnProperty(t)){
-          cubicvrTextures[t] = new CubicVR.CanvasTexture(textures[t]);
-        }
+    Loader.load(Loader.Image(spriteDescription.resource), function(image){
+      var cubicvrTextures = {
+        color: new CubicVR.CanvasTexture(image)
       }
 
       var material = new CubicVR.Material({
@@ -70,7 +67,7 @@ define([  "engine/component", "engine/schedule",
       mesh.calcFaceNormals();
       uv.apply(mesh, material);
       mesh.prepare();
-    };
+    });
 
     var _sceneObject = _this.sceneObject = new CubicVR.SceneObject(mesh);
     _this.collisionPoints = [
