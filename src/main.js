@@ -41,6 +41,14 @@ require([ "engine/schedule", "engine/hud",
       size: 2
     });
 
+    playerEntity.isInsideGround = function() {
+      return this.collisionPoints.downA1.state || this.collisionPoints.downB1.state;
+    }
+
+    playerEntity.isOnGround = function() {
+      return this.collisionPoints.downA2.state || this.collisionPoints.downB2.state;
+    }
+
     GameLogic.AddGameObject(playerEntity);
     scene.add(playerEntity);
 
@@ -66,15 +74,35 @@ require([ "engine/schedule", "engine/hud",
       }
 
       scene.cubicvr.camera.target = [p.sceneObject.position[0],9, 0];
-      scene.cubicvr.camera.position = [p.sceneObject.position[0], 14+Math.sin(p.sceneObject.position[0]*0.1)*3, 15];
+      scene.cubicvr.camera.position = [p.sceneObject.position[0], 14, 15];
 
     } );
 
-    GameLogic.KeyDownEachFrame("Player").push( function(p, keyCode, elapsedTime) {
+    GameLogic.KeyEachFrame("Player").push( function(p, isPressed, keyCode, elapsedTime) {
+      // Slow down the elapsedTime
       elapsedTime = elapsedTime / 20;
-      p.speed[1] += 0.06 * elapsedTime;
+      if (isPressed) {
+        if (p.isOnGround()) {
+          p.canJump = true;
+          p.jumpForceRemaining = 0.9;
+        }
+
+        if (p.canJump === true) {
+          var force = 0.06 * elapsedTime;
+          if (force > p.jumpForceRemaining) {
+            force = p.jumpForceRemaining;
+          }
+          p.speed[1] += force;
+          p.jumpForceRemaining -= force;
+        }
+      } else {
+        // released key up, don't allow jump up again
+        p.canJump = false;
+      }
+
       if (p.speed[1] > 0.3)
         p.speed[1] = 0.3; // velocity max
+
     } );
 
     GameLogic.EachFrame("Physical").push( function(p,elapsedTime) {
@@ -92,7 +120,7 @@ require([ "engine/schedule", "engine/hud",
 
       p.sceneObject.position[1] += p.speed[1] * elapsedTime;
 
-      if (p.collisionPoints.downA1.state || p.collisionPoints.downB1.state) {
+      if (p.isInsideGround()) {
         p.sceneObject.position[1] += 0.05 * elapsedTime;
       } else if (p.collisionPoints.right1.state) {  
         p.sceneObject.position[0] -= 0.05 * elapsedTime;
