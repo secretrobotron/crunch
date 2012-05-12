@@ -58,8 +58,7 @@ define([  "engine/component", "engine/schedule", "engine/loader",
       if(!__materials[spriteDescription.resource]){
         Loader.load(Loader.Image(spriteDescription.resource), function(image){
           var cubicvrTextures = {
-            color: new CubicVR.CanvasTexture(image),
-            alpha: new CubicVR.Texture("assets/images/crate-alpha.jpg")
+            color: new CubicVR.CanvasTexture(image)
           }
 
           var _animationIndex = 0;
@@ -128,7 +127,7 @@ define([  "engine/component", "engine/schedule", "engine/loader",
 
     _this.event.add("entity-changed", function(e){
       var entity = e.data;
-      entity.sceneObject.obj = mesh;
+      entity.sceneObject.bindChild( _sceneObject );
     });
 
   });
