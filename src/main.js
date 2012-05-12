@@ -5,10 +5,11 @@ require([ "engine/schedule", "engine/hud",
           "entities/test-entity",
           "entities/player",
           "engine/loader",
+          "engine/level",
           "engine/game-logic",
           "entities/platform"
         ], 
-        function(Schedule, HUD, Graphics, Scene, TestEntity, PlayerEntity, Loader, GameLogic, PlatformEntity){
+        function(Schedule, HUD, Graphics, Scene, TestEntity, PlayerEntity, Loader, Level, GameLogic, PlatformEntity){
 
   var DEFAULT_FLOOR_Y = 0;
   var DEFAULT_FLOOR_X = -20;
@@ -65,20 +66,15 @@ require([ "engine/schedule", "engine/hud",
     
     scene.cubicvr.bind(testLight);
 
-    var x = DEFAULT_FLOOR_X;
-    for(var i = 0; i < 30; ++i){
-      var h = DEFAULT_FLOOR_H + Math.random() * DEFAULT_FLOOR_H_VAR;
-      var w = 1 + Math.random() * 1;
-      x += w * 2;
-      var floorEntity = new PlatformEntity({
-        position: [x, DEFAULT_FLOOR_Y + h, 0],
-        families : ["floor", "PointCollision"],
-        width: w,
-        height: h
-      });
-      GameLogic.AddGameObject(floorEntity);
-      scene.add(floorEntity);
-    }
+    var level = new Level({
+      levelOrigin: [-20, 1, 0],
+      goalAtY: 100,
+      floorFamilies: ["floor", "PointCollision"],
+    });
+
+    // Transform the setup options into platforms entity
+    // and add them to the scene.
+    level.buildToScene(scene);
 
     scene.cubicvr.camera.target = [0, 3, 0];
     scene.cubicvr.camera.position = [0, 8, 20];
