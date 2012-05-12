@@ -11,10 +11,10 @@ require([ "engine/schedule", "engine/hud",
         ], 
         function(Schedule, HUD, Graphics, Scene, TestEntity, PlayerEntity, Loader, Level, GameLogic, PlatformEntity){
 
-  var DEFAULT_FLOOR_Y = 0;
+  var DEFAULT_FLOOR_Y = -5;
   var DEFAULT_FLOOR_X = -20;
-  var DEFAULT_FLOOR_H = 3;
-  var DEFAULT_FLOOR_H_VAR = 2;
+  var DEFAULT_FLOOR_H = 10;
+  var FLOOR_Y_VAR = 2;
 
   Loader.lock();
 
@@ -68,14 +68,13 @@ require([ "engine/schedule", "engine/hud",
 
     var x = DEFAULT_FLOOR_X;
     for(var i = 0; i < 30; ++i){
-      var h = DEFAULT_FLOOR_H + Math.random() * DEFAULT_FLOOR_H_VAR;
       var w = 1 + Math.random() * 1;
       x += w * 2;
       var floorEntity = new PlatformEntity({
-        position: [x, DEFAULT_FLOOR_Y + h, 0],
+        position: [x, DEFAULT_FLOOR_Y + Math.random() * FLOOR_Y_VAR, 0],
         families : ["floor", "PointCollision"],
         width: w,
-        height: h
+        height: DEFAULT_FLOOR_H
       });
       GameLogic.AddGameObject(floorEntity);
       scene.add(floorEntity);
