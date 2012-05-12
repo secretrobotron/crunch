@@ -32,8 +32,8 @@ require([ "engine/schedule", "engine/hud",
         downA2: [-0.3, -0.7, 0],
         downB1: [ 0.3, -0.6, 0], 
         downB2: [ 0.3, -0.7, 0],
-        right1: [0.5, 0, 0],
-        right2: [0.6, 0, 0]
+        right1: [0.5, -0.3, 0],
+        right2: [0.6, -0.3, 0]
       },
       speed:[0,0,0],
       size: 2
@@ -73,8 +73,8 @@ require([ "engine/schedule", "engine/hud",
         DebugCanvas.DrawBox(everyBody[o].getAABB());
       }
 
-      scene.cubicvr.camera.target = [p.sceneObject.position[0],10, 0];
-      scene.cubicvr.camera.position = [p.sceneObject.position[0], 12+Math.sin(p.sceneObject.position[0]*0.1)*5, 15];
+      scene.cubicvr.camera.target = [p.sceneObject.position[0],9, 0];
+      scene.cubicvr.camera.position = [p.sceneObject.position[0], 14+Math.sin(p.sceneObject.position[0]*0.1)*3, 15];
 
     } );
 
