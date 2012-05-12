@@ -101,9 +101,9 @@ define(["engine/schedule"], function(Schedule){
               , b2 = objByFamily[f2][i2].sceneObject.children[0].getAABB();
             if( module.BoxCollisionTest2d( b1, b2 ) ){
               // invoke every callback for collision evt between these two folks
-              module.logic.boxCollisions[f1][f2].forEach(function(cb){
-                cb( objByFamily[f1][i1], objByFamily[f2][i2], elapsedTime );
-              });
+              (function(a, b, ff1, ff2){module.logic.boxCollisions[ff1][ff2].forEach(function(cb){
+                cb( a, b, elapsedTime );
+              })}(objByFamily[f1][i1], objByFamily[f2][i2], f1, f2));
             }
           }
         }
@@ -176,16 +176,16 @@ define(["engine/schedule"], function(Schedule){
     var elapsedTime = module.elapsedTime = now - module.lastFrameTime;
 
     // precompute all pointCollisions, the state is cached in entity.collisionPoints["pointName"].state
-    ProcessPointCollisions([]);
+    //ProcessPointCollisions([]);
     // process all boxCollision
     ProcessBoxCollisions(elapsedTime);
-    ProcessEachFrame(elapsedTime)
+    //ProcessEachFrame(elapsedTime)
 
-    if (module.logic.eachFrame) {
-      module.logic.eachFrame.forEach(function(callback) {
-          callback(elapsedTime);
-      });
-    }
+    //if (module.logic.eachFrame) {
+    //  module.logic.eachFrame.forEach(function(callback) {
+    //      callback(elapsedTime);
+    //  });
+    //}
     module.lastFrameTime = now;
   };
 

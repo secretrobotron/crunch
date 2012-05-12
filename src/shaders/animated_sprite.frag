@@ -1,5 +1,4 @@
-void main(void) 
-{  
+void main(void) {  
   vec2 texCoord = cubicvr_texCoord();
 
   vec4 color = cubicvr_color(texCoord);
