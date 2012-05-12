@@ -7,7 +7,8 @@ void main(void) {
   vec2 texCoord = cubicvr_texCoord();
 
   vec4 color;
-  float c = worldCoord.y/Y_FACTOR + sin(uShadowIndex) * 0.2 + cos(worldCoord.x*(0.1 + sin(uShadowIndex)*0.2) + uShadowIndex)*0.3;
+  float c = worldCoord.y/Y_FACTOR + sin(uShadowIndex) * 0.2 + cos(worldCoord.x*(0.1 + sin(uShadowIndex)*0.1) + uShadowIndex)*0.3;
+  c += fract(sin(dot(texCoord.xy ,vec2(12.9898,78.233))) * 43758.5453) * 0.1;
   c = clamp(c, 0.0, 0.7);
   color.r = color.g = color.b = c;
   color.a = 1.0;
