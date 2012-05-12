@@ -74,6 +74,10 @@ require([ "engine/schedule", "engine/hud",
         DebugCanvas.DrawBox(everyBody[o].getAABB());
       }
 
+      if (p.sceneObject.position[1] < -1) {
+        p.sceneObject.position[1] = 15;
+      }
+
       scene.cubicvr.camera.target = [p.sceneObject.position[0],9, 0];
       scene.cubicvr.camera.position = [p.sceneObject.position[0], 14, 15];
 
