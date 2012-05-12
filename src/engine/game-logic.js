@@ -1,6 +1,4 @@
-
-
-define( function(){
+define(["engine/schedule"], function(Schedule){
 
   var module = {
       // lists of the game objects 
@@ -99,8 +97,8 @@ define( function(){
       for( var i1 = 0; i1 < module.GetFamily(f1).length;++i1 ){
         for( var f2 in module.logic.boxCollisions[f1] ){
           for( var i2 = 0; i2 < module.GetFamily(f2).length;++i2 ){
-            var b1 = objByFamily[f1][i1].sceneObj.getAABB()
-              , b2 = objByFamily[f2][i2].sceneObj.getAABB();
+            var b1 = objByFamily[f1][i1].sceneObject.children[0].getAABB()
+              , b2 = objByFamily[f2][i2].sceneObject.children[0].getAABB();
             if( module.BoxCollisionTest2d( b1, b2 ) ){
               // invoke every callback for collision evt between these two folks
               module.logic.boxCollisions[f1][f2].forEach(function(cb){
@@ -150,12 +148,14 @@ define( function(){
     );
   };
 
-  ProcessPointCollisions = function (backdropList) {
-    var objList = module.GetFamily("HasCollisionPoints");
-    for(var i=0; i<objList.length;++i ) {
-      for(var j=0; j<backdropList.length;++j ) {
-        for(var cp in objList[i].collisionPoints) {
-          cp.state = module.PointCollisionTest2d(cp.pos, backdropList[j]);
+  ProcessPointCollisions = function () {
+    var pointList = module.GetFamily("HasCollisionPoints");
+    var boxList = module.GetFamily("PointCollision");
+    for(var i=0; i<pointList.length;++i ) {
+      for(var j=0; j<boxList.length;++j ) {
+        for(var cp in pointList[i].collisionPoints) {
+          var currPoint = pointList[i].collisionPoints[cp];
+          currPoint.state = module.PointCollisionTest2d(currPoint.pos, boxList[j].sceneObject.children[0].getAABB());
         }
       }
     }
@@ -167,7 +167,6 @@ define( function(){
   };
   
   module.DoOneFrame = function() {
-    
     var now = Date.now();
     // to avoid weird stuff in first frame
     if (module.lastFrameTime === 0) {

@@ -1,0 +1,10 @@
+{
+  "resource":"assets/images/test_sprite_sheet.png",
+  "numRows": 4,
+  "numCols": 4,
+  "animation" : {
+    "frameCount": 4,
+    "speed": 2,
+    "index": 0
+  }
+}
