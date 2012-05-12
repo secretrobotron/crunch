@@ -24,9 +24,14 @@ require([ "engine/schedule", "engine/hud",
     var scene = new Scene();
 
     var playerEntity = new PlayerEntity({
-      position: [0, 8, 3],
+      position: [3, 8, 3],
       rotation: [0, 180, 0],
-      families : ["Player", "HasCollisionPoints"],
+      families : ["Player", "HasCollisionPoints","Physical"],
+      collisionPoints: {
+        down1: [0,0,0],
+        down2: [0,-0.2,0]
+      },
+      speed:[0,0,0],
       size: 3
     });
     playerEntity.move = function(dx) {
@@ -35,7 +40,7 @@ require([ "engine/schedule", "engine/hud",
       for (var i = 0.001; i < dx; i+=0.001) {
         playerEntity.isCollisionFloor = false;
         playerEntity.sceneObject.position[1] = startY - i;
-        GameLogic.DoOneFrame();
+        //GameLogic.DoOneFrame();
         if (playerEntity.isCollisionFloor) {
           dump("break\n");
           break;
@@ -48,13 +53,14 @@ require([ "engine/schedule", "engine/hud",
         playerEntity.sceneObject.position[1] = playerEntity.sceneObject.position[1] + 0.1;
         playerEntity.sceneObject.dirty = true;
         playerEntity.sceneObject.children[0].dirty = true;
-        GameLogic.DoOneFrame();
+        //GameLogic.DoOneFrame();
         break;
       }
       playerEntity.sceneObject.position[0] += dx;
       //GameLogic.DoOneFrame();
       //if (
     };
+
     GameLogic.AddGameObject(playerEntity);
     scene.add(playerEntity);
 
@@ -65,6 +71,28 @@ require([ "engine/schedule", "engine/hud",
         hero.isCollisionFloor = true;
       }
     );
+
+    GameLogic.EachFrame("Player").push( function(p) {
+      p.sceneObject.position[0] += 0.12;
+    } );
+
+    GameLogic.EachFrame("Physical").push( function(p,elapsedTime) {
+      if (!p.collisionPoints.down2.state){
+        p.speed[1] -= 0.03;
+        p.sceneObject.position[1] += p.speed[1];
+        console.log("in the air");
+      } else {
+        p.speed[1] = 0;
+        console.log("grounded");
+      }
+
+      if (p.collisionPoints.down1.state) {
+        p.sceneObject.position[1] += 0.1;
+        console.log("into the ground!");
+      }
+
+      console.log(p.sceneObject.position[1]);
+    });
 
     var testLight = new CubicVR.Light({
       type: "area",
@@ -78,7 +106,7 @@ require([ "engine/schedule", "engine/hud",
     scene.cubicvr.bind(testLight);
 
     var x = DEFAULT_FLOOR_X;
-    for(var i = 0; i < 40; ++i){
+    for(var i = 0; i < 30; ++i){
       var h = DEFAULT_FLOOR_H + Math.random() * DEFAULT_FLOOR_H_VAR;
       var w = 1 + Math.random() * 1;
       x += w * 2;
@@ -107,7 +135,7 @@ require([ "engine/schedule", "engine/hud",
       scene.cubicvr.camera.position[0] += dx;
       scene.cubicvr.camera.target[0] += dx;
       //pointLight.position[0] += dx;
-      playerEntity.move(dx);
+      //playerEntity.move(dx);
       GameLogic.DoOneFrame();
     });
     

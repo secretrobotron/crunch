@@ -16,6 +16,8 @@ define(["engine/entity", "components/sprite", "engine/loader", "text!sprites/pla
         }),
       ],
       families: setupOptions.families,
+      collisionPoints: setupOptions.collisionPoints,
+      speed: setupOptions.speed,
       position: setupOptions.position,
       rotation: setupOptions.rotation
     });

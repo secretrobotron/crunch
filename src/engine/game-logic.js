@@ -97,8 +97,8 @@ define(["engine/schedule"], function(Schedule){
       for( var i1 = 0; i1 < module.GetFamily(f1).length;++i1 ){
         for( var f2 in module.logic.boxCollisions[f1] ){
           for( var i2 = 0; i2 < module.GetFamily(f2).length;++i2 ){
-            var b1 = objByFamily[f1][i1].sceneObject.children[0].getAABB()
-              , b2 = objByFamily[f2][i2].sceneObject.children[0].getAABB();
+            var b1 = objByFamily[f1][i1].getAABB()
+              , b2 = objByFamily[f2][i2].getAABB();
             if( module.BoxCollisionTest2d( b1, b2 ) ){
               // invoke every callback for collision evt between these two folks
               (function(a, b, ff1, ff2){module.logic.boxCollisions[ff1][ff2].forEach(function(cb){
@@ -152,10 +152,16 @@ define(["engine/schedule"], function(Schedule){
     var pointList = module.GetFamily("HasCollisionPoints");
     var boxList = module.GetFamily("PointCollision");
     for(var i=0; i<pointList.length;++i ) {
-      for(var j=0; j<boxList.length;++j ) {
-        for(var cp in pointList[i].collisionPoints) {
-          var currPoint = pointList[i].collisionPoints[cp];
-          currPoint.state = module.PointCollisionTest2d(currPoint.pos, boxList[j].sceneObject.children[0].getAABB());
+      for(var cp in pointList[i].collisionPoints) {
+        pointList[i].collisionPoints[cp].state = false;
+        for(var j=0; j<boxList.length;++j ) {
+        var currPoint = pointList[i].collisionPoints[cp];
+        var worldPosition = currPoint.slice();
+        var objPos = pointList[i].getAABB()[0];
+        worldPosition[0]+=objPos[0];
+        worldPosition[1]+=objPos[1];
+        worldPosition[2]+=objPos[2];
+        if(!currPoint.state) {currPoint.state = module.PointCollisionTest2d(worldPosition, boxList[j].getAABB())};
         }
       }
     }
@@ -163,7 +169,7 @@ define(["engine/schedule"], function(Schedule){
 
   // helper function to test if a game object touches the ground
   module.IsGrounded = function(gameObject){
-    return (gameObject.collisionPoints && (gameObject.collisionPoints.down2===true));
+    return (gameObject.collisionPoints && (gameObject.collisionPoints.down2.state===true));
   };
   
   module.DoOneFrame = function() {
@@ -176,10 +182,10 @@ define(["engine/schedule"], function(Schedule){
     var elapsedTime = module.elapsedTime = now - module.lastFrameTime;
 
     // precompute all pointCollisions, the state is cached in entity.collisionPoints["pointName"].state
-    //ProcessPointCollisions([]);
+    ProcessPointCollisions([]);
     // process all boxCollision
     ProcessBoxCollisions(elapsedTime);
-    //ProcessEachFrame(elapsedTime)
+    ProcessEachFrame(elapsedTime)
 
     //if (module.logic.eachFrame) {
     //  module.logic.eachFrame.forEach(function(callback) {

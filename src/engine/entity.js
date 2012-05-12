@@ -13,6 +13,27 @@ define(["engine/event"], function(Event){
     this.components = {};
     this.name = description.name || null;
     this.families = description.families;
+    this.collisionPoints = description.collisionPoints;
+    this.speed = description.speed;
+
+    this.getAABB = function(){
+
+      var aabb = [_sceneObject.position.slice(), _sceneObject.position.slice()];
+
+      if(_sceneObject.obj){
+        aabb = _sceneObject.getAABB();
+        aabb = [
+          aabb[0].slice(),
+          aabb[1].slice()
+        ];
+      }
+      else if(_sceneObject.children.length){
+        aabb = _sceneObject.children[0].getAABB();
+      }
+
+      return aabb;
+
+    };
 
     var _sceneObject = this.sceneObject = new CubicVR.SceneObject();
 
