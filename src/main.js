@@ -28,7 +28,7 @@ require([ "engine/schedule", "engine/hud",
     GameLogic.AddGameObject(playerEntity);
     scene.add(playerEntity);
 
-    GameLogic.OnBoxCollision("Player","Foo").push(
+    GameLogic.OnBoxCollision("Player","floor").push(
       function(hero,enemy) {
         console.log("col");
       }
@@ -52,9 +52,11 @@ require([ "engine/schedule", "engine/hud",
       x += w * 2;
       var floorEntity = new FloorEntity({
         position: [x, DEFAULT_FLOOR_Y + h, 0],
+        families : ["floor"],
         width: w,
         height: h
       });
+      GameLogic.AddGameObject(floorEntity);
       scene.add(floorEntity);
     }
 

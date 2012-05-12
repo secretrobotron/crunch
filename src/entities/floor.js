@@ -9,6 +9,7 @@ define(["engine/entity", "components/box", "engine/loader"],
 
     var entity = new Entity({
       name: "player",
+      families: setupOptions.families,
       components: [
         new BoxComponent({
           size: [setupOptions.width, setupOptions.height, DEFAULT_FLOOR_DEPTH],
