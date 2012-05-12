@@ -1,29 +1,28 @@
-define([], function(){
+define(["dat/gui/GUI"], function(DatGUI){
   
-  function HUD(){
+  var __bigMessage = document.getElementById("big-message-wrapper");
 
-    var _bigMessage = document.getElementById("big-message-wrapper");
+  __bigMessage.classList.add("can-fade");
 
-    _bigMessage.classList.add("can-fade");
+  var __datgui = new DatGUI();
 
-    return {
-      showBigMessage: function(msg){
-        _bigMessage.firstChild.innerHTML = msg;
-        _bigMessage.style.visibility = "visible";
-        setTimeout(function(){
-          _bigMessage.classList.add("fade-in");
-        }, 0);
-      },
-      hideBigMessage: function(){
-        _bigMessage.classList.remove("fade-in");
-        setTimeout(function(){
-          _bigMessage.style.visibility = "hidden";
-        }, 1000);
-      }
-    };
+  return {
+    datgui: __datgui,
 
-  }
+    showBigMessage: function(msg){
+      __bigMessage.firstChild.innerHTML = msg;
+      __bigMessage.style.visibility = "visible";
+      setTimeout(function(){
+        __bigMessage.classList.add("fade-in");
+      }, 0);
+    },
+    hideBigMessage: function(){
+      __bigMessage.classList.remove("fade-in");
+      setTimeout(function(){
+        __bigMessage.style.visibility = "hidden";
+      }, 1000);
+    }
 
-  return HUD;
+  };
 
 });

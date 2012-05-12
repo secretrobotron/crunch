@@ -44,6 +44,7 @@ define(["engine/observe"], function(Observe){
           //CubicVR.setFixedAspect(window.innerWidth/window.innerHeight);
           CubicVR.addResizeable(mainCanvas);
           window.addEventListener("resize", CubicVR.GLCore.onResize, false);
+          Graphics.observe.notify("ready");
           events.success();
         }, events.failure);
     },

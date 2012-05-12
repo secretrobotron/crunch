@@ -5,18 +5,17 @@ require([ "engine/schedule", "engine/hud",
           "entities/test-entity",
           "entities/player",
           "engine/loader",
+          "engine/level",
           "engine/game-logic",
           "entities/platform",
           "engine/debug-canvas"
         ], 
-        function(Schedule, HUD, Graphics, Scene, TestEntity, PlayerEntity, Loader, GameLogic, PlatformEntity, DebugCanvas){
+        function(Schedule, HUD, Graphics, Scene, TestEntity, PlayerEntity, Loader, Level, GameLogic, PlatformEntity, DebugCanvas){
 
-  var DEFAULT_FLOOR_Y = 1;
+  var DEFAULT_FLOOR_Y = 0;
   var DEFAULT_FLOOR_X = -20;
-  var DEFAULT_FLOOR_H = 2;
+  var DEFAULT_FLOOR_H = 3;
   var DEFAULT_FLOOR_H_VAR = 2;
-
-  var _hud = new HUD();
 
   Loader.lock();
 
@@ -77,7 +76,6 @@ require([ "engine/schedule", "engine/hud",
       scene.cubicvr.camera.target = [p.sceneObject.position[0],10, 0];
       scene.cubicvr.camera.position = [p.sceneObject.position[0], 12+Math.sin(p.sceneObject.position[0]*0.1)*5, 15];
 
-
     } );
 
     GameLogic.EachFrame("Physical").push( function(p,elapsedTime) {
@@ -97,6 +95,7 @@ require([ "engine/schedule", "engine/hud",
 
       if (p.collisionPoints.right1.state) {  
         p.sceneObject.position[1] -= 0.05;
+
       }
 
     });
@@ -112,20 +111,18 @@ require([ "engine/schedule", "engine/hud",
     
     scene.cubicvr.bind(testLight);
 
-    var x = DEFAULT_FLOOR_X;
-    for(var i = 0; i < 30; ++i){
-      var h = DEFAULT_FLOOR_H + Math.random() * DEFAULT_FLOOR_H_VAR;
-      var w = 1 + Math.random() * 1;
-      x += w * 2;
-      var floorEntity = new PlatformEntity({
-        position: [x, DEFAULT_FLOOR_Y + h, 0],
-        families : ["floor", "PointCollision"],
-        width: w,
-        height: h
-      });
-      GameLogic.AddGameObject(floorEntity);
-      scene.add(floorEntity);
-    }
+    var level = new Level({
+      // Where the levle starts in space
+      levelOrigin: [-20, 1, 0],
+      // How long the level is
+      goalAtY: 60,
+      // The families given to the floor used for GameLogic
+      floorFamilies: ["floor", "PointCollision"],
+    });
+
+    // Transform the setup options into platforms entity
+    // and add them to the scene.
+    level.buildToScene(scene);
 
 
 
@@ -154,15 +151,15 @@ require([ "engine/schedule", "engine/hud",
   // Start graphics subsystem
   Graphics.setup({
     success: function(){
-      _hud.showBigMessage("Loading...");
+      HUD.showBigMessage("Loading...");
       Graphics.addScene(createTestScene());
       Schedule.start();
       Loader.unlock(function(){
-        _hud.hideBigMessage();
+        HUD.hideBigMessage();
       });
     },
     failure: function(){
-      _hud.showBigMessage("Startup Error: Please make sure your browser is WebGL-capable.");
+      HUD.showBigMessage("Startup Error: Please make sure your browser is WebGL-capable.");
     }
   });
 
