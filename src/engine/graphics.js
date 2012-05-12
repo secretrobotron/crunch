@@ -39,6 +39,8 @@ define(["engine/observe"], function(Observe){
       Graphics.viewport.width = mainCanvas.width = window.innerWidth;
       Graphics.viewport.height = mainCanvas.height = window.innerHeight;
 
+      Graphics.canvas = mainCanvas;
+
       CubicVR.start(mainCanvas, function(){
           CubicVR.setSoftShadows(true);
           //CubicVR.setFixedAspect(window.innerWidth/window.innerHeight);
@@ -52,7 +54,9 @@ define(["engine/observe"], function(Observe){
     viewport: {
       width: 0,
       height: 0
-    }
+    },
+
+    canvas: null
 
   };
 

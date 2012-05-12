@@ -10,7 +10,7 @@ define(["engine/schedule", "engine/debug-canvas"], function(Schedule,DebugCanvas
       }
       // lists of gameplay rules
     , logic: {
-          keyDownEachFrame : []
+          keyEachFrame : []
         , eachFrame : []
         , boxCollisions : []
       }
@@ -84,11 +84,11 @@ define(["engine/schedule", "engine/debug-canvas"], function(Schedule,DebugCanvas
     return module.logic.eachFrame[familyName];
   }
 
-  module.KeyDownEachFrame = function(familyName) {
-    if ( !module.logic.keyDownEachFrame[familyName]){
-      module.logic.keyDownEachFrame[familyName] = [];
+  module.KeyEachFrame = function(familyName) {
+    if ( !module.logic.keyEachFrame[familyName]){
+      module.logic.keyEachFrame[familyName] = [];
     }
-    return module.logic.keyDownEachFrame[familyName];
+    return module.logic.keyEachFrame[familyName];
   }
 
   ProcessEachFrame = function(elapsedTime) {
@@ -101,14 +101,12 @@ define(["engine/schedule", "engine/debug-canvas"], function(Schedule,DebugCanvas
     }
   }
 
-  ProcessKeyDownEachFrame = function(keyCode, elapsedTime) {
-    if (module.keyState[keyCode] !== true)
-      return;
-    for (var familyName in module.logic.keyDownEachFrame) {
+  ProcessKeyEachFrame = function(keyCode, elapsedTime) {
+    for (var familyName in module.logic.keyEachFrame) {
       var family = module.GetFamily(familyName);
       for( var objIdx = 0; objIdx < family.length; ++objIdx ) {
-        for( var i=0; i<module.logic.keyDownEachFrame[familyName].length;++i )
-        module.logic.keyDownEachFrame[familyName][i](family[objIdx],keyCode,elapsedTime);
+        for( var i=0; i<module.logic.keyEachFrame[familyName].length;++i )
+        module.logic.keyEachFrame[familyName][i](family[objIdx],module.keyState[keyCode]===true,keyCode,elapsedTime);
       }
     }
   }
@@ -248,13 +246,18 @@ define(["engine/schedule", "engine/debug-canvas"], function(Schedule,DebugCanvas
     }
 
     var elapsedTime = module.elapsedTime = now - module.lastFrameTime;
+    if (elapsedTime > 100) {
+      // Max frame skip
+      console.log(elapsedTime);
+      elapsedTime = 100;
+    }
 
     // precompute all pointCollisions, the state is cached in entity.collisionPoints["pointName"].state
     ProcessPointCollisions([]);
     // process all boxCollision
     ProcessBoxCollisions(elapsedTime);
     ProcessEachFrame(elapsedTime);
-    ProcessKeyDownEachFrame(KEY_UP, elapsedTime);
+    ProcessKeyEachFrame(KEY_UP, elapsedTime);
 
     //if (module.logic.eachFrame) {
     //  module.logic.eachFrame.forEach(function(callback) {

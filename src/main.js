@@ -2,7 +2,6 @@ window.dump = window.dump || function(){};
 
 require([ "engine/schedule", "engine/hud",
           "engine/graphics", "engine/scene",
-          "entities/test-entity",
           "entities/player",
           "engine/loader",
           "engine/level",
@@ -10,7 +9,9 @@ require([ "engine/schedule", "engine/hud",
           "entities/platform",
           "engine/debug-canvas"
         ], 
-        function(Schedule, HUD, Graphics, Scene, TestEntity, PlayerEntity, Loader, Level, GameLogic, PlatformEntity, DebugCanvas){
+        function( Schedule, HUD, Graphics, Scene, 
+                  PlayerEntity, Loader, 
+                  Level, GameLogic, PlatformEntity, DebugCanvas){
 
   var DEFAULT_FLOOR_Y = -5;
   var DEFAULT_FLOOR_X = -20;
@@ -29,20 +30,28 @@ require([ "engine/schedule", "engine/hud",
     var scene = new Scene();
 
     var playerEntity = new PlayerEntity({
-      position: [0, 8, 0],
+      position: [0, 58, 0],
       rotation: [0, 180, 0],
       families : ["Player", "HasCollisionPoints","Physical"],
       collisionPoints: { // TODO fix the collisionPoints positions
         downA1: [-0.3, -0.6, 0], 
-        downA2: [-0.3, -0.7, 0],
+        downA2: [-0.3, -0.85, 0],
         downB1: [ 0.3, -0.6, 0], 
-        downB2: [ 0.3, -0.7, 0],
+        downB2: [ 0.3, -0.85, 0],
         right1: [0.5, -0.3, 0],
         right2: [0.6, -0.3, 0]
       },
       speed:[0,0,0],
       size: 2
     });
+
+    var isInsideGround = function(p) {
+      return p.collisionPoints.downA1.state || p.collisionPoints.downB1.state;
+    };
+
+    var isOnGround = function(p) {
+      return p.collisionPoints.downA2.state || p.collisionPoints.downB2.state;
+    };
 
     GameLogic.AddGameObject(playerEntity);
     scene.add(playerEntity);
@@ -68,8 +77,13 @@ require([ "engine/schedule", "engine/hud",
         DebugCanvas.DrawBox(everyBody[o].getAABB());
       }
 
+      if (p.sceneObject.position[1] < -1) {
+        p.sceneObject.position[1] = 15;
+      }
+
       scene.cubicvr.camera.target = [p.sceneObject.position[0],9, 0];
-      scene.cubicvr.camera.position = [p.sceneObject.position[0], 14+Math.sin(p.sceneObject.position[0]*0.1)*3, 15];
+      scene.cubicvr.camera.position = [p.sceneObject.position[0], 14, 15];  
+      //scene.cubicvr.camera.position = [p.sceneObject.position[0], 14+Math.sin(p.sceneObject.position[0]*0.1)*3, 15];
       if (p.sceneObject.position[1] < 0) {
         if(p.isDead) {
 
@@ -89,15 +103,34 @@ require([ "engine/schedule", "engine/hud",
           p.isDead = true;
         }
       }
-      
 
     } );
 
-    GameLogic.KeyDownEachFrame("Player").push( function(p, keyCode, elapsedTime) {
+    GameLogic.KeyEachFrame("Player").push( function(p, isPressed, keyCode, elapsedTime) {
+      // Slow down the elapsedTime
       elapsedTime = elapsedTime / 20;
-      p.speed[1] += 0.06 * elapsedTime;
+      if (isPressed) {
+        if (isOnGround(p)) {
+          p.canJump = true;
+          p.jumpForceRemaining = 0.9;
+        }
+
+        if (p.canJump === true) {
+          var force = 0.06 * elapsedTime;
+          if (force > p.jumpForceRemaining) {
+            force = p.jumpForceRemaining;
+          }
+          p.speed[1] += force;
+          p.jumpForceRemaining -= force;
+        }
+      } else {
+        // released key up, don't allow jump up again
+        p.canJump = false;
+      }
+
       if (p.speed[1] > 0.3)
         p.speed[1] = 0.3; // velocity max
+
     } );
 
     GameLogic.EachFrame("Physical").push( function(p,elapsedTime) {
@@ -106,6 +139,9 @@ require([ "engine/schedule", "engine/hud",
       if (!p.collisionPoints.downA2.state || !p.collisionPoints.downB2.state ){
         // Gravity
         p.speed[1] -= 0.03 * elapsedTime;
+        if (p.speed[1] < -0.4) {
+          p.speed[1] = -0.4;
+        }
       } else {
         // Stop on ground collision
         if(p.speed[1] < 0) {
@@ -115,12 +151,16 @@ require([ "engine/schedule", "engine/hud",
 
       p.sceneObject.position[1] += p.speed[1] * elapsedTime;
 
-      if (p.collisionPoints.downA1.state || p.collisionPoints.downB1.state) {
+      if (isInsideGround(p)) {
         p.sceneObject.position[1] += 0.05 * elapsedTime;
       } else if (p.collisionPoints.right1.state) {  
         p.sceneObject.position[0] -= 0.05 * elapsedTime;
       }
 
+    });
+
+    GameLogic.OnBoxCollision("Monster", "Player").push(function(m, p, e){
+      p.hurt();
     });
 
     var testLight = new CubicVR.Light({
@@ -157,13 +197,18 @@ require([ "engine/schedule", "engine/hud",
 
     var cameraIndex = 0;
 
+    var firstFrame = true;
+
     Schedule.event.add("update", function(e){
       var dx = e.data.dt / 300;
       scene.cubicvr.camera.position[0] += dx;
       scene.cubicvr.camera.target[0] += dx;
       //pointLight.position[0] += dx;
       //playerEntity.move(dx);
-      GameLogic.DoOneFrame();
+      if(!firstFrame){
+        GameLogic.DoOneFrame();
+      }
+      firstFrame = false;
     });
     
     return scene;
