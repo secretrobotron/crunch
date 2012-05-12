@@ -21,6 +21,9 @@ require([ "engine/schedule", "engine/hud",
   Loader.lock();
 
   var wilhelmCry = null;
+  Loader.load(Loader.Audio("assets/audio/WilhelmScream.ogg"), function(audio){
+    wilhelmCry = audio;
+  });
 
 
   DebugCanvas.SetEnabled(false);
@@ -89,9 +92,8 @@ require([ "engine/schedule", "engine/hud",
       scene.cubicvr.camera.position = [p.sceneObject.position[0], 14, 15];  
       //scene.cubicvr.camera.position = [p.sceneObject.position[0], 14+Math.sin(p.sceneObject.position[0]*0.1)*3, 15];
       if (p.sceneObject.position[1] < 0) {
-        var sound = document.getElementById("wilhelm");
-        if (sound) {
-          sound.cloneNode().play();
+        if (wilhelmCry) {
+          wilhelmCry.cloneNode().play();
         }        
       }
 
