@@ -1,5 +1,5 @@
-define(["engine/entity", "components/box", "engine/loader"], 
-  function(Entity, BoxComponent, Loader){
+define(["engine/entity", "components/platform", "engine/loader"], 
+  function(Entity, PlatformComponent, Loader){
 
   var DEFAULT_FLOOR_DEPTH = 1;
 
@@ -8,10 +8,10 @@ define(["engine/entity", "components/box", "engine/loader"],
     setupOptions = setupOptions || {};
 
     var entity = new Entity({
-      name: "player",
+      name: "platform",
       families: setupOptions.families,
       components: [
-        new BoxComponent({
+        new PlatformComponent({
           size: [setupOptions.width, setupOptions.height, DEFAULT_FLOOR_DEPTH],
         }),
       ],
@@ -19,7 +19,7 @@ define(["engine/entity", "components/box", "engine/loader"],
     });
 
     Loader.load(Loader.Image("assets/images/2282-diffuse.jpg"), function(image){
-      entity.components["box"].compile({
+      entity.components["platform"].compile({
         color: image,
       });
     });
