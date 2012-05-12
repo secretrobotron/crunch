@@ -108,7 +108,7 @@ define(["engine/schedule", "engine/debug-canvas"], function(Schedule,DebugCanvas
       var family = module.GetFamily(familyName);
       for( var objIdx = 0; objIdx < family.length; ++objIdx ) {
         for( var i=0; i<module.logic.keyDownEachFrame[familyName].length;++i )
-        module.logic.keyDownEachFrame[familyName][i](keyCode, family[objIdx],elapsedTime);
+        module.logic.keyDownEachFrame[familyName][i](family[objIdx],keyCode,elapsedTime);
       }
     }
   }

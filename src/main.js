@@ -49,8 +49,6 @@ require([ "engine/schedule", "engine/hud",
     GameLogic.EachFrame("Player").push( function(p, elapsedTime) {
       if(!p.collisionPoints.right2.state) {
         p.sceneObject.position[0] += 0.1;
-      } else {
-        p.speed[1] = 0.5;
       }
 
       if(p.speed[1] < -0.001) {
@@ -74,28 +72,32 @@ require([ "engine/schedule", "engine/hud",
 
     } );
 
-    GameLogic.KeyDownEachFrame("Player").push( function(keyCode, elapsedTime) {
-      console.log("player key down\n");
+    GameLogic.KeyDownEachFrame("Player").push( function(p, keyCode, elapsedTime) {
+      elapsedTime = elapsedTime / 20;
+      p.speed[1] += 0.06 * elapsedTime;
+      if (p.speed[1] > 0.3)
+        p.speed[1] = 0.3; // velocity max
     } );
 
     GameLogic.EachFrame("Physical").push( function(p,elapsedTime) {
+      // Slow down the elapsedTime
+      elapsedTime = elapsedTime / 20;
       if (!p.collisionPoints.downA2.state || !p.collisionPoints.downB2.state ){
-        p.speed[1] -= 0.03;
+        // Gravity
+        p.speed[1] -= 0.03 * elapsedTime;
       } else {
+        // Stop on ground collision
         if(p.speed[1] < 0) {
           p.speed[1] = 0;
         }
       }
 
-      p.sceneObject.position[1] += p.speed[1];
+      p.sceneObject.position[1] += p.speed[1] * elapsedTime;
 
       if (p.collisionPoints.downA1.state || p.collisionPoints.downB1.state) {
-        p.sceneObject.position[1] += 0.05;
-      }
-
-      if (p.collisionPoints.right1.state) {  
-        p.sceneObject.position[1] -= 0.05;
-
+        p.sceneObject.position[1] += 0.05 * elapsedTime;
+      } else if (p.collisionPoints.right1.state) {  
+        p.sceneObject.position[0] -= 0.05 * elapsedTime;
       }
 
     });
@@ -135,7 +137,7 @@ require([ "engine/schedule", "engine/hud",
       // Where the levle starts in space
       levelOrigin: [-20, 1, 0],
       // How long the level is
-      goalAtY: 60,
+      goalAtY: 600,
       // The families given to the floor used for GameLogic
       floorFamilies: ["floor", "PointCollision"],
     });
