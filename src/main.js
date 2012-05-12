@@ -19,6 +19,9 @@ require([ "engine/schedule", "engine/hud",
 
   Loader.lock();
 
+  var wilhelmCry = null;
+
+
   DebugCanvas.SetEnabled(false);
 
   function createTestScene(){
@@ -67,6 +70,26 @@ require([ "engine/schedule", "engine/hud",
 
       scene.cubicvr.camera.target = [p.sceneObject.position[0],9, 0];
       scene.cubicvr.camera.position = [p.sceneObject.position[0], 14+Math.sin(p.sceneObject.position[0]*0.1)*3, 15];
+      if (p.sceneObject.position[1] < 0) {
+        if(p.isDead) {
+
+        } else {
+          var sound = document.getElementById("wilhelm");
+
+          //alert("you are about to hear something 3");
+          if (sound) {
+             //alert("you are about to hear something 2");
+            if(sound.play) {
+              //alert("you are about to hear something 1");
+            }
+            sound.play();
+          }
+          //else alert(" audio did nah work man...");
+        
+          p.isDead = true;
+        }
+      }
+      
 
     } );
 
