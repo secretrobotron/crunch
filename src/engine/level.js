@@ -19,26 +19,26 @@ define(["./game-logic", "entities/platform", "entities/monster"], function(GameL
         scene.add(floorEntity);
       }
 
-      // var monsters = 20;
-      // while(monsters--){
-      //   var monsterEntity = new MonsterEntity({
-      //     position: [Math.random()*setupOptions.goalAtY, 15, 0],
-      //     rotation: [0, 180, 0],
-      //     families : ["Monster", "HasCollisionPoints", "Physical"],
-      //     collisionPoints: { // TODO fix the collisionPoints positions
-      //       downA1: [-0.3, -0.6, 0], 
-      //       downA2: [-0.3, -0.85, 0],
-      //       downB1: [ 0.3, -0.6, 0], 
-      //       downB2: [ 0.3, -0.85, 0],
-      //       right1: [0.5, -0.3, 0],
-      //       right2: [0.6, -0.3, 0]
-      //     },
-      //     speed:[0,0,0],
-      //     size: 2
-      //   });
-      //   GameLogic.AddGameObject(monsterEntity);
-      //   scene.add(monsterEntity);
-      // }
+      var monsters = 20;
+      while(monsters--){
+        var monsterEntity = new MonsterEntity({
+          position: [Math.random()*setupOptions.goalAtY, 150, 0],
+          rotation: [0, 180, 0],
+          families : ["Monster", "HasCollisionPoints", "Physical"],
+          collisionPoints: { // TODO fix the collisionPoints positions
+            downA1: [-0.3, -0.6, 0], 
+            downA2: [-0.3, -0.85, 0],
+            downB1: [ 0.3, -0.6, 0], 
+            downB2: [ 0.3, -0.85, 0],
+            right1: [0.5, -0.3, 0],
+            right2: [0.6, -0.3, 0]
+          },
+          speed:[0,0,0],
+          size: 2
+        });
+        GameLogic.AddGameObject(monsterEntity);
+        scene.add(monsterEntity);
+      }
     };
 
     return this;

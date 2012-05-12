@@ -27,7 +27,7 @@ require([ "engine/schedule", "engine/hud",
     var scene = new Scene();
 
     var playerEntity = new PlayerEntity({
-      position: [0, 8, 0],
+      position: [0, 58, 0],
       rotation: [0, 180, 0],
       families : ["Player", "HasCollisionPoints","Physical"],
       collisionPoints: { // TODO fix the collisionPoints positions
