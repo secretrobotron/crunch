@@ -97,8 +97,8 @@ define(["engine/schedule"], function(Schedule){
       for( var i1 = 0; i1 < module.GetFamily(f1).length;++i1 ){
         for( var f2 in module.logic.boxCollisions[f1] ){
           for( var i2 = 0; i2 < module.GetFamily(f2).length;++i2 ){
-            var b1 = objByFamily[f1][i1].sceneObject.getAABB()
-              , b2 = objByFamily[f2][i2].sceneObject.getAABB();
+            var b1 = objByFamily[f1][i1].sceneObject.children[0].getAABB()
+              , b2 = objByFamily[f2][i2].sceneObject.children[0].getAABB();
             if( module.BoxCollisionTest2d( b1, b2 ) ){
               // invoke every callback for collision evt between these two folks
               module.logic.boxCollisions[f1][f2].forEach(function(cb){
