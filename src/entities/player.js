@@ -7,6 +7,8 @@ define(["engine/entity", "components/sprite", "engine/loader", "text!sprites/pla
 
     setupOptions = setupOptions || {};
 
+
+
     var entity = new Entity({
       name: "player",
       components: [
@@ -19,8 +21,12 @@ define(["engine/entity", "components/sprite", "engine/loader", "text!sprites/pla
       collisionPoints: setupOptions.collisionPoints,
       speed: setupOptions.speed,
       position: setupOptions.position,
-      rotation: setupOptions.rotation
+      rotation: setupOptions.rotation, 
     });
+
+    entity.setAnimation = function(animName) {
+      entity.components["sprite"].currentAnimation = animName;
+    }
 
     Loader.load(Loader.Image(SPRITE_JSON.resource), function(image){
       entity.components["sprite"].compile({

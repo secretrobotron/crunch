@@ -2,12 +2,14 @@
 <html>
   <head>
     <title>CRUNCH</title>
+    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
     <link rel="stylesheet" href="css/style.css" />
     <script type="text/javascript" src="lib/CubicVR.js"></script>
     <script type="text/javascript" src="lib/require.min.js" data-main="src/main"></script>
   </head>
   <body>
     <canvas id="main-canvas"></canvas>
+    <canvas id="debug-canvas" width=500 height=500 style="position:absolute; left:0; top:0px; border: 2px solid red; z-index:9000"></canvas>
     <div id="big-message-wrapper"><div id="big-message"></div></div>
   </body>  
 </html>

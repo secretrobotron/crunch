@@ -40,6 +40,8 @@ define([  "engine/component", "engine/schedule",
     var _spriteRows = spriteDescription.numRows;
     var _spriteLength = _spriteCols * _spriteRows;
 
+    _this.currentAnimation = spriteDescription.defaultAnimation;
+
     var _animShader = new CubicVR.CustomShader({
       vertex: VERT_SRC,
       fragment: FRAG_SRC,
@@ -83,12 +85,18 @@ define([  "engine/component", "engine/schedule",
     }
 
     var _animationIndex = 0;
-    var _animationOffset = spriteDescription.animation.index;
-    var _animationLength = spriteDescription.animation.frameCount;
-    var _animaionSpeed = spriteDescription.animation.speed;
-
+    
     Schedule.event.add("update", function(e){
       if(_animShader.ready()){
+
+        if(!_this.currentAnimation) {
+          return;
+        } 
+
+        var _animationOffset = spriteDescription.animations[_this.currentAnimation].index;
+        var _animationLength = spriteDescription.animations[_this.currentAnimation].frameCount;
+        var _animaionSpeed = spriteDescription.animations[_this.currentAnimation].speed;
+
         _animationIndex += e.data.dt / 1000 * _animaionSpeed;
         _animationIndex = _animationIndex % _animationLength;
 
