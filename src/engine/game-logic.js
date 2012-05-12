@@ -1,4 +1,4 @@
-define(["engine/schedule"], function(Schedule){
+define(["engine/schedule", "engine/debug-canvas"], function(Schedule,DebugCanvas){
 
   var module = {
       // lists of the game objects 
@@ -153,23 +153,55 @@ define(["engine/schedule"], function(Schedule){
     var boxList = module.GetFamily("PointCollision");
     for(var i=0; i<pointList.length;++i ) {
       for(var cp in pointList[i].collisionPoints) {
-        pointList[i].collisionPoints[cp].state = false;
-        for(var j=0; j<boxList.length;++j ) {
         var currPoint = pointList[i].collisionPoints[cp];
-        var worldPosition = currPoint.slice();
-        var objPos = pointList[i].getAABB()[0];
-        worldPosition[0]+=objPos[0];
-        worldPosition[1]+=objPos[1];
-        worldPosition[2]+=objPos[2];
-        if(!currPoint.state) {currPoint.state = module.PointCollisionTest2d(worldPosition, boxList[j].getAABB())};
+        currPoint.state = false;
+        for(var j=0; j<boxList.length;++j ) {
+          var worldPosition = currPoint.slice();
+          var objPosAB = pointList[i].getAABB();
+          var objPosA = objPosAB[0];
+          var objPosB = objPosAB[1];
+          worldPosition[0]+=(objPosA[0]+objPosB[0])/2.0;
+          worldPosition[1]+=(objPosA[1]+objPosB[1])/2.0;
+          //worldPosition[2]+=(objPosA[2]+objPosB[2])/2.0;
+          if(!currPoint.state) {
+            currPoint.state = module.PointCollisionTest2d(worldPosition, boxList[j].getAABB()); 
+          };
         }
+        if(currPoint.state) DebugCanvas.DrawPoint(worldPosition,"white");
+        else DebugCanvas.DrawPoint(worldPosition,"green");
       }
     }
   }
 
+  unittest = function() {
+    var aabb = [[1,1,-1],[10,10,10]];
+    // dont collid
+    var p1 = [0,0,0];
+    var p2 = [-1,0,0];
+    var p3 = [0,5,0];
+    var p4 = [5,0,0];
+    var p5 = [15,0,0];
+    var p6 = [0,15,0];
+    // collide
+    var p7 = [5,5,5];
+    var p8 = [2,5,5];
+    var p9 = [9,8,5];
+
+    if( module.PointCollisionTest2d(p1,aabb) ) alert("fail1");
+    if( module.PointCollisionTest2d(p2,aabb) ) alert("fail2");
+    if( module.PointCollisionTest2d(p3,aabb) ) alert("fail3");
+    if( module.PointCollisionTest2d(p4,aabb) ) alert("fail4");
+    if( module.PointCollisionTest2d(p5,aabb) ) alert("fail5");
+    if( module.PointCollisionTest2d(p6,aabb) ) alert("fail6");
+    if( !module.PointCollisionTest2d(p7,aabb) ) alert("fail7");
+    if( !module.PointCollisionTest2d(p8,aabb) ) alert("fail8");
+    if( !module.PointCollisionTest2d(p9,aabb) ) alert("fail9");
+  }
+
+
   // helper function to test if a game object touches the ground
   module.IsGrounded = function(gameObject){
-    return (gameObject.collisionPoints && (gameObject.collisionPoints.down2.state===true));
+    return (gameObject.collisionPoints && (gameObject.collisionPoints.downA2.state===true || gameObject.collisionPoints.downB2.state===true));
   };
   
   module.DoOneFrame = function() {
