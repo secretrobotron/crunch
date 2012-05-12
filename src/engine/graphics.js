@@ -41,6 +41,9 @@ define(["engine/observe"], function(Observe){
 
       CubicVR.start(mainCanvas, function(){
           CubicVR.setSoftShadows(true);
+          //CubicVR.setFixedAspect(window.innerWidth/window.innerHeight);
+          CubicVR.addResizeable(mainCanvas);
+          window.addEventListener("resize", CubicVR.GLCore.onResize, false);
           events.success();
         }, events.failure);
     },

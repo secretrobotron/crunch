@@ -13,8 +13,6 @@ define(["./event", "./graphics"], function(Event, Graphics){
 
     var cubicvrScene = new CubicVR.Scene(width, height, fov);
 
-    CubicVR.addResizeable(cubicvrScene);
-
     this.cubicvr = cubicvrScene;
 
     this.add = function(obj){

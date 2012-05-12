@@ -1,3 +1,5 @@
+window.dump = window.dump || function(){};
+
 require([ "engine/schedule", "engine/hud",
           "engine/graphics", "engine/scene",
           "entities/test-entity",
