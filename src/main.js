@@ -136,24 +136,8 @@ require([ "engine/schedule", "engine/hud",
 
     });
 
-
-    var _playerHurtFunction;
     GameLogic.OnBoxCollision("Monster", "Player").push(function(m, p, e){
-      if(!_playerHurtFunction){
-        _playerHurtFunction = (function(startTime){
-          return function(e){
-            var elapsed = Date.now() - startTime;
-            p.sceneObject.position[0] -= Math.max(0, (1000 - elapsed)/8000);
-            p.sceneObject.visible = Math.round(Math.sin(elapsed/20)*.5 + .5) === 0;
-            if(elapsed > 2000){
-              p.sceneObject.visible = true;
-              Schedule.event.remove("update",_playerHurtFunction);
-              _playerHurtFunction = null;
-            }
-          };
-        }(Date.now()));
-        Schedule.event.add("update",_playerHurtFunction);
-      }
+      p.hurt();
     });
 
     var testLight = new CubicVR.Light({
@@ -190,13 +174,18 @@ require([ "engine/schedule", "engine/hud",
 
     var cameraIndex = 0;
 
+    var firstFrame = true;
+
     Schedule.event.add("update", function(e){
       var dx = e.data.dt / 300;
       scene.cubicvr.camera.position[0] += dx;
       scene.cubicvr.camera.target[0] += dx;
       //pointLight.position[0] += dx;
       //playerEntity.move(dx);
-      GameLogic.DoOneFrame();
+      if(!firstFrame){
+        GameLogic.DoOneFrame();
+      }
+      firstFrame = false;
     });
     
     return scene;
