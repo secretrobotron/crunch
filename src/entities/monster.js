@@ -1,4 +1,4 @@
-define(["engine/entity", "components/sprite", "text!sprites/player.json"], 
+define(["engine/entity", "components/sprite", "text!sprites/monster.json"], 
   function(Entity, SpriteComponent, SPRITE_SRC){
 
   var SPRITE_JSON = JSON.parse(SPRITE_SRC);
