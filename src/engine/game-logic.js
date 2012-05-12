@@ -246,6 +246,11 @@ define(["engine/schedule", "engine/debug-canvas"], function(Schedule,DebugCanvas
     }
 
     var elapsedTime = module.elapsedTime = now - module.lastFrameTime;
+    if (elapsedTime > 100) {
+      // Max frame skip
+      console.log(elapsedTime);
+      elapsedTime = 100;
+    }
 
     // precompute all pointCollisions, the state is cached in entity.collisionPoints["pointName"].state
     ProcessPointCollisions([]);

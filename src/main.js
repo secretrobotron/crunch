@@ -112,6 +112,9 @@ require([ "engine/schedule", "engine/hud",
       if (!p.collisionPoints.downA2.state || !p.collisionPoints.downB2.state ){
         // Gravity
         p.speed[1] -= 0.03 * elapsedTime;
+        if (p.speed[1] < -0.4) {
+          p.speed[1] = -0.4;
+        }
       } else {
         // Stop on ground collision
         if(p.speed[1] < 0) {

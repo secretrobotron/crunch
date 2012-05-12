@@ -20,9 +20,10 @@ define(["./game-logic", "entities/platform", "entities/monster"], function(GameL
       }
 
       var monsters = 20;
+      var SAFE_ZONE = 5;
       while(monsters--){
         var monsterEntity = new MonsterEntity({
-          position: [Math.random()*setupOptions.goalAtY, 150, 0],
+          position: [SAFE_ZONE + Math.random()*(setupOptions.goalAtY-SAFE_ZONE), 115, 0],
           rotation: [0, 180, 0],
           families : ["Monster", "HasCollisionPoints", "Physical"],
           collisionPoints: { // TODO fix the collisionPoints positions
@@ -34,7 +35,7 @@ define(["./game-logic", "entities/platform", "entities/monster"], function(GameL
             right2: [0.6, -0.3, 0]
           },
           speed:[0,0,0],
-          size: 2
+          size: 1
         });
         GameLogic.AddGameObject(monsterEntity);
         scene.add(monsterEntity);
