@@ -4,12 +4,14 @@ require([ "engine/schedule", "engine/hud",
           "entities/player",
           "engine/loader",
           "engine/game-logic",
-          "entities/floor"
+          "entities/platform"
         ], 
-        function(Schedule, HUD, Graphics, Scene, TestEntity, PlayerEntity, Loader, GameLogic, FloorEntity){
+        function(Schedule, HUD, Graphics, Scene, TestEntity, PlayerEntity, Loader, GameLogic, PlatformEntity){
 
-  var DEFAULT_FLOOR_Y = -3;
+  var DEFAULT_FLOOR_Y = 1;
   var DEFAULT_FLOOR_X = -20;
+  var DEFAULT_FLOOR_H = 2;
+  var DEFAULT_FLOOR_H_VAR = 2;
 
   var _hud = new HUD();
 
@@ -39,10 +41,10 @@ require([ "engine/schedule", "engine/hud",
 
     var x = DEFAULT_FLOOR_X;
     for(var i = 0; i < 40; ++i){
-      var h = 0.2 + Math.random() * 1;
+      var h = DEFAULT_FLOOR_H + Math.random() * DEFAULT_FLOOR_H_VAR;
       var w = 1 + Math.random() * 1;
       x += w * 2;
-      var floorEntity = new FloorEntity({
+      var floorEntity = new PlatformEntity({
         position: [x, DEFAULT_FLOOR_Y + h, 0],
         width: w,
         height: h
@@ -50,8 +52,9 @@ require([ "engine/schedule", "engine/hud",
       scene.add(floorEntity);
     }
 
-    scene.cubicvr.camera.target = [0, 0, 0];
-    scene.cubicvr.camera.position = [0, 0, 5];
+    scene.cubicvr.camera.target = [0, 3, 0];
+    scene.cubicvr.camera.position = [0, 8, 20];
+    scene.cubicvr.camera.setFOV(45);
 
     scene.cubicvr.setSkyBox(new CubicVR.SkyBox({texture: "assets/images/8bit-sky.jpg"}));
 
