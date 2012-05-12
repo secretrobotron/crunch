@@ -12,7 +12,21 @@ define(["engine/schedule", "engine/debug-canvas"], function(Schedule,DebugCanvas
         , boxCollisions : []
       }
     , lastFrameTime:0
+    , keyState : {}
   };
+
+  { // watch the key state
+    module.onKeyDown = function (ev) {
+      module.keyState[ev.keyCode] = true;
+    };
+
+    module.onKeyUp = function (ev) {
+      module.keyState[ev.keyCode] = false;
+    };
+
+    window.addEventListener('keydown', module.onKeyDown, false);
+    window.addEventListener('keyup', module.onKeyUp, false);
+  }
 
   // return the array of all the game objects belonging to family 
   module.GetFamily = function(family) {
