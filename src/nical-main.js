@@ -45,7 +45,7 @@ require([ "engine/sprites", "engine/game-logic"
       imageHeight: 1024,
       animations : {
           numbers : {
-              frameCount: 7,
+              frameCount: 8,
               speed: 1.5,
               index: 0
           },
