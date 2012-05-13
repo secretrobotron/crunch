@@ -56,6 +56,8 @@ require([ "engine/schedule", "engine/menu",
 
     GameLogic.EachFrame("Player").push( function(p, elapsedTime) {
       DebugCanvas.Clear();
+      document.getElementById("distance").style.left = -32 + 128*Math.round(p.position[0])/2000 + "px";
+      console.log(document.getElementById("distance").style.left);
       document.getElementById("meters").innerHTML = Math.round(p.position[0]);
       document.getElementById("metersfinal").innerHTML = Math.round(p.position[0]);
       var everyBody = GameLogic.gameObjects.all;
@@ -179,6 +181,7 @@ require([ "engine/schedule", "engine/menu",
       var mainScene = createTestScene();
       Schedule.event.add("intro-complete", function(e){
         document.getElementById("livesContainer").classList.add("fade-in");
+        document.getElementById("distanceContainer").classList.add("fade-in");
         Graphics.addScene(mainScene);
       });
       Schedule.event.add("game-over", function(e){
