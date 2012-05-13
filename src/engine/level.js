@@ -1,12 +1,19 @@
-define(["./game-logic", "engine/entity","engine/beats", "components/sprite", "entities/platform", "entities/monster", "entities/pigeon",
+define(["./game-logic", "engine/entity","engine/beats", "components/sprite", "entities/platform", "entities/monster", "entities/pigeon", "engine/loader",
         "text!sprites/background.json", "text!sprites/coin.json", "text!sprites/spikes.json", "text!sprites/bumper.json"], 
-  function(GameLogic, Entity, Beats, SpriteComponent, PlatformEntity, MonsterEntity, PigeonEntity, BG_SPRITE_SRC, COIN_SRC, SPIKE_SRC, BUMPER_SRC){
+  function(GameLogic, Entity, Beats, SpriteComponent, PlatformEntity, MonsterEntity, PigeonEntity, Loader, BG_SPRITE_SRC, COIN_SRC, SPIKE_SRC, BUMPER_SRC){
   return function(setupOptions) {
 
     var BG_SPRITE_JSON = JSON.parse(BG_SPRITE_SRC);
     var COIN_JSON = JSON.parse(COIN_SRC);
     var SPIKE_JSON = JSON.parse(SPIKE_SRC);
     var BUMPER_JSON = JSON.parse(BUMPER_SRC);
+    var collectSfx = null;
+
+    if( Loader.IsAudioAvailable() ) {
+      Loader.load(Loader.Audio("assets/audio/coin.wav"), function(audio){
+        collectSfx = audio;
+      });
+    }
 
     setupOptions = setupOptions || {};
 
@@ -24,6 +31,7 @@ define(["./game-logic", "engine/entity","engine/beats", "components/sprite", "en
           ],
           position: [-30+100*i, 15, -100],
         });
+        entity.original_y = 15;
         entity.original_z = -100;
         GameLogic.AddGameObject(entity);
         scene.add(entity);
@@ -41,6 +49,7 @@ define(["./game-logic", "engine/entity","engine/beats", "components/sprite", "en
           ],
           position: [-10+100*i, 5, -50],
         });
+        entity.original_y = 5;
         entity.original_z = -50;
         GameLogic.AddGameObject(entity);
         scene.add(entity);
@@ -78,6 +87,9 @@ define(["./game-logic", "engine/entity","engine/beats", "components/sprite", "en
       coin.collectedBy = function(p) {
         if (coin.collected)
           return;
+        if (collectSfx) {
+          collectSfx.cloneNode().play();
+        }
         coin.collected = true;
         coin.upVelocity = 0.04;
         coin.rotationVelocity = 2*40;
@@ -93,7 +105,7 @@ define(["./game-logic", "engine/entity","engine/beats", "components/sprite", "en
     this.spawnBumper = function(scene, x, y) {
       var bump = new Entity({
         name: "bumper",
-        families : ["Bumper", "Physical"],
+        families : ["Bumper", "aHasCollisionPoints", "Physical"],
         collisionPoints : {
           downA1: [-0.1, -0.1, 0.0],
           downA2: [-0.1, -0.2, 0.0],
@@ -113,7 +125,6 @@ define(["./game-logic", "engine/entity","engine/beats", "components/sprite", "en
       });
       bump.bumpTheShitOf = function(someEntity,elapsedTime) {
         someEntity.speed[1] = 2.0; 
-        console.log("Bump!");
       }
       GameLogic.AddGameObject(bump);
       scene.add(bump);
@@ -152,13 +163,12 @@ define(["./game-logic", "engine/entity","engine/beats", "components/sprite", "en
           this.spawnCoin(scene, x - w + 2*w*Math.random(), setupOptions.levelOrigin[1] + h);
         }
         if (Math.random() > 0.8) {
-          this.spawnSpikes(scene, x - 0.8*w + 1.6*w*Math.random(), setupOptions.levelOrigin[1] + h);
+          //this.spawnSpikes(scene, x - 0.8*w + 1.6*w*Math.random(), setupOptions.levelOrigin[1] + h);
         }
         if (Math.random() > 0.3) {
           var bx = x/2 + 10;
           var by = setupOptions.levelOrigin[1] + 5;
           this.spawnBumper(scene, bx, by);
-          console.log("bumper: "+bx+" "+by );
         }
 
         GameLogic.AddGameObject(floorEntity);
@@ -213,13 +223,13 @@ define(["./game-logic", "engine/entity","engine/beats", "components/sprite", "en
 
     GameLogic.OnBoxCollision("Physical", "floor").push(function(p, c, e){
       if(isInsideGround(p) || isOnGround(p)){
-        if(!p.collisionPoints.right2.state){
+        //if(!p.collisionPoints.right2.state){
           p.position[1] = c.position[1] + c.size[1]/2 - p.collisionPoints.downA1[1];
           if(p.speed[1] < 0){
             p.speed[1] = 0;  
           }
           p.updateBB();
-        }
+        //}
       }
     });
 

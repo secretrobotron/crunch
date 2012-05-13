@@ -46,6 +46,10 @@ require([ "engine/schedule", "engine/menu",
 
     GameLogic.AddGameObject(playerEntity);
     scene.add(playerEntity);
+    Schedule.event.add("game-over", function(e){
+      GameLogic.RemoveGameObject(playerEntity);
+      scene.remove(playerEntity);
+    });
 
     var plane = new PlaneEntity({
       size: 10,
@@ -69,7 +73,7 @@ require([ "engine/schedule", "engine/menu",
     GameLogic.EachFrame("beats-z-beat").push( function(b,elapsedTime) {
       if (!Beats.lastBeat)
         return;
-      b.sceneObject.position[2] = b.original_z + (new Date().getTime() - Beats.lastBeat)/500;
+      b.sceneObject.position[1] = b.original_y + (new Date().getTime() - Beats.lastBeat)/500;
     });
     
     GameLogic.EachFrame("beats-z-spect").push( function(b,elapsedTime) {
@@ -148,7 +152,7 @@ require([ "engine/schedule", "engine/menu",
         });
         var dx = e.data.dt / 300;
         var p = GameLogic.GetFamily("Player")[0];
-
+        cameraSpeedDistance += (p.speed[0] - cameraSpeedDistance)/10;
         var cameraY = scene.cubicvr.camera.target[1];
 
         scene.cubicvr.camera.position = [
@@ -190,7 +194,7 @@ require([ "engine/schedule", "engine/menu",
         setTimeout(function(){
           document.getElementById("score").classList.add("fade-in");
         }, 2000);
-        Graphics.removeScene(mainScene);
+        //Graphics.removeScene(mainScene);
       });
       Intro.init();
       Loader.unlock(function(){
