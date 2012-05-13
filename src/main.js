@@ -33,7 +33,7 @@ require([ "engine/schedule", "engine/hud",
     var scene = new Scene();
 
     var playerEntity = new PlayerEntity({
-      position: [0, 58, 0],
+      position: [0, 12, 0],
       rotation: [0, 180, 0],
       families : ["Player", "HasCollisionPoints","Physical"],
       collisionPoints: { // TODO fix the collisionPoints positions
@@ -44,7 +44,7 @@ require([ "engine/schedule", "engine/hud",
         right1: [0.4, -0.3, 0],
         right2: [0.7, -0.3, 0]
       },
-      speed:[0,0.5,0],
+      speed:[0.1,-0.2,0],
       size: 3
     });
 
@@ -62,8 +62,10 @@ require([ "engine/schedule", "engine/hud",
     GameLogic.EachFrame("Player").push( function(p, elapsedTime) {
       elapsedTime=elapsedTime/20;
       if(!p.collisionPoints.right2.state) {
+        p.speed[0] += 0.000004 * elapsedTime;
+        if (p.speed[0] > 0.4)
+          p.speed[0] = 0.4;
         p.sceneObject.position[0] += p.speed[0] * elapsedTime;
-        p.speed[0] += 0.0004 * elapsedTime;
       } else {
         //speed[0] = 0.8;
       }
