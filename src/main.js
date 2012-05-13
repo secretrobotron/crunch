@@ -138,7 +138,7 @@ require([ "engine/schedule", "engine/hud",
     } );
 
     GameLogic.EachFrame("beats-z").push( function(b,elapsedTime) {
-      b.sceneObject.position[2] = b.original_z + 10*Beats.spectrum[4];
+      b.sceneObject.position[2] = b.original_z + 10*Beats.spectrumMax;
     });
     GameLogic.EachFrame("Physical").push( function(p,elapsedTime) {
       // Slow down the elapsedTime

@@ -22,6 +22,7 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
           ],
           position: [-30+100*i, 15, -100],
         });
+        GameLogic.AddGameObject(entity);
         scene.add(entity);
       }
       // back 2
@@ -59,7 +60,7 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
       scene.add(spike);
     }
 
-    this.spawnCoint = function(scene, x, y) {
+    this.spawnCoin = function(scene, x, y) {
       var coin = new Entity({
         name: "coin",
         families : ["collectable"],
@@ -91,8 +92,10 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
           width: w,
           height: h
         });
-        if (Math.random() > 0.0 || true) {
-          //this.spawnCoint(scene, x - w + 2*w*Math.random(), setupOptions.levelOrigin[1] + h);
+        if (Math.random() > 0.2) {
+          this.spawnCoin(scene, x - w + 2*w*Math.random(), setupOptions.levelOrigin[1] + h);
+        }
+        if (Math.random() > 0.8) {
           this.spawnSpikes(scene, x - 0.8*w + 1.6*w*Math.random(), setupOptions.levelOrigin[1] + h);
         }
         GameLogic.AddGameObject(floorEntity);
