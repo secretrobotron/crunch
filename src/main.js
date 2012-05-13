@@ -26,7 +26,7 @@ require([ "engine/schedule", "engine/menu",
 
   DebugCanvas.SetEnabled(false);
 
-  function createTestScene(){
+  function createTestScene() {
     var scene = new Scene();
 
     // Start beathelper
