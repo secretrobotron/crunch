@@ -13,12 +13,16 @@ void main(void) {
 
   float chan;
 
-  if (mod(texCoord.x/ 3.5, 3.0) < 1.0) {
+  if (mod(texCoord.x/ 3.5, 5.0) < 1.0) {
     chan = uAudio0;
-  } else if (mod(texCoord.x/ 3.5, 3.0) < 2.0) {
+  } else if (mod(texCoord.x/ 3.5, 5.0) < 2.0) {
     chan = uAudio1;
-  } else if (mod(texCoord.x/ 3.5, 3.0) < 3.0) {
+  } else if (mod(texCoord.x/ 3.5, 5.0) < 3.0) {
     chan = uAudio2;
+  } else if (mod(texCoord.x/ 3.5, 5.0) < 4.0) {
+    chan = uAudio3;
+  } else if (mod(texCoord.x/ 3.5, 5.0) < 5.0) {
+    chan = uAudio4;
   }
 
   if (mod(texCoord.x, 3.5) > 0.5 && mod(texCoord.y, 3.0) > 1.1 && (chan * 10.0) > texCoord.y) {
