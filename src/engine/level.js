@@ -1,8 +1,10 @@
-define(["./game-logic", "engine/entity", "components/sprite", "entities/platform", "entities/monster", "text!sprites/background.json"], 
-  function(GameLogic, Entity, SpriteComponent, PlatformEntity, MonsterEntity, BG_SPRITE_SRC){
+define(["./game-logic", "engine/entity", "components/sprite", "entities/platform", "entities/monster",
+        "text!sprites/background.json", "text!sprites/coin.json"], 
+  function(GameLogic, Entity, SpriteComponent, PlatformEntity, MonsterEntity, BG_SPRITE_SRC, COIN_SRC){
   return function(setupOptions) {
 
     var BG_SPRITE_JSON = JSON.parse(BG_SPRITE_SRC);
+    var COIN_JSON = JSON.parse(COIN_SRC);
 
     setupOptions = setupOptions || {};
 
@@ -37,6 +39,21 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
       }
     }
 
+    this.spawnCoint = function(scene, x, y) {
+      var entity = new Entity({
+        name: "coin",
+        families : ["collectable"],
+        components: [
+          new SpriteComponent({
+            size: 1,
+            sprite: COIN_JSON
+          }),
+        ],
+        position: [x, y+5, 0.1],
+      });
+      scene.add(entity);
+    }
+
     this.buildToScene = function(scene) {
       var x = setupOptions.levelOrigin[0];
       while (x < setupOptions.goalAtY) {
@@ -49,6 +66,9 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
           width: w,
           height: h
         });
+        if (Math.random() > 0.3) {
+          this.spawnCoint(scene, x - w + 2*w*Math.random(), setupOptions.levelOrigin[1] + h);
+        }
         GameLogic.AddGameObject(floorEntity);
         scene.add(floorEntity);
       }

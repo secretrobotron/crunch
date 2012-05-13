@@ -1,0 +1,18 @@
+{
+  "resource":"assets/images/coin.png",
+  "numRows": 1,
+  "numCols": 1,
+  "defaultAnimation":"run",
+  "animation" : {
+    "frameCount": 1,
+    "speed": 10,
+    "index": 0
+  },
+  "animations": {
+    "run": {
+      "index":0,
+      "frameCount":1,
+      "speed":10
+    }
+  }
+}
