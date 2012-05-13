@@ -61,7 +61,13 @@ require([ "engine/schedule", "engine/hud",
       }
     });
 
-    GameLogic.EachFrame("beats-z").push( function(b,elapsedTime) {
+    GameLogic.EachFrame("beats-z-beat").push( function(b,elapsedTime) {
+      if (!Beats.lastBeat)
+        return;
+      b.sceneObject.position[2] = b.original_z + (new Date().getTime() - Beats.lastBeat)/500;
+    });
+    
+    GameLogic.EachFrame("beats-z-spect").push( function(b,elapsedTime) {
       b.sceneObject.position[2] = b.original_z + 10*Beats.spectrumMax;
     });
     
