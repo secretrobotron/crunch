@@ -90,16 +90,21 @@ define([  "engine/observe",
 
     var mesh = new CubicVR.Mesh();
     var size = setupOptions.size || [0.5, 0.5, 0.5];
+    var halfSize = [
+      size[0]/2,
+      size[1]/2,
+      size[2]/2
+    ];
 
     mesh.addPoint([
-      [size[0], -size[1], size[2]],
-      [size[0], size[1], size[2]],
-      [-size[0], size[1], size[2]],
-      [-size[0], -size[1], size[2]],
-      [size[0], -size[1], -size[2]],
-      [size[0], size[1], -size[2]],
-      [-size[0], size[1], -size[2]],
-      [-size[0], -size[1], -size[2]]
+      [halfSize[0], -halfSize[1], halfSize[2]],
+      [halfSize[0], halfSize[1], halfSize[2]],
+      [-halfSize[0], halfSize[1], halfSize[2]],
+      [-halfSize[0], -halfSize[1], halfSize[2]],
+      [halfSize[0], -halfSize[1], -halfSize[2]],
+      [halfSize[0], halfSize[1], -halfSize[2]],
+      [-halfSize[0], halfSize[1], -halfSize[2]],
+      [-halfSize[0], -halfSize[1], -halfSize[2]]
     ]);
 
     mesh.addFace([
@@ -120,10 +125,6 @@ define([  "engine/observe",
     mesh.prepare();
 
     var _sceneObject = _this.sceneObject = new CubicVR.SceneObject(mesh);
-
-    if(setupOptions.position){
-      _sceneObject.position = setupOptions.position;
-    }
 
     _this.event.add("entity-changed", function(e){
       var entity = e.data;

@@ -126,13 +126,14 @@ define(["engine/schedule", "engine/debug-canvas"], function(Schedule,DebugCanvas
 
   // called each frame, before the rest of the gameplay code
   ProcessBoxCollisions = function(elapsedTime) {
+
     var objByFamily = module.gameObjects.byFamily;
     for( var f1 in module.logic.boxCollisions ){
       for( var i1 = 0; i1 < module.GetFamily(f1).length;++i1 ){
         for( var f2 in module.logic.boxCollisions[f1] ){
           for( var i2 = 0; i2 < module.GetFamily(f2).length;++i2 ){
-            var b1 = objByFamily[f1][i1].getAABB()
-              , b2 = objByFamily[f2][i2].getAABB();
+            var b1 = objByFamily[f1][i1].aabb
+              , b2 = objByFamily[f2][i2].aabb;
             if( module.BoxCollisionTest2d( b1, b2 ) ){
               // invoke every callback for collision evt between these two folks
               (function(a, b, ff1, ff2){module.logic.boxCollisions[ff1][ff2].forEach(function(cb){
@@ -168,7 +169,7 @@ define(["engine/schedule", "engine/debug-canvas"], function(Schedule,DebugCanvas
       , ay1 = box1[0][1]
       , ay2 = box1[1][1]
       , by1 = box2[0][1]
-        by2 = box2[1][1];
+      , by2 = box2[1][1];
     return (
         (ax2 > bx1) && (bx2 > ax1)
         &&(ay2 > by1) && (by2 > ay1)
@@ -191,14 +192,11 @@ define(["engine/schedule", "engine/debug-canvas"], function(Schedule,DebugCanvas
         currPoint.state = false;
         for(var j=0; j<boxList.length;++j ) {
           var worldPosition = currPoint.slice();
-          var objPosAB = pointList[i].getAABB();
-          var objPosA = objPosAB[0];
-          var objPosB = objPosAB[1];
-          worldPosition[0]+=(objPosA[0]+objPosB[0])/2.0;
-          worldPosition[1]+=(objPosA[1]+objPosB[1])/2.0;
+          worldPosition[0]+=pointList[i].position[0];
+          worldPosition[1]+=pointList[i].position[1];
           //worldPosition[2]+=(objPosA[2]+objPosB[2])/2.0;
           if(!currPoint.state) {
-            currPoint.state = module.PointCollisionTest2d(worldPosition, boxList[j].getAABB()); 
+            currPoint.state = module.PointCollisionTest2d(worldPosition, boxList[j].aabb); 
           };
         }
         if(currPoint.state) DebugCanvas.DrawPoint(worldPosition,"white");
@@ -248,7 +246,6 @@ define(["engine/schedule", "engine/debug-canvas"], function(Schedule,DebugCanvas
     var elapsedTime = module.elapsedTime = now - module.lastFrameTime;
     if (elapsedTime > 100) {
       // Max frame skip
-      console.log(elapsedTime);
       elapsedTime = 100;
     }
 

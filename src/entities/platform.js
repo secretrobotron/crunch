@@ -9,13 +9,14 @@ define(["engine/entity", "components/platform", "engine/loader"],
 
     var entity = new Entity({
       name: "platform",
-      families: setupOptions.families,
+      families: ["floor", "PointCollision"],
       components: [
         new PlatformComponent({
           size: [setupOptions.width, setupOptions.height, DEFAULT_FLOOR_DEPTH],
         }),
       ],
-      position: setupOptions.position
+      position: setupOptions.position,
+      size: [setupOptions.width, setupOptions.height]
     });
 
     return entity;

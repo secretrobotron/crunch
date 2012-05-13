@@ -1,4 +1,4 @@
-define(["engine/event"], function(Event){
+define(["engine/event", "engine/graphics"], function(Event, Graphics){
   
   return function(description){
 
@@ -7,6 +7,7 @@ define(["engine/event"], function(Event){
     var _this = this;
     var _scene = null;
     var _parentEntity = null;
+    var _sceneObject = this.sceneObject = new CubicVR.SceneObject();
 
     Event(this);
 
@@ -16,29 +17,36 @@ define(["engine/event"], function(Event){
     this.collisionPoints = description.collisionPoints;
     this.speed = description.speed;
 
-    this.getAABB = function(){
+    this.aabb = [
+      [0,0,0],
+      [0,0,0]
+    ];
 
-      var aabb = [_sceneObject.position.slice(), _sceneObject.position.slice()];
+    this.size = description.size || [0,0];
 
-      if(_sceneObject.obj){
-        aabb = _sceneObject.getAABB();
-        aabb = [
-          aabb[0].slice(),
-          aabb[1].slice()
-        ];
-      }
-      else if(_sceneObject.children.length){
-        aabb = _sceneObject.children[0].getAABB();
-      }
+    this.position = description.position || [0,0,0];
 
-      return aabb;
-
+    this.updateBB = function(){
+      var hw = _this.size[0]/2;
+      var hh = _this.size[1]/2;
+      var position = _this.position;
+      _this.aabb[0] = [
+        position[0] - hw,
+        position[1] - hh,
+      ];
+      _this.aabb[1] = [
+        position[0] + hw,
+        position[1] + hh
+      ];
     };
 
-    var _sceneObject = this.sceneObject = new CubicVR.SceneObject();
+    _this.updateBB();
 
-    _sceneObject.position = description.position || _sceneObject.position;
     _sceneObject.rotation = description.rotation || _sceneObject.rotation;
+
+    Graphics.observe.subscribe("start-render", function(){
+      _sceneObject.position = _this.position;
+    });
 
     this.addComponent = function(component){
       var oldComponent = _this.components[component.name];

@@ -55,10 +55,6 @@ define(["engine/component", "engine/schedule"], function(Component, Schedule){
 
     var _sceneObject = _this.sceneObject = new CubicVR.SceneObject(mesh);
 
-    if(setupOptions.position){
-      _sceneObject.position = setupOptions.position;
-    }
-
     _this.event.add("entity-changed", function(e){
       var entity = e.data;
       entity.sceneObject.bindChild(_sceneObject);

@@ -11,15 +11,23 @@ define(["engine/entity", "components/sprite", "text!sprites/monster.json"],
       name: "player",
       components: [
         new SpriteComponent({
-          size: setupOptions.size,
+          size: 7,
           sprite: SPRITE_JSON
         }),
       ],
-      families: setupOptions.families,
-      collisionPoints: setupOptions.collisionPoints,
-      speed: setupOptions.speed,
+      families : ["Monster", "HasCollisionPoints", "Physical"],
+      collisionPoints: { // TODO fix the collisionPoints positions
+        downA1: [-0.3, -0.6, 0], 
+        downA2: [-0.3, -0.90, 0],
+        downB1: [ 0.3, -0.6, 0], 
+        downB2: [ 0.3, -0.90, 0],
+        right1: [0.5, -0.3, 0],
+        right2: [0.6, -0.3, 0]
+      },
+      speed:[0,0,0],
       position: setupOptions.position,
-      rotation: setupOptions.rotation, 
+      rotation: setupOptions.rotation,
+      size: [7, 7]
     });
 
     entity.setAnimation = function(animName) {

@@ -13,18 +13,7 @@ require([ "engine/schedule", "engine/hud",
                   PlayerEntity, Loader, 
                   Level, GameLogic, PlatformEntity, DebugCanvas){
 
-  var DEFAULT_FLOOR_Y = -5;
-  var DEFAULT_FLOOR_X = -20;
-  var DEFAULT_FLOOR_H = 10;
-  var FLOOR_Y_VAR = 2;
-
   Loader.lock();
-
-  var wilhelmCry = null;
-  Loader.load(Loader.Audio("assets/audio/WilhelmScream.ogg"), function(audio){
-    wilhelmCry = audio;
-  });
-
 
   DebugCanvas.SetEnabled(false);
 
@@ -33,125 +22,19 @@ require([ "engine/schedule", "engine/hud",
     var scene = new Scene();
 
     var playerEntity = new PlayerEntity({
-      position: [0, 12, 0],
+      position: [0, 10, 0],
       rotation: [0, 180, 0],
-      families : ["Player", "HasCollisionPoints","Physical"],
-      collisionPoints: { // TODO fix the collisionPoints positions
-        downA1: [-0.3, -0.6, 0], 
-        downA2: [-0.3, -0.85, 0],
-        downB1: [ 0.3, -0.6, 0], 
-        downB2: [ 0.3, -0.85, 0],
-        right1: [0.4, -0.3, 0],
-        right2: [0.7, -0.3, 0]
-      },
-      speed:[0.1,-0.2,0],
-      size: 3
     });
-
-    var isInsideGround = function(p) {
-      return p.collisionPoints.downA1.state || p.collisionPoints.downB1.state;
-    };
-
-    var isOnGround = function(p) {
-      return p.collisionPoints.downA2.state || p.collisionPoints.downB2.state;
-    };
 
     GameLogic.AddGameObject(playerEntity);
     scene.add(playerEntity);
 
     GameLogic.EachFrame("Player").push( function(p, elapsedTime) {
-      elapsedTime=elapsedTime/20;
-      if(!p.collisionPoints.right2.state) {
-        p.speed[0] += 0.000004 * elapsedTime;
-        if (p.speed[0] > 0.4)
-          p.speed[0] = 0.4;
-        p.sceneObject.position[0] += p.speed[0] * elapsedTime;
-      } else {
-        //speed[0] = 0.8;
-      }
-
-      if(p.speed[1] < -0.001) {
-        p.setAnimation("jumpDown");
-      } else if (p.speed[1] > 0.001) {
-        p.setAnimation("jumpUp");
-      }
-
-      if(GameLogic.IsGrounded(p)) {
-        p.setAnimation("run");
-      }
-
       DebugCanvas.Clear();
       var everyBody = GameLogic.gameObjects.all;
       for(var o = 0; o<everyBody.length; ++o) {
-        DebugCanvas.DrawBox(everyBody[o].getAABB());
+        DebugCanvas.DrawBox(everyBody[o].aabb);
       }
-
-      if (p.sceneObject.position[1] < -1) {
-        p.sceneObject.position[1] = 15;
-      }
-
-      scene.cubicvr.camera.target = [p.sceneObject.position[0],9, 0];
-      scene.cubicvr.camera.position = [p.sceneObject.position[0], 14, 15];  
-      //scene.cubicvr.camera.position = [p.sceneObject.position[0], 14+Math.sin(p.sceneObject.position[0]*0.1)*3, 15];
-      if (p.sceneObject.position[1] < 0) {
-        if (wilhelmCry) {
-          wilhelmCry.cloneNode().play();
-        }        
-      }
-
-    } );
-
-    GameLogic.KeyEachFrame("Player").push( function(p, isPressed, keyCode, elapsedTime) {
-      // Slow down the elapsedTime
-      elapsedTime = elapsedTime / 20;
-      if (isPressed) {
-        if (GameLogic.IsGrounded(p)) {
-          p.canJump = true;
-          p.jumpForceRemaining = 0.9;
-        }
-
-        if (p.canJump === true) {
-          var force = 0.06 * elapsedTime;
-          if (force > p.jumpForceRemaining) {
-            force = p.jumpForceRemaining;
-          }
-          p.speed[1] += force;
-          p.jumpForceRemaining -= force;
-        }
-      } else {
-        // released key up, don't allow jump up again
-        p.canJump = false;
-      }
-
-      if (p.speed[1] > 0.3)
-        p.speed[1] = 0.3; // velocity max
-
-    } );
-
-    GameLogic.EachFrame("Physical").push( function(p,elapsedTime) {
-      // Slow down the elapsedTime
-      elapsedTime = elapsedTime / 20;
-      if (!p.collisionPoints.downA2.state || !p.collisionPoints.downB2.state ){
-        // Gravity
-        p.speed[1] -= 0.03 * elapsedTime;
-        if (p.speed[1] < -0.4) {
-          p.speed[1] = -0.4;
-        }
-      } else {
-        // Stop on ground collision
-        if(p.speed[1] < 0) {
-          p.speed[1] = 0;
-        }
-      }
-
-      p.sceneObject.position[1] += p.speed[1] * elapsedTime;
-
-      if (isInsideGround(p)) {
-        p.sceneObject.position[1] += 0.05 * elapsedTime;
-      } else if (p.collisionPoints.right1.state) {  
-        p.sceneObject.position[0] -= 0.05 * elapsedTime;
-      }
-
     });
 
     GameLogic.OnBoxCollision("Monster", "Player").push(function(m, p, e){
@@ -175,16 +58,16 @@ require([ "engine/schedule", "engine/hud",
 
     var level = new Level({
       // Where the levle starts in space
-      levelOrigin: [-20, 1, 0],
+      levelOrigin: [-20, -4, 0],
       // How long the level is
       goalAtY: 600,
-      // The families given to the floor used for GameLogic
-      floorFamilies: ["floor", "PointCollision"],
     });
 
     // Transform the setup options into platforms entity
     // and add them to the scene.
     level.buildToScene(scene);
+
+    GameLogic.AddGameObject(playerEntity);
 
     scene.cubicvr.camera.target = [0, 0, 0];
     scene.cubicvr.camera.position = [0, 8, 20];
@@ -200,8 +83,10 @@ require([ "engine/schedule", "engine/hud",
 
     Schedule.event.add("update", function(e){
       var dx = e.data.dt / 300;
-      scene.cubicvr.camera.position[0] += dx;
-      scene.cubicvr.camera.target[0] += dx;
+      //scene.cubicvr.camera.position[0] += dx;
+      //scene.cubicvr.camera.target[0] += dx;
+      scene.cubicvr.camera.target = [playerEntity.position[0],9, 0];
+      scene.cubicvr.camera.position = [playerEntity.position[0], 14, 15];  
       //pointLight.position[0] += dx;
       //playerEntity.move(dx);
       if(!firstFrame){

@@ -63,12 +63,11 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
     this.buildToScene = function(scene) {
       var x = setupOptions.levelOrigin[0];
       while (x < setupOptions.goalAtY) {
-        var h = 2 + Math.random() * 2;
-        var w = 3 + Math.random() * 4;
+        var h = 4 + Math.random() * 4;
+        var w = 6 + Math.random() * 8;
         x += w * 2;
         var floorEntity = new PlatformEntity({
           position: [x, setupOptions.levelOrigin[1] + h, 0],
-          families : setupOptions.floorFamilies,
           width: w,
           height: h
         });
@@ -81,28 +80,55 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
 
       this.buildBackground(scene);
 
-      var monsters = 20;
-      var SAFE_ZONE = 5;
-      while(monsters--){
-        var monsterEntity = new MonsterEntity({
-          position: [SAFE_ZONE + Math.random()*(setupOptions.goalAtY-SAFE_ZONE), 115, 0],
-          rotation: [0, 0, 0],
-          families : ["Monster", "HasCollisionPoints", "Physical"],
-          collisionPoints: { // TODO fix the collisionPoints positions
-            downA1: [-0.3, -0.6, 0], 
-            downA2: [-0.3, -0.90, 0],
-            downB1: [ 0.3, -0.6, 0], 
-            downB2: [ 0.3, -0.90, 0],
-            right1: [0.5, -0.3, 0],
-            right2: [0.6, -0.3, 0]
-          },
-          speed:[0,0,0],
-          size: 7
-        });
-        GameLogic.AddGameObject(monsterEntity);
-        scene.add(monsterEntity);
-      }
+      // var monsters = 20;
+      // var SAFE_ZONE = 5;
+      // while(monsters--){
+      //   var monsterEntity = new MonsterEntity({
+      //     position: [SAFE_ZONE + Math.random()*(setupOptions.goalAtY-SAFE_ZONE), 115, 0],
+      //     rotation: [0, 0, 0]
+      //   });
+      //   GameLogic.AddGameObject(monsterEntity);
+      //   scene.add(monsterEntity);
+      // }
     };
+
+    var isInsideGround = function(p) {
+      return p.collisionPoints.downA1.state || p.collisionPoints.downB1.state;
+    };
+
+    var isOnGround = function(p) {
+      return p.collisionPoints.downA2.state || p.collisionPoints.downB2.state;
+    };
+
+    GameLogic.OnBoxCollision("Player", "floor").push(function(p, c, e){
+      if(isInsideGround(p)){
+        p.position[1] = c.position[1] + (c.size[1]/2) + (p.size[1]/2) + p.collisionPoints.downA2[1];
+        p.speed[1] = 0;
+        p.updateBB();
+      }
+    });
+
+    GameLogic.EachFrame("Physical").push( function(p,elapsedTime) {
+      // Slow down the elapsedTime
+      elapsedTime = elapsedTime / 20;
+      if (!p.collisionPoints.downA2.state || !p.collisionPoints.downB2.state ){
+        // Gravity
+        p.speed[1] -= 0.03 * elapsedTime;
+        if (p.speed[1] < -0.4) {
+          p.speed[1] = -0.4;
+        }          
+      }
+
+      p.position[1] += p.speed[1];
+
+      if (isInsideGround(p)) {
+        //p.position[1] += 0.05 * elapsedTime;
+      } else if (p.collisionPoints.right1.state) {
+        //p.position[0] -= 0.05 * elapsedTime;
+      }
+
+      p.updateBB();
+    });
 
     return this;
   };
