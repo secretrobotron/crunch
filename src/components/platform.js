@@ -67,21 +67,20 @@ define([  "engine/observe",
       }
     }
 
-    var audioBuffer = [1,2,3,4,5,6,7,8,9,10,11,12];
-
     Schedule.event.add("update", function(e){
       if(screenCoordsShader.ready()){
         __shadowIndex += e.data.dt/1000;
         if(screenCoordsShader.uShadowIndex)screenCoordsShader.uShadowIndex.set(__shadowIndex);
-        //if(screenCoordsShader.uAudio)screenCoordsShader.uAudio.set(audioBuffer);
-        if(screenCoordsShader.uAudio0)screenCoordsShader.uAudio0.set(Math.random());
-        if(screenCoordsShader.uAudio0)screenCoordsShader.uAudio0.value = Math.random();
-
+       
         var buf = Beats.spectrum;
 
-        if(screenCoordsShader.uAudio0)screenCoordsShader.uAudio0.value =buf[1];
-        if(screenCoordsShader.uAudio4)screenCoordsShader.uAudio4.value =buf[12];
-        if(screenCoordsShader.uAudio7)screenCoordsShader.uAudio7.value =buf[31];
+        //console.log(buf[0]);
+
+        if(screenCoordsShader.uAudio0)screenCoordsShader.uAudio0.set(buf[0]*10);
+        if(screenCoordsShader.uAudio1)screenCoordsShader.uAudio1.set(buf[5]*10);
+        if(screenCoordsShader.uAudio2)screenCoordsShader.uAudio2.set(buf[12]*10);
+        if(screenCoordsShader.uAudio3)screenCoordsShader.uAudio3.set(buf[24]*10);
+        if(screenCoordsShader.uAudio4)screenCoordsShader.uAudio4.set(buf[31]*10);
 
 
       }

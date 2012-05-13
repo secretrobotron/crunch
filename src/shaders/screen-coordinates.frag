@@ -7,9 +7,6 @@ uniform float uAudio1;
 uniform float uAudio2;
 uniform float uAudio3;
 uniform float uAudio4;
-uniform float uAudio5;
-uniform float uAudio6;
-uniform float uAudio7;
 
 void main(void) {
   vec2 texCoord = cubicvr_texCoord();
@@ -19,12 +16,12 @@ void main(void) {
   if (mod(texCoord.x/ 3.5, 3.0) < 1.0) {
     chan = uAudio0;
   } else if (mod(texCoord.x/ 3.5, 3.0) < 2.0) {
-    chan = uAudio4;
+    chan = uAudio1;
   } else if (mod(texCoord.x/ 3.5, 3.0) < 3.0) {
-    chan = uAudio7;
+    chan = uAudio2;
   }
 
-  if (mod(texCoord.x, 3.5) > 0.5 && mod(texCoord.y, 3.0) > 1.1 && (10.0 - chan * 10.0) > texCoord.y) {
+  if (mod(texCoord.x, 3.5) > 0.5 && mod(texCoord.y, 3.0) > 1.1 && (chan * 10.0) > texCoord.y) {
   
 
     //discard;
