@@ -11,13 +11,13 @@
   "animations": {
     "run": {
       "index":0,
-      "frameCount":8,
+      "frameCount":1,
       "speed":10
     },
     "spikes": {
       "index":1,
       "frameCount":1,
       "speed":10
-    },
+    }
   }
 }
