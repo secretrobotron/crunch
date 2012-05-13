@@ -7,7 +7,7 @@ define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/p
 
    GameLogic.EachFrame("Player").push( function(p, elapsedTime) {
     if(!p.collisionPoints.right2.state) {
-      p.speed[0] += 0.000004 * elapsedTime;
+      p.speed[0] += 0.000002 * elapsedTime;
       if (p.speed[0] > 0.6)
         p.speed[0] = 0.6;
       p.position[0] += p.speed[0];
@@ -31,7 +31,7 @@ define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/p
 
     if (p.sceneObject.position[1] < 0) {
       if (wilhelmCry) {
-        //wilhelmCry.cloneNode().play();
+        wilhelmCry.cloneNode().play();
       }
     }
 

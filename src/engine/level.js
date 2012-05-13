@@ -93,7 +93,8 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
         var floorEntity = new PlatformEntity({
           position: [x, setupOptions.levelOrigin[1] + h - EXTEND_PLATFORMS, 0],
           width: w,
-          height: h + EXTEND_PLATFORMS
+          height: h + EXTEND_PLATFORMS,
+          moving: Math.random() < 0.4
         });
         if (Math.random() > 0.2) {
           this.spawnCoin(scene, x - w + 2*w*Math.random(), setupOptions.levelOrigin[1] + h);
@@ -127,7 +128,7 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
       return p.collisionPoints.downA2.state || p.collisionPoints.downB2.state;
     };
 
-    GameLogic.OnBoxCollision("Player", "floor").push(function(p, c, e){
+    GameLogic.OnBoxCollision("Physical", "floor").push(function(p, c, e){
       if(isInsideGround(p) || isOnGround(p)){
         p.position[1] += 0.07;
         p.speed[1] = 0;

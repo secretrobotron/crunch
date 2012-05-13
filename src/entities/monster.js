@@ -1,7 +1,21 @@
-define(["engine/entity", "components/sprite", "text!sprites/monster.json"], 
-  function(Entity, SpriteComponent, SPRITE_SRC){
+define(["engine/entity", "engine/game-logic", "components/sprite", "text!sprites/monster.json"], 
+  function(Entity, GameLogic, SpriteComponent, SPRITE_SRC){
 
   var SPRITE_JSON = JSON.parse(SPRITE_SRC);
+
+   GameLogic.EachFrame("Monster").push( function(p, elapsedTime) {
+    if(p.speed[1] < -0.001) {
+      p.setAnimation("jumpDown");
+    } else if (p.speed[1] > 0.001) {
+      p.setAnimation("jumpUp");
+    }
+
+    if(GameLogic.IsGrounded(p)) {
+      p.setAnimation("run");
+    }
+
+    p.updateBB();
+  });
 
   return function(setupOptions){
 

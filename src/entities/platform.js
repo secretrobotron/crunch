@@ -1,5 +1,5 @@
-define(["engine/entity", "components/platform", "engine/loader"], 
-  function(Entity, PlatformComponent, Loader){
+define(["engine/entity", "engine/schedule", "components/platform", "engine/loader"], 
+  function(Entity, Schedule, PlatformComponent, Loader){
 
   var DEFAULT_FLOOR_DEPTH = 3;
 
@@ -18,6 +18,15 @@ define(["engine/entity", "components/platform", "engine/loader"],
       position: setupOptions.position,
       size: [setupOptions.width, setupOptions.height]
     });
+
+    if(setupOptions.moving){
+      var originalPosition = entity.position.slice();
+      var variance = Math.random();
+      Schedule.event.add("update", function(e){
+        entity.position[1] = originalPosition[1] + Math.sin(Date.now()/300 + variance) * 2
+        entity.updateBB();
+      });      
+    }
 
     return entity;
 
