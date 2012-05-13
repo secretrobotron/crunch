@@ -57,7 +57,6 @@ require([ "engine/schedule", "engine/menu",
     GameLogic.EachFrame("Player").push( function(p, elapsedTime) {
       DebugCanvas.Clear();
       document.getElementById("distance").style.left = -32 + 128*Math.round(p.position[0])/2000 + "px";
-      console.log(document.getElementById("distance").style.left);
       document.getElementById("meters").innerHTML = Math.round(p.position[0]);
       document.getElementById("metersfinal").innerHTML = Math.round(p.position[0]);
       var everyBody = GameLogic.gameObjects.all;

@@ -75,9 +75,16 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
         ],
         position: [x, y+5, 0.1],
       });
-      coin.collectedBy = function(player) {
-        GameLogic.RemoveGameObject(coin);
-        scene.remove(coin); 
+      coin.collectedBy = function(p) {
+        if (coin.collected)
+          return;
+        coin.collected = true;
+        coin.upVelocity = 0.04;
+        coin.rotationVelocity = 2*40;
+        setTimeout(function(){
+          scene.remove(coin); 
+          GameLogic.RemoveGameObject(coin);
+        }, 800);
       }
       GameLogic.AddGameObject(coin);
       scene.add(coin);
@@ -224,6 +231,15 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
       p.position[1] += p.speed[1] * elapsedTime;  
 
     });
+
+    GameLogic.EachFrame("collectable").push( function(p,elapsedTime) {
+      elapsedTime /= 20;
+      if (p.rotationVelocity) {
+        p.sceneObject.rotation[1] += p.rotationVelocity * elapsedTime;          
+        p.position[1] += p.upVelocity * elapsedTime;  
+      }
+    });
+
 
     GameLogic.EachFrame("Physical").push( function(p,elapsedTime) {
       // Slow down the elapsedTime

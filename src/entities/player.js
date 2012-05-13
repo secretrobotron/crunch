@@ -48,7 +48,7 @@ define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/p
       }
 
       if (p.canJump === true) {
-        var force = 0.4 * elapsedTime/4;
+        var force = 0.3 * elapsedTime/4;
         if (force > p.jumpForceRemaining) {
           force = p.jumpForceRemaining;
           p.canJump = false;
