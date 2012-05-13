@@ -19,6 +19,8 @@ define(["engine/entity", "engine/schedule", "components/platform", "engine/loade
       size: [setupOptions.width, setupOptions.height]
     });
 
+    entity.falling = setupOptions.falling;
+
     if(setupOptions.moving){
       var originalPosition = entity.position.slice();
       var variance = Math.random();

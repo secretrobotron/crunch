@@ -116,15 +116,29 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
       var x = setupOptions.levelOrigin[0];
       // Make the platforms go lower down
       var EXTEND_PLATFORMS = 10;
+      var firstBlock = true;
       while (x < setupOptions.goalAtY) {
         var h = 4 + Math.random() * 4;
         var w = 6 + Math.random() * 8;
+        // Make sure the first platform reach to 3
+        if (w+x < 5) {
+          w = 5-x;
+        }
         x += w * 1.3;
+        var isMoving = false;
+        var isFalling = false;
+        if (!firstBlock && Math.random() < 0.3) {
+          isMoving = true;
+        } else if (!firstBlock && Math.random() < 0.2) {
+          //disabled, collision bugs
+          //isFalling = true;
+        }
         var floorEntity = new PlatformEntity({
           position: [x, setupOptions.levelOrigin[1] + h - EXTEND_PLATFORMS, 0],
           width: w,
           height: h + EXTEND_PLATFORMS,
-          moving: Math.random() < 0.4
+          moving: isMoving,
+          falling: isFalling
         });
         if (Math.random() > 0.2) {
           this.spawnCoin(scene, x - w + 2*w*Math.random(), setupOptions.levelOrigin[1] + h);
@@ -141,11 +155,12 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
 
         GameLogic.AddGameObject(floorEntity);
         scene.add(floorEntity);
+        firstBlock = false;
       }
 
       this.buildBackground(scene);
 
-      var monsters = 20;
+      var monsters = 0;
       var SAFE_ZONE = 5;
       while(monsters--){
         var monsterEntity = new MonsterEntity({
@@ -156,7 +171,7 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
         scene.add(monsterEntity);
       }
 
-      var pigeons = 20;
+      var pigeons = 0;
       var SAFE_ZONE = 5;
       while(pigeons--){
         var pigeonEntity = new PigeonEntity({
@@ -188,6 +203,25 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
           p.updateBB();
         }
       }
+    });
+
+    GameLogic.OnBoxCollision("Player", "floor").push(function(p, f, e){
+      if (!f.falling) {
+        return;
+      }
+      f.speed = f.speed || [0, 0, 0];
+      f.speed[1] = -0.03;
+    });
+
+    GameLogic.EachFrame("floor").push( function(p,elapsedTime) {
+      if (!p.falling)
+        return;
+      if (!p.speed) {
+        return;
+      }
+      elapsedTime = elapsedTime / 14;
+      p.position[1] += p.speed[1] * elapsedTime;  
+
     });
 
     GameLogic.EachFrame("Physical").push( function(p,elapsedTime) {
