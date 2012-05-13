@@ -8,7 +8,7 @@ define([],
     }
 
     function beat() {
-      //console.log("beat");
+      module.lastBeat = new Date().getTime();
     }
     function spectrum_callback(spectrum) {
       module.spectrum = spectrum;

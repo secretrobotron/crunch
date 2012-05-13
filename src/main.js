@@ -61,7 +61,13 @@ require([ "engine/schedule", "engine/hud",
       }
     });
 
-    GameLogic.EachFrame("beats-z").push( function(b,elapsedTime) {
+    GameLogic.EachFrame("beats-z-beat").push( function(b,elapsedTime) {
+      if (!Beats.lastBeat)
+        return;
+      b.sceneObject.position[2] = b.original_z + (new Date().getTime() - Beats.lastBeat)/500;
+    });
+    
+    GameLogic.EachFrame("beats-z-spect").push( function(b,elapsedTime) {
       b.sceneObject.position[2] = b.original_z + 10*Beats.spectrumMax;
     });
     
@@ -118,9 +124,21 @@ require([ "engine/schedule", "engine/hud",
       //scene.cubicvr.camera.target = [playerEntity.position[0],9, 0];
       //scene.cubicvr.camera.position = [playerEntity.position[0], 14, 15];  
       var p = GameLogic.GetFamily("Player")[0];
-      scene.cubicvr.camera.target = [p.sceneObject.position[0]+cameraSpeedDistance*23, 7.5+cameraSpeedDistance*30, 0];
-      scene.cubicvr.camera.position = [p.sceneObject.position[0]+cameraSpeedDistance*10, 8.5+cameraSpeedDistance*40, 7 + cameraSpeedDistance*70];  
+
+      var cameraY = scene.cubicvr.camera.target[1];
+
+      scene.cubicvr.camera.position = [
+        p.sceneObject.position[0] + cameraSpeedDistance*10, 
+        14.5,
+        10 + cameraSpeedDistance*70
+      ];
       
+      scene.cubicvr.camera.target = [
+        p.sceneObject.position[0] + cameraSpeedDistance*23, 
+        cameraY - (cameraY - playerEntity.sceneObject.position[1])*0.08,
+        0
+      ];
+
       //pointLight.position[0] += dx;
       //playerEntity.move(dx);
       if(!firstFrame){
