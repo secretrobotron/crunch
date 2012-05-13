@@ -133,7 +133,7 @@ define(["./game-logic", "engine/entity","engine/beats", "components/sprite", "en
     this.buildToScene = function(scene) {
       var x = setupOptions.levelOrigin[0];
       // Make the platforms go lower down
-      var EXTEND_PLATFORMS = 15;
+      var EXTEND_PLATFORMS = 20;
       var RANDOM_Z = 0.05;
       var firstBlock = true;
       while (x < setupOptions.goalAtY) {
@@ -153,7 +153,7 @@ define(["./game-logic", "engine/entity","engine/beats", "components/sprite", "en
           //isFalling = true;
         }
         var floorEntity = new PlatformEntity({
-          position: [x, setupOptions.levelOrigin[1] + h - EXTEND_PLATFORMS, -RANDOM_Z + 2*Math.random()],
+          position: [x, setupOptions.levelOrigin[1] + h - EXTEND_PLATFORMS/2-4, -RANDOM_Z + 2*Math.random()],
           width: w,
           height: h + EXTEND_PLATFORMS,
           moving: isMoving,
