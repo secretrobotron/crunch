@@ -34,6 +34,11 @@ define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/p
             var elapsed = Date.now() - startTime;
             entity.sceneObject.position[0] -= Math.max(0, (1000 - elapsed)/8000);
             entity.sceneObject.visible = Math.round(Math.sin(elapsed/40)*.5 + .2) === 0;
+            if(elapsed < 500){
+              entity.forceHitAnim = true;
+            } else {
+              entity.forceHitAnim = false;
+            }
             if(elapsed > 2000){
               entity.sceneObject.visible = true;
               Schedule.event.remove("update", _playerHurtFunction);

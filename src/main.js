@@ -40,11 +40,11 @@ require([ "engine/schedule", "engine/hud",
     new BeatHelper("assets/audio/track.ogg", beat, spectrum_callback);
   }
 
+  cameraSpeedDistance = 0;
 
   DebugCanvas.SetEnabled(false);
 
   function createTestScene(){
-    
     var scene = new Scene();
 
     var playerEntity = new PlayerEntity({
@@ -82,7 +82,7 @@ require([ "engine/schedule", "engine/hud",
     GameLogic.EachFrame("Player").push( function(p, elapsedTime) {
       elapsedTime=elapsedTime/20;
       if(!p.collisionPoints.right2.state) {
-        p.speed[0] += 0.000004 * elapsedTime;
+        p.speed[0] += 0.0001 * elapsedTime;
         if (p.speed[0] > 0.6)
           p.speed[0] = 0.6;
         p.sceneObject.position[0] += p.speed[0] * elapsedTime;
@@ -96,8 +96,11 @@ require([ "engine/schedule", "engine/hud",
         p.setAnimation("jumpUp");
       }
 
-      if(GameLogic.IsGrounded(p)) {
+      if(GameLogic.IsGrounded(p) && p.speed[0] > 0 && !p.forceHitAnim) {
         p.setAnimation("run");
+      } 
+      if(p.forceHitAnim) {
+        p.setAnimation("hit");
       }
 
       DebugCanvas.Clear();
@@ -110,8 +113,10 @@ require([ "engine/schedule", "engine/hud",
         p.sceneObject.position[1] = 15;
       }
 
-      scene.cubicvr.camera.target = [p.sceneObject.position[0]+4, 9, 0];
-      scene.cubicvr.camera.position = [p.sceneObject.position[0]+4, 14, 15];  
+      cameraSpeedDistance += (p.speed[0] - cameraSpeedDistance)/3.0; 
+
+      scene.cubicvr.camera.target = [p.sceneObject.position[0]+cameraSpeedDistance*20, 9, 0];
+      scene.cubicvr.camera.position = [p.sceneObject.position[0]+cameraSpeedDistance*15, 14+cameraSpeedDistance*10, 8 + cameraSpeedDistance*50];  
       //scene.cubicvr.camera.position = [p.sceneObject.position[0], 14+Math.sin(p.sceneObject.position[0]*0.1)*3, 15];
       if (p.sceneObject.position[1] < 0) {
         if (wilhelmCry) {
