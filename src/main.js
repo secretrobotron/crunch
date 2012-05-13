@@ -81,6 +81,8 @@ require([ "engine/schedule", "engine/menu",
     });
 
     GameLogic.OnBoxCollision("Player", "collectable").push(function(p, c, e){
+      if (c.collected)
+        return;
       c.collectedBy(p);
       p.addCoins(1);
     });
