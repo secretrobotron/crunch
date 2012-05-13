@@ -91,7 +91,7 @@ define(["./game-logic", "engine/entity","engine/beats", "components/sprite", "en
           collectSfx.cloneNode().play();
         }
         coin.collected = true;
-        coin.upVelocity = 0.04;
+        coin.upVelocity = 0.2;
         coin.rotationVelocity = 2*40;
         setTimeout(function(){
           scene.remove(coin); 
@@ -105,7 +105,7 @@ define(["./game-logic", "engine/entity","engine/beats", "components/sprite", "en
     this.spawnBumper = function(scene, x, y) {
       var bump = new Entity({
         name: "bumper",
-        families : ["Bumper", "aHasCollisionPoints", "Physical"],
+        families : ["Bumper", "[removed]HasCollisionPoints", "[removed]Physical"],
         collisionPoints : {
           downA1: [-0.1, -0.1, 0.0],
           downA2: [-0.1, -0.2, 0.0],
@@ -133,7 +133,7 @@ define(["./game-logic", "engine/entity","engine/beats", "components/sprite", "en
     this.buildToScene = function(scene) {
       var x = setupOptions.levelOrigin[0];
       // Make the platforms go lower down
-      var EXTEND_PLATFORMS = 10;
+      var EXTEND_PLATFORMS = 15;
       var RANDOM_Z = 0.05;
       var firstBlock = true;
       while (x < setupOptions.goalAtY) {
@@ -165,9 +165,9 @@ define(["./game-logic", "engine/entity","engine/beats", "components/sprite", "en
         if (Math.random() > 0.8) {
           //this.spawnSpikes(scene, x - 0.8*w + 1.6*w*Math.random(), setupOptions.levelOrigin[1] + h);
         }
-        if (Math.random() > 0.3) {
+        if (Math.random() > 0.95) {
           var bx = x/2 + 10;
-          var by = setupOptions.levelOrigin[1] + 5;
+          var by = setupOptions.levelOrigin[1];
           this.spawnBumper(scene, bx, by);
         }
 
