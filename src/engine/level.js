@@ -130,8 +130,10 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
 
     GameLogic.OnBoxCollision("Physical", "floor").push(function(p, c, e){
       if(isInsideGround(p) || isOnGround(p)){
-        p.position[1] += 0.07;
-        p.speed[1] = 0;
+        p.position[1] = c.position[1] + c.size[1]/2 - p.collisionPoints.downA1[1];
+        if(p.speed[1] < 0){
+          p.speed[1] = 0;  
+        }
         p.updateBB();
       }
     });
@@ -147,13 +149,7 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
         }          
       }
 
-      p.position[1] += p.speed[1];
-
-      if (isInsideGround(p)) {
-        //p.position[1] += 0.05 * elapsedTime;
-      } else if (p.collisionPoints.right1.state) {
-        //p.position[0] -= 0.05 * elapsedTime;
-      }
+      p.position[1] += p.speed[1];  
 
       p.updateBB();
     });

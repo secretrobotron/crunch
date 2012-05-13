@@ -101,6 +101,16 @@ require([ "engine/schedule", "engine/menu",
     // and add them to the scene.
     level.buildToScene(scene);
 
+
+    // var platformEntity = new PlatformEntity({
+    //   position: [0, 3, 0],
+    //   width: 5,
+    //   height: 10,
+    //   moving: true
+    // });
+
+    // scene.add(platformEntity);
+    // GameLogic.AddGameObject(platformEntity);
     GameLogic.AddGameObject(playerEntity);
 
     scene.cubicvr.camera.target = [0, 0, 0];

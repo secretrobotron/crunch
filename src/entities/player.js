@@ -5,7 +5,7 @@ define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/p
 
   var SPRITE_JSON = JSON.parse(SPRITE_SRC);
 
-   GameLogic.EachFrame("Player").push( function(p, elapsedTime) {
+  GameLogic.EachFrame("Player").push( function(p, elapsedTime) {
     if(!p.collisionPoints.right2.state) {
       p.speed[0] += 0.000002 * elapsedTime;
       if (p.speed[0] > 0.6)
@@ -36,7 +36,7 @@ define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/p
     }
 
     p.updateBB();
-   });
+  });
 
   GameLogic.KeyEachFrame("Player").push( function(p, isPressed, keyCode, elapsedTime) {
     // Slow down the elapsedTime
@@ -48,9 +48,10 @@ define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/p
       }
 
       if (p.canJump === true) {
-        var force = 0.1 * elapsedTime/2;
+        var force = 0.1 * elapsedTime/4;
         if (force > p.jumpForceRemaining) {
           force = p.jumpForceRemaining;
+          p.canJump = false;
         }
         p.speed[1] += force;
         p.jumpForceRemaining -= 2*force;
@@ -87,10 +88,10 @@ define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/p
       ],
       families: ["Player", "HasCollisionPoints","Physical"],
       collisionPoints: { // TODO fix the collisionPoints positions
-        downA1: [-0.3, -2.55, 0], 
-        downA2: [-0.3, -2.65, 0],
-        downB1: [ 0.3, -2.55, 0], 
-        downB2: [ 0.3, -2.65, 0],
+        downA1: [-0.3, -2.0, 0], 
+        downA2: [-0.3, -2.95, 0],
+        downB1: [ 0.3, -2.0, 0], 
+        downB2: [ 0.3, -2.95, 0],
         right1: [0.4, -0.3, 0],
         right2: [0.7, -0.3, 0]
       },
