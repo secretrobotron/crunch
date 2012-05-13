@@ -46,9 +46,12 @@ require([ "engine/schedule", "engine/hud",
     GameLogic.AddGameObject(playerEntity);
     scene.add(playerEntity);
 
-    //var plane = new PlaneEntity({
-    //  size: 1,
-    //});
+    var plane = new PlaneEntity({
+      size: 10,
+      families : ["Plane"]
+    });
+    GameLogic.AddGameObject(plane);
+    scene.add(plane);
 
     GameLogic.EachFrame("Player").push( function(p, elapsedTime) {
       DebugCanvas.Clear();
