@@ -29,6 +29,7 @@ define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/p
 
     if (p.position[1] < -1) {
       p.position[1] = 15;
+      p.fall();
       if (wilhelmCry) {
         wilhelmCry.cloneNode().play();
       }
@@ -102,6 +103,7 @@ define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/p
       rotation: setupOptions.rotation,
       size: [SIZE, SIZE]
     });
+    entity.lives = setupOptions.lives;
 
     entity.setAnimation = function(animName) {
       entity.components["sprite"].currentAnimation = animName;
@@ -130,6 +132,17 @@ define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/p
         }(Date.now()));
         Schedule.event.add("update",_playerHurtFunction);
       }
+    };
+
+    entity.loseLife = function() {
+      entity.lives -= 1;
+      document.getElementById("lives").innerHTML = entity.lives + " x ";
+    };
+
+    entity.fall = function() {
+      console.log("loose life");
+      entity.hurt();
+      entity.loseLife();
     };
 
     return entity;

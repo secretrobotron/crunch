@@ -36,6 +36,7 @@ require([ "engine/schedule", "engine/menu",
     var playerEntity = new PlayerEntity({
       position: [0, 10, 0],
       rotation: [0, 180, 0],
+      lives: 3
     });
     playerEntity.coins = 0;
     playerEntity.addCoins = function(c) {
