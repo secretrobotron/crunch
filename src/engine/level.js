@@ -89,6 +89,11 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
       while (x < setupOptions.goalAtY) {
         var h = 4 + Math.random() * 4;
         var w = 6 + Math.random() * 8;
+        // Make sure the first platform reach to 3
+        if (w+x < 5) {
+          w = 5-x;
+          console.log("extend: " + (x+w));
+        }
         x += w * 1.3;
         var floorEntity = new PlatformEntity({
           position: [x, setupOptions.levelOrigin[1] + h - EXTEND_PLATFORMS, 0],

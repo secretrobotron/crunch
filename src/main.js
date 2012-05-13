@@ -27,11 +27,11 @@ require([ "engine/schedule", "engine/menu",
 
   DebugCanvas.SetEnabled(false);
 
-  function createTestScene(){
+  function createTestScene() {
     var scene = new Scene();
 
     // Start beathelper
-    Beats.play("assets/audio/track.ogg");
+    Beats.play("assets/audio/track2.ogg");
 
     var playerEntity = new PlayerEntity({
       position: [0, 10, 0],

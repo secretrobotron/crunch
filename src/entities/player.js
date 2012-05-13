@@ -47,21 +47,22 @@ define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/p
       }
 
       if (p.canJump === true) {
-        var force = 0.1 * elapsedTime/4;
+        var force = 0.4 * elapsedTime/4;
         if (force > p.jumpForceRemaining) {
           force = p.jumpForceRemaining;
           p.canJump = false;
         }
         p.speed[1] += force;
-        p.jumpForceRemaining -= 2*force;
+        //p.jumpForceRemaining -= 4*force;
+        p.jumpForceRemaining /= 2.0; // -= 4*force;
       }
     } else {
       // released key up, don't allow jump up again
       p.canJump = false;
     }
 
-    if (p.speed[1] > 1.3)
-      p.speed[1] = 1.3; // velocity max
+    if (p.speed[1] > 2.3)
+      p.speed[1] = 2.3; // velocity max
 
     p.updateBB();
 
