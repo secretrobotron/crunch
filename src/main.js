@@ -21,10 +21,10 @@ require([ "engine/schedule", "engine/hud",
   Loader.lock();
 
   var wilhelmCry = null;
-  Loader.load(Loader.Audio("assets/audio/WilhelmScream.ogg"), function(audio){
+/*  Loader.load(Loader.Audio("assets/audio/WilhelmScream.ogg"), function(audio){
     wilhelmCry = audio;
   });
-
+*/
 
   DebugCanvas.SetEnabled(false);
 
@@ -63,8 +63,8 @@ require([ "engine/schedule", "engine/hud",
       elapsedTime=elapsedTime/20;
       if(!p.collisionPoints.right2.state) {
         p.speed[0] += 0.000004 * elapsedTime;
-        if (p.speed[0] > 0.4)
-          p.speed[0] = 0.4;
+        if (p.speed[0] > 0.6)
+          p.speed[0] = 0.6;
         p.sceneObject.position[0] += p.speed[0] * elapsedTime;
       } else {
         //speed[0] = 0.8;
@@ -90,8 +90,8 @@ require([ "engine/schedule", "engine/hud",
         p.sceneObject.position[1] = 15;
       }
 
-      scene.cubicvr.camera.target = [p.sceneObject.position[0],9, 0];
-      scene.cubicvr.camera.position = [p.sceneObject.position[0], 14, 15];  
+      scene.cubicvr.camera.target = [p.sceneObject.position[0]+4, 9, 0];
+      scene.cubicvr.camera.position = [p.sceneObject.position[0]+4, 14, 15];  
       //scene.cubicvr.camera.position = [p.sceneObject.position[0], 14+Math.sin(p.sceneObject.position[0]*0.1)*3, 15];
       if (p.sceneObject.position[1] < 0) {
         if (wilhelmCry) {
@@ -107,24 +107,24 @@ require([ "engine/schedule", "engine/hud",
       if (isPressed) {
         if (GameLogic.IsGrounded(p)) {
           p.canJump = true;
-          p.jumpForceRemaining = 0.9;
+          p.jumpForceRemaining = 1.0;
         }
 
         if (p.canJump === true) {
-          var force = 0.06 * elapsedTime;
+          var force = 0.1 * elapsedTime;
           if (force > p.jumpForceRemaining) {
             force = p.jumpForceRemaining;
           }
           p.speed[1] += force;
-          p.jumpForceRemaining -= force;
+          p.jumpForceRemaining -= 2*force;
         }
       } else {
         // released key up, don't allow jump up again
         p.canJump = false;
       }
 
-      if (p.speed[1] > 0.3)
-        p.speed[1] = 0.3; // velocity max
+      if (p.speed[1] > 1.3)
+        p.speed[1] = 1.3; // velocity max
 
     } );
 
