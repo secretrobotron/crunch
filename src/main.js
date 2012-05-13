@@ -48,8 +48,8 @@ require([ "engine/schedule", "engine/hud",
 
     var plane = new PlaneEntity({
       size: 10,
-      families : ["Plane"]
-    });
+      families : ["plane"]
+    }, playerEntity);
     GameLogic.AddGameObject(plane);
     scene.add(plane);
 
