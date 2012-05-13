@@ -52,7 +52,6 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
         position: [x, y+5, 0.1],
       });
       coin.collectedBy = function(player) {
-        console.log("remove");
         GameLogic.RemoveGameObject(coin);
         scene.remove(coin); 
       }
