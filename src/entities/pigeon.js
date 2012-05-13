@@ -1,10 +1,11 @@
-define(["engine/entity", "engine/game-logic", "components/sprite", "text!sprites/pigeon.json"], 
-  function(Entity, GameLogic, SpriteComponent, SPRITE_SRC){
+define(["engine/entity", "engine/loader", "engine/game-logic", "components/sprite", "text!sprites/pigeon.json"], 
+  function(Entity, Loader, GameLogic, SpriteComponent, SPRITE_SRC){
 
   var SPRITE_JSON = JSON.parse(SPRITE_SRC);
 
   var SIZE = 3.1;
-
+  var birdSfx = null;
+  var loadOnlyOnce = true;
 
   GameLogic.EachFrame("Flying").push(function(p,elapsedTime){
     p.position[0] -= elapsedTime/100;
@@ -14,6 +15,13 @@ define(["engine/entity", "engine/game-logic", "components/sprite", "text!sprites
 
   return function(setupOptions){
 
+
+  if( Loader.IsAudioAvailable() && loadOnlyOnce ) {
+    loadOnlyOnce = false;
+    Loader.load(Loader.Audio("assets/audio/bird.wav"), function(audio){
+      birdSfx = audio;
+    });
+  }
 
     setupOptions = setupOptions || {};
 
@@ -39,6 +47,15 @@ define(["engine/entity", "engine/game-logic", "components/sprite", "text!sprites
       rotation: setupOptions.rotation,
       size: [SIZE, SIZE]
     });
+
+    entity.hit = function() {
+      if (entity.hasPlayedSound)
+        return;
+      entity.hasPlayedSound = true;
+      if (birdSfx) {
+         birdSfx.cloneNode().play();
+      }
+    }
 
     entity.setAnimation = function(animName) {
       entity.components["sprite"].currentAnimation = animName;

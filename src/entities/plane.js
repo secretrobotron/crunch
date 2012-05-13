@@ -24,7 +24,7 @@ define(["engine/entity", "engine/game-logic", "components/sprite", "engine/sched
       entity.position[0] = player.position[0];
       if (p.position[1] > 50)
         p.position[1] = -10;
-      p.position[0] += 0.4 * elapsedTime;
+      //p.position[0] += 0.4 * elapsedTime;
       p.position[1] += 0.04 * elapsedTime;
       //p.sceneObject.rotation[2] += 0.4 * elapsedTime;
     });

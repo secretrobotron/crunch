@@ -22,7 +22,6 @@ define(["engine/event"], function(Event){
       ++loaded;
       loadedItems[url] = item;
 
-      console.log(loaded, toLoad);
       if(loaded === toLoad){
         callback(loadedItems);
       }

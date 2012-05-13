@@ -257,8 +257,8 @@ define(["engine/schedule", "engine/debug-canvas"], function(Schedule,DebugCanvas
     // process all boxCollision
     ProcessBoxCollisions(elapsedTime);
     ProcessEachFrame(elapsedTime);
-    ProcessKeyEachFrame(KEY_UP, elapsedTime);
-    //ProcessKeyEachFrame(KEY_SPACE, elapsedTime);
+    //ProcessKeyEachFrame(KEY_UP, elapsedTime);
+    ProcessKeyEachFrame(KEY_SPACE, elapsedTime);
     //ProcessKeyEachFrame(KEY_W, elapsedTime);
 
     //if (module.logic.eachFrame) {

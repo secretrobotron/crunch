@@ -22,6 +22,7 @@ require([ "engine/schedule", "engine/menu",
   Loader.lock();
   Menu.show();
   Menu.showLoadMessage();
+  
 
   var cameraSpeedDistance = 0.2;
 
@@ -81,6 +82,9 @@ require([ "engine/schedule", "engine/menu",
     });
     
     GameLogic.OnBoxCollision("Monster", "Player").push(function(m, p, e){
+      if (m.hit) {
+        m.hit();
+      }
       p.hurt();
     });
 
@@ -200,6 +204,15 @@ require([ "engine/schedule", "engine/menu",
       Loader.unlock(function(){
         Menu.hideLoadMessage();
         Menu.showStartMessage(function(){
+          var elem = document.body;
+          if (elem.requestFullScreen) {  
+            elem.requestFullScreen();  
+          } else if (elem.mozRequestFullScreen) {  
+            elem.mozRequestFullScreen();  
+          } else if (elem.webkitRequestFullScreen) {  
+            elem.webkitRequestFullScreen();  
+          }  
+                                        
           Menu.hide();
           Intro.play();
         });
