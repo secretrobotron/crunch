@@ -16,8 +16,16 @@ define(["engine/entity", "engine/game-logic", "components/sprite", "engine/sched
           sprite: SPRITE_JSON
         }),
       ],
+      rotation: [0, 180, 10],
       position: [0, 10, -70]
     });
+    GameLogic.EachFrame("plane").push( function(p,elapsedTime) {
+      elapsedTime /= 20;
+      p.position[0] += 0.4 * elapsedTime;
+      p.position[1] += 0.04 * elapsedTime;
+      //p.sceneObject.rotation[2] += 0.4 * elapsedTime;
+    });
+
 
     return entity;
 
