@@ -82,15 +82,17 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
 
     this.buildToScene = function(scene) {
       var x = setupOptions.levelOrigin[0];
+      // Make the platforms go lower down
+      var EXTEND_PLATFORMS = 10;
       while (x < setupOptions.goalAtY) {
         var h = 2 + Math.random() * 2;
         var w = 3 + Math.random() * 4;
         x += w * 2;
         var floorEntity = new PlatformEntity({
-          position: [x, setupOptions.levelOrigin[1] + h, 0],
+          position: [x, setupOptions.levelOrigin[1] + h - EXTEND_PLATFORMS, 0],
           families : setupOptions.floorFamilies,
           width: w,
-          height: h
+          height: h + EXTEND_PLATFORMS
         });
         if (Math.random() > 0.2) {
           this.spawnCoin(scene, x - w + 2*w*Math.random(), setupOptions.levelOrigin[1] + h);
