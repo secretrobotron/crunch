@@ -158,6 +158,10 @@ require([ "engine/schedule", "engine/hud",
       p.hurt();
     });
 
+    GameLogic.OnBoxCollision("Player", "collectable").push(function(p, c, e){
+      c.collectedBy(p);
+    });
+
     var testLight = new CubicVR.Light({
       type: "area",
       intensity: 0.9,

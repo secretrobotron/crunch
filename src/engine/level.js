@@ -40,7 +40,7 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
     }
 
     this.spawnCoint = function(scene, x, y) {
-      var entity = new Entity({
+      var coin = new Entity({
         name: "coin",
         families : ["collectable"],
         components: [
@@ -51,7 +51,13 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
         ],
         position: [x, y+5, 0.1],
       });
-      scene.add(entity);
+      coin.collectedBy = function(player) {
+        console.log("remove");
+        GameLogic.RemoveGameObject(coin);
+        scene.remove(coin); 
+      }
+      GameLogic.AddGameObject(coin);
+      scene.add(coin);
     }
 
     this.buildToScene = function(scene) {
