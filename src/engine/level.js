@@ -1,17 +1,26 @@
 define(["./game-logic", "engine/entity","engine/beats", "components/sprite", "entities/platform", "entities/monster", "entities/pigeon", "engine/loader",
         "text!sprites/background.json", "text!sprites/coin.json", "text!sprites/spikes.json", "text!sprites/bumper.json"], 
   function(GameLogic, Entity, Beats, SpriteComponent, PlatformEntity, MonsterEntity, PigeonEntity, Loader, BG_SPRITE_SRC, COIN_SRC, SPIKE_SRC, BUMPER_SRC){
+  var loadOnce = true;
+  var collectSfx = null;
+  var springSfx = null;
+
   return function(setupOptions) {
 
     var BG_SPRITE_JSON = JSON.parse(BG_SPRITE_SRC);
     var COIN_JSON = JSON.parse(COIN_SRC);
     var SPIKE_JSON = JSON.parse(SPIKE_SRC);
     var BUMPER_JSON = JSON.parse(BUMPER_SRC);
-    var collectSfx = null;
 
     if( Loader.IsAudioAvailable() ) {
+      if (loadOnce == false)
+        return;
+      loadOnce = false;
       Loader.load(Loader.Audio("assets/audio/coin.wav"), function(audio){
         collectSfx = audio;
+      });
+      Loader.load(Loader.Audio("assets/audio/spring.wav"), function(audio){
+        springSfx = audio;
       });
     }
 
@@ -124,6 +133,11 @@ define(["./game-logic", "engine/entity","engine/beats", "components/sprite", "en
         speed: [0,0,0],
       });
       bump.bumpTheShitOf = function(someEntity,elapsedTime) {
+        if (springSfx) {
+          if (!bump.hasPlayedSound)
+            springSfx.cloneNode().play();
+          bump.hasPlayedSound = true;
+        }
         someEntity.speed[1] = 2.0; 
       }
       GameLogic.AddGameObject(bump);

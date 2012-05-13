@@ -81,6 +81,9 @@ require([ "engine/schedule", "engine/menu",
     });
     
     GameLogic.OnBoxCollision("Monster", "Player").push(function(m, p, e){
+      if (m.hit) {
+        m.hit();
+      }
       p.hurt();
     });
 
