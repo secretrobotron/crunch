@@ -13,6 +13,12 @@
     <script type="text/javascript" src="lib/require.min.js" data-main="src/main"></script>
   </head>
   <body>
+    <div id="game-over" class="can-fade" style="position:fixed;z-index:1000;top: 50%; left: 50%; margin-top: -50px; margin-left: -30px;">
+      <center>
+        <h1>Game over</h1>
+        <span id="score" class="can-fade">Total distance: <a id="metersfinal">1337</a> meters.</span>
+      </center>
+    </div>
     <canvas id="main-canvas" class="can-fade"></canvas>
     <canvas id="debug-canvas" width=500 height=500></canvas>
     <div id="coinsDiv" class="can-fade">

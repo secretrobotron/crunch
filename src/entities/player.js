@@ -137,10 +137,12 @@ define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/p
     entity.loseLife = function() {
       entity.lives -= 1;
       document.getElementById("lives").innerHTML = entity.lives + " x ";
+      if (entity.lives == 0) {
+        Schedule.event.dispatch("game-over");
+      }
     };
 
     entity.fall = function() {
-      console.log("loose life");
       entity.hurt();
       entity.loseLife();
     };

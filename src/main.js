@@ -57,6 +57,7 @@ require([ "engine/schedule", "engine/menu",
     GameLogic.EachFrame("Player").push( function(p, elapsedTime) {
       DebugCanvas.Clear();
       document.getElementById("meters").innerHTML = Math.round(p.position[0]);
+      document.getElementById("metersfinal").innerHTML = Math.round(p.position[0]);
       var everyBody = GameLogic.gameObjects.all;
       for(var o = 0; o<everyBody.length; ++o) {
         DebugCanvas.DrawBox(everyBody[o].aabb);
@@ -135,7 +136,13 @@ require([ "engine/schedule", "engine/menu",
     var firstFrame = true;
 
     Schedule.event.add("intro-complete", function(e){
+      var isGameOver = false;
       Schedule.event.add("update", function(e){
+        if (isGameOver)
+          return;
+        Schedule.event.add("game-over", function(e){
+          isGameOver = true;
+        });
         var dx = e.data.dt / 300;
         var p = GameLogic.GetFamily("Player")[0];
 
@@ -173,6 +180,13 @@ require([ "engine/schedule", "engine/menu",
       Schedule.event.add("intro-complete", function(e){
         document.getElementById("livesContainer").classList.add("fade-in");
         Graphics.addScene(mainScene);
+      });
+      Schedule.event.add("game-over", function(e){
+        document.getElementById("game-over").classList.add("fade-in");
+        setTimeout(function(){
+          document.getElementById("score").classList.add("fade-in");
+        }, 2000);
+        Graphics.removeScene(mainScene);
       });
       Intro.init();
       Loader.unlock(function(){

@@ -116,6 +116,7 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
       var x = setupOptions.levelOrigin[0];
       // Make the platforms go lower down
       var EXTEND_PLATFORMS = 10;
+      var RANDOM_Z = 0.05;
       var firstBlock = true;
       while (x < setupOptions.goalAtY) {
         var h = 4 + Math.random() * 4;
@@ -134,7 +135,7 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
           //isFalling = true;
         }
         var floorEntity = new PlatformEntity({
-          position: [x, setupOptions.levelOrigin[1] + h - EXTEND_PLATFORMS, 0],
+          position: [x, setupOptions.levelOrigin[1] + h - EXTEND_PLATFORMS, -RANDOM_Z + 2*Math.random()],
           width: w,
           height: h + EXTEND_PLATFORMS,
           moving: isMoving,
