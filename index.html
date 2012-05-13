@@ -4,6 +4,9 @@
     <title>CRUNCH</title>
     <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
     <link rel="stylesheet" href="css/style.css" />
+    <script type='application/javascript' src='lib/fft.js'></script>
+    <script type='application/javascript' src='lib/beatdetektor.js'></script>
+    <script type='application/javascript' src='lib/beathelper.js'></script>
     <script type="text/javascript" src="lib/CubicVR.js"></script>
     <script type="text/javascript" src="lib/require.min.js" data-main="src/main"></script>
   </head>
@@ -11,5 +14,6 @@
     <canvas id="main-canvas"></canvas>
     <canvas id="debug-canvas" width=500 height=500 style="visibility: hidden; position:absolute; left:0; top:0px; border: 2px solid red; z-index:9000"></canvas>
     <div id="big-message-wrapper"><div id="big-message"></div></div>
+    <div id="coinsDiv" style="position:absolute; left:0; top:0px;"><img src="assets/images/coin.png" style="position:absolute; top:-2px; width: 32px; height: 32px"></img></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <a id="coins">0</a></a>
   </body>  
 </html>

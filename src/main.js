@@ -26,6 +26,18 @@ require([ "engine/schedule", "engine/hud",
   });
 */
 
+function beat() {
+    //console.log("beat");
+}
+function spectrum_callback(spectrum) {
+    //console.log(spectrum);
+}
+function vu_callback(vu) {
+    //console.log(vu);
+}
+
+  new BeatHelper("assets/audio/track.ogg", beat, spectrum_callback);
+  
   DebugCanvas.SetEnabled(false);
 
   function createTestScene(){
@@ -47,6 +59,11 @@ require([ "engine/schedule", "engine/hud",
       speed:[0.1,-0.2,0],
       size: 3
     });
+    playerEntity.coins = 0;
+    playerEntity.addCoins = function(c) {
+      playerEntity.coins += c;
+      document.getElementById("coins").innerHTML = playerEntity.coins;
+    }
 
     var isInsideGround = function(p) {
       return p.collisionPoints.downA1.state || p.collisionPoints.downB1.state;
@@ -160,6 +177,7 @@ require([ "engine/schedule", "engine/hud",
 
     GameLogic.OnBoxCollision("Player", "collectable").push(function(p, c, e){
       c.collectedBy(p);
+      p.addCoins(1);
     });
 
     var testLight = new CubicVR.Light({
