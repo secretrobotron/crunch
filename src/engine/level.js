@@ -16,7 +16,7 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
               sprite: BG_SPRITE_JSON
             }),
           ],
-          position: [-10+101*i, -10, -100],
+          position: [-10+100*i, -10, -100],
         });
         scene.add(entity);
       }
