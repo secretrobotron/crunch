@@ -1,12 +1,19 @@
-define(["./game-logic", "engine/entity", "components/sprite", "entities/platform", "entities/monster", "entities/pigeon",
+define(["./game-logic", "engine/entity", "components/sprite", "entities/platform", "entities/monster", "entities/pigeon", "engine/loader",
         "text!sprites/background.json", "text!sprites/coin.json", "text!sprites/spikes.json", "text!sprites/bumper.json"], 
-  function(GameLogic, Entity, SpriteComponent, PlatformEntity, MonsterEntity, PigeonEntity, BG_SPRITE_SRC, COIN_SRC, SPIKE_SRC, BUMPER_SRC){
+  function(GameLogic, Entity, SpriteComponent, PlatformEntity, MonsterEntity, PigeonEntity, Loader, BG_SPRITE_SRC, COIN_SRC, SPIKE_SRC, BUMPER_SRC){
   return function(setupOptions) {
 
     var BG_SPRITE_JSON = JSON.parse(BG_SPRITE_SRC);
     var COIN_JSON = JSON.parse(COIN_SRC);
     var SPIKE_JSON = JSON.parse(SPIKE_SRC);
     var BUMPER_JSON = JSON.parse(BUMPER_SRC);
+    var collectSfx = null;
+
+    if( Loader.IsAudioAvailable() ) {
+      Loader.load(Loader.Audio("assets/audio/coin.wav"), function(audio){
+        collectSfx = audio;
+      });
+    }
 
     setupOptions = setupOptions || {};
 
@@ -78,6 +85,9 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
       coin.collectedBy = function(p) {
         if (coin.collected)
           return;
+        if (collectSfx) {
+          collectSfx.cloneNode().play();
+        }
         coin.collected = true;
         coin.upVelocity = 0.04;
         coin.rotationVelocity = 2*40;
