@@ -62,6 +62,7 @@ require([ "engine/schedule", "engine/menu",
       }
     });
 
+
     GameLogic.EachFrame("beats-z-beat").push( function(b,elapsedTime) {
       if (!Beats.lastBeat)
         return;
@@ -164,6 +165,7 @@ require([ "engine/schedule", "engine/menu",
     success: function(){
       var mainScene = createTestScene();
       Schedule.event.add("intro-complete", function(e){
+        document.getElementById("livesContainer").classList.add("fade-in");
         Graphics.addScene(mainScene);
       });
       Intro.init();
