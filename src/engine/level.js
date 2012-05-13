@@ -1,11 +1,12 @@
 define(["./game-logic", "engine/entity", "components/sprite", "entities/platform", "entities/monster", "entities/pigeon",
-        "text!sprites/background.json", "text!sprites/coin.json", "text!sprites/spikes.json"], 
-  function(GameLogic, Entity, SpriteComponent, PlatformEntity, MonsterEntity, PigeonEntity, BG_SPRITE_SRC, COIN_SRC, SPIKE_SRC){
+        "text!sprites/background.json", "text!sprites/coin.json", "text!sprites/spikes.json", "text!sprites/bumper.json"], 
+  function(GameLogic, Entity, SpriteComponent, PlatformEntity, MonsterEntity, PigeonEntity, BG_SPRITE_SRC, COIN_SRC, SPIKE_SRC, BUMPER_SRC){
   return function(setupOptions) {
 
     var BG_SPRITE_JSON = JSON.parse(BG_SPRITE_SRC);
     var COIN_JSON = JSON.parse(COIN_SRC);
     var SPIKE_JSON = JSON.parse(SPIKE_SRC);
+    var BUMPER_JSON = JSON.parse(BUMPER_SRC);
 
     setupOptions = setupOptions || {};
 
@@ -82,6 +83,35 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
       scene.add(coin);
     }
 
+    this.spawnBumper = function(scene, x, y) {
+      var bump = new Entity({
+        name: "bumper",
+        families : ["Bumper", "Physical"],
+        collisionPoints : {
+          downA1: [-0.1, -0.1, 0.0],
+          downA2: [-0.1, -0.2, 0.0],
+          downB1: [ 0.1, -0.2, 0.0],
+          downB2: [ 0.1, -0.2, 0.0],
+          right1: [ 0.2,  0.0, 0.0],
+          right2: [ 0.3,  0.0, 0.0],
+        },
+        components: [
+          new SpriteComponent({
+            size: 2.5,
+            sprite: BUMPER_JSON
+          }),
+        ],
+        position: [x, y+5, 0.1],
+        speed: [0,0,0],
+      });
+      bump.bumpTheShitOf = function(someEntity,elapsedTime) {
+        someEntity.speed[1] = 2.0; 
+        console.log("Bump!");
+      }
+      GameLogic.AddGameObject(bump);
+      scene.add(bump);
+    }
+
     this.buildToScene = function(scene) {
       var x = setupOptions.levelOrigin[0];
       // Make the platforms go lower down
@@ -102,6 +132,13 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
         if (Math.random() > 0.8) {
           this.spawnSpikes(scene, x - 0.8*w + 1.6*w*Math.random(), setupOptions.levelOrigin[1] + h);
         }
+        if (Math.random() > 0.3) {
+          var bx = x/2 + 10;
+          var by = setupOptions.levelOrigin[1] + 5;
+          this.spawnBumper(scene, bx, by);
+          console.log("bumper: "+bx+" "+by );
+        }
+
         GameLogic.AddGameObject(floorEntity);
         scene.add(floorEntity);
       }

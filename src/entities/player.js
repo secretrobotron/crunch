@@ -66,6 +66,8 @@ define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/p
 
     p.updateBB();
 
+    //console.log("playerpos: "+p.sceneObject.position[0]+" "+p.sceneObject.position[1]);
+
   });
 
   return function(setupOptions){

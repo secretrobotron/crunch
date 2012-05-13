@@ -79,6 +79,11 @@ require([ "engine/schedule", "engine/menu",
       p.addCoins(1);
     });
 
+    GameLogic.OnBoxCollision("Player", "Bumper").push(function(p, b, e){
+      b.bumpTheShitOf(p,e);
+      // TODO play a sound
+    });
+
     var testLight = new CubicVR.Light({
       type: "area",
       intensity: 0.9,
