@@ -2,8 +2,8 @@ define([  "engine/observe",
           "engine/graphics",
           "engine/component", "engine/schedule", 
           "text!shaders/screen-coordinates.frag", "text!shaders/screen-coordinates.vert",
-          "engine/hud"], 
-  function(Observe, Graphics, Component, Schedule, SCRN_COORDS_FRAG_SRC, SCRN_COORDS_VERT_SRC, HUD){
+          "engine/hud", "engine/beats"], 
+  function(Observe, Graphics, Component, Schedule, SCRN_COORDS_FRAG_SRC, SCRN_COORDS_VERT_SRC, HUD, Beats){
 
   var mat4 = CubicVR.mat4;
 
@@ -48,6 +48,7 @@ define([  "engine/observe",
       fragment: SCRN_COORDS_FRAG_SRC,
       init: function(shader){
         if(shader.uShadowIndex) shader.uShadowIndex.set(0);
+        if(shader.uAudio)screenCoordsShader.uAudio0.set(0);
         for(var prop in __datguiModel){
           if(__datguiModel.hasOwnProperty(prop)){
             shader[prop].set(__datguiModel[prop]);            
@@ -66,10 +67,23 @@ define([  "engine/observe",
       }
     }
 
+    var audioBuffer = [1,2,3,4,5,6,7,8,9,10,11,12];
+
     Schedule.event.add("update", function(e){
       if(screenCoordsShader.ready()){
         __shadowIndex += e.data.dt/1000;
         if(screenCoordsShader.uShadowIndex)screenCoordsShader.uShadowIndex.set(__shadowIndex);
+        //if(screenCoordsShader.uAudio)screenCoordsShader.uAudio.set(audioBuffer);
+        if(screenCoordsShader.uAudio0)screenCoordsShader.uAudio0.set(Math.random());
+        if(screenCoordsShader.uAudio0)screenCoordsShader.uAudio0.value = Math.random();
+
+        var buf = Beats.spectrum;
+
+        if(screenCoordsShader.uAudio0)screenCoordsShader.uAudio0.value =buf[1];
+        if(screenCoordsShader.uAudio4)screenCoordsShader.uAudio4.value =buf[12];
+        if(screenCoordsShader.uAudio7)screenCoordsShader.uAudio7.value =buf[31];
+
+
       }
     });
 
