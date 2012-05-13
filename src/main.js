@@ -45,7 +45,7 @@ require([ "engine/schedule", "engine/hud",
         right2: [0.6, -0.3, 0]
       },
       speed:[0,0.5,0],
-      size: 2
+      size: 3
     });
 
     var isInsideGround = function(p) {
