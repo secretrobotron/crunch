@@ -17,6 +17,8 @@ define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/p
       //speed[0] = 0.8;
     }
 
+    ///console.log("player " + p.position[0] + " " +  p.position[1]);
+
     if(p.speed[1] < -0.001) {
       p.setAnimation("jumpDown");
     } else if (p.speed[1] > 0.001) {

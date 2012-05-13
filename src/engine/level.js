@@ -1,12 +1,13 @@
 define(["./game-logic", "engine/entity","engine/beats", "components/sprite", "entities/platform", "entities/monster", "entities/pigeon", "engine/loader",
-        "text!sprites/background.json", "text!sprites/coin.json", "text!sprites/spikes.json", "text!sprites/bumper.json"], 
-  function(GameLogic, Entity, Beats, SpriteComponent, PlatformEntity, MonsterEntity, PigeonEntity, Loader, BG_SPRITE_SRC, COIN_SRC, SPIKE_SRC, BUMPER_SRC){
+        "text!sprites/background.json", "text!sprites/coin.json", "text!sprites/spikes.json", "text!sprites/bumper.json","text!levels/level01.json"], 
+  function(GameLogic, Entity, Beats, SpriteComponent, PlatformEntity, MonsterEntity, PigeonEntity, Loader, BG_SPRITE_SRC, COIN_SRC, SPIKE_SRC, BUMPER_SRC, LVL01_SRC){
   return function(setupOptions) {
 
     var BG_SPRITE_JSON = JSON.parse(BG_SPRITE_SRC);
     var COIN_JSON = JSON.parse(COIN_SRC);
     var SPIKE_JSON = JSON.parse(SPIKE_SRC);
     var BUMPER_JSON = JSON.parse(BUMPER_SRC);
+    var LVL01_JSON  = JSON.parse(LVL01_SRC);
     var collectSfx = null;
 
     if( Loader.IsAudioAvailable() ) {
@@ -130,7 +131,115 @@ define(["./game-logic", "engine/entity","engine/beats", "components/sprite", "en
       scene.add(bump);
     }
 
+
+
+
+    this.buildSceneFromJson = function(scene, lvl) {  //-------------- ****
+      var x = setupOptions.levelOrigin[0];
+      // Make the platforms go lower down
+      var EXTEND_PLATFORMS = 15;
+      var RANDOM_Z = 0.05;
+      
+      for (var b in lvl.blocks) {
+        var floorEntity = new PlatformEntity({
+          position: [lvl.blocks[b].x + lvl.blocks[b].l/2
+            , setupOptions.levelOrigin[1] + lvl.blocks[b].y - EXTEND_PLATFORMS  + 5
+            , -RANDOM_Z + 2*Math.random()],
+          width: lvl.blocks[b].l,
+          height: EXTEND_PLATFORMS,
+          moving: lvl.blocks[b].moving,
+          falling: false
+        });
+        
+        GameLogic.AddGameObject(floorEntity);
+        scene.add(floorEntity);
+      }
+
+      for (var bump in lvl.bumpers) {
+        this.spawnBumper(scene, lvl.bumpers[bump].x
+          , setupOptions.levelOrigin[1] + lvl.bumpers[bump].y  - 7.5);
+      }
+
+      for (var c in lvl.coin) {
+        this.spawnCoin(scene, lvl.coins[c].x, lvl.coins[c].y + 6);        
+      }
+
+      this.buildBackground(scene);
+
+      var monsters = 0;
+      var SAFE_ZONE = 5;
+      while(monsters--){
+        var monsterEntity = new MonsterEntity({
+          position: [SAFE_ZONE + Math.random()*(setupOptions.goalAtY-SAFE_ZONE), 115, 0],
+          rotation: [0, 0, 0],
+        });
+        GameLogic.AddGameObject(monsterEntity);
+        scene.add(monsterEntity);
+      }
+
+      var pigeons = 10;
+      var SAFE_ZONE = 5;
+      while(pigeons--){
+        var pigeonEntity = new PigeonEntity({
+          position: [SAFE_ZONE + Math.random()*(setupOptions.goalAtY-SAFE_ZONE), Math.random()*3 + 8, 0],
+          rotation: [0, 0, 0],
+        });
+        GameLogic.AddGameObject(pigeonEntity);
+        scene.add(pigeonEntity);
+      }
+
+    
+      // Make the platforms go lower down
+      var firstBlock = true;
+      while (x < setupOptions.goalAtY) {
+        var h = 4 + Math.random() * 4;
+        var w = 6 + Math.random() * 8;
+        // Make sure the first platform reach to 3
+        if (w+x < 5) {
+          w = 5-x;
+        }
+        x += w * 1.3;
+        var isMoving = false;
+        var isFalling = false;
+        if (!firstBlock && Math.random() < 0.3) {
+          isMoving = true;
+        } else if (!firstBlock && Math.random() < 0.2) {
+          //disabled, collision bugs
+          //isFalling = true;
+        }
+        var px = x;
+        var py = setupOptions.levelOrigin[1] + h;
+
+        //dump( '{"x": '+px+', "y":'+py+', "l":' +w+', "isMoving":'+isMoving+'},\n');
+        
+        if (Math.random() > 0.2) {
+          this.spawnCoin(scene, x - w + 2*w*Math.random(), setupOptions.levelOrigin[1] + h);
+        }
+        if (Math.random() > 0.96) {
+          var bx = x/2 + 10;
+          var by = setupOptions.levelOrigin[1];
+          this.spawnBumper(scene, bx, by);
+        }
+      }
+
+      Beats.beatEvents.push( function(){
+        var camX = scene.cubicvr.camera.position[0];
+        var pigeonEntity = new PigeonEntity({
+          position: [camX, Math.random()*5 + 7, 0],
+          rotation: [0, 0, 0],
+        });
+        GameLogic.AddGameObject(pigeonEntity);
+        scene.add(pigeonEntity);
+      });
+
+
+    };
+
     this.buildToScene = function(scene) {
+
+      this.buildSceneFromJson(scene,LVL01_JSON);
+      return;
+
       var x = setupOptions.levelOrigin[0];
       // Make the platforms go lower down
       var EXTEND_PLATFORMS = 15;
@@ -152,8 +261,12 @@ define(["./game-logic", "engine/entity","engine/beats", "components/sprite", "en
           //disabled, collision bugs
           //isFalling = true;
         }
+        var px = x;
+        var py = setupOptions.levelOrigin[1] + h;
+
+        dump( '{"x": '+px+', "y":'+py+', "l":' +w+', "isMoving":'+isMoving+'},\n');
         var floorEntity = new PlatformEntity({
-          position: [x, setupOptions.levelOrigin[1] + h - EXTEND_PLATFORMS, -RANDOM_Z + 2*Math.random()],
+          position: [px, py, -RANDOM_Z + 2*Math.random()],
           width: w,
           height: h + EXTEND_PLATFORMS,
           moving: isMoving,
