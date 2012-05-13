@@ -31,6 +31,7 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
           ],
           position: [-30+100*i, 15, -100],
         });
+        entity.original_y = 15;
         entity.original_z = -100;
         GameLogic.AddGameObject(entity);
         scene.add(entity);
@@ -48,6 +49,7 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
           ],
           position: [-10+100*i, 5, -50],
         });
+        entity.original_y = 5;
         entity.original_z = -50;
         GameLogic.AddGameObject(entity);
         scene.add(entity);

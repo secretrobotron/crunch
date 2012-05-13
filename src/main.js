@@ -69,7 +69,7 @@ require([ "engine/schedule", "engine/menu",
     GameLogic.EachFrame("beats-z-beat").push( function(b,elapsedTime) {
       if (!Beats.lastBeat)
         return;
-      b.sceneObject.position[2] = b.original_z + (new Date().getTime() - Beats.lastBeat)/500;
+      b.sceneObject.position[1] = b.original_y + (new Date().getTime() - Beats.lastBeat)/500;
     });
     
     GameLogic.EachFrame("beats-z-spect").push( function(b,elapsedTime) {
