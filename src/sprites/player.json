@@ -28,6 +28,11 @@
       "index":24,
       "frameCount":1,
       "speed":10
+    },
+    "hit": {
+      "index":32,
+      "frameCount":1,
+      "speed":10
     }
   }
 }

@@ -17,10 +17,17 @@ require([ "engine/schedule", "engine/hud",
 
   Loader.lock();
 
+  var wilhelmCry = null;
+/*  Loader.load(Loader.Audio("assets/audio/WilhelmScream.ogg"), function(audio){
+    wilhelmCry = audio;
+  });
+*/
+
+  var cameraSpeedDistance = 0.0;
+
   DebugCanvas.SetEnabled(false);
 
   function createTestScene(){
-    
     var scene = new Scene();
 
     // Start beathelper

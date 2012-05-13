@@ -1,6 +1,8 @@
 define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/player.json", "engine/game-logic", "engine/loader"], 
   function(Entity, SpriteComponent, Schedule, SPRITE_SRC, GameLogic, Loader){
 
+  var wilhelmCry = null;
+
   var SPRITE_JSON = JSON.parse(SPRITE_SRC);
 
    GameLogic.EachFrame("Player").push( function(p, elapsedTime) {
@@ -25,6 +27,12 @@ define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/p
 
     if (p.position[1] < -1) {
       p.position[1] = 15;
+    }
+
+    if (p.sceneObject.position[1] < 0) {
+      if (wilhelmCry) {
+        wilhelmCry.cloneNode().play();
+      }
     }
 
     p.updateBB();
@@ -61,7 +69,6 @@ define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/p
 
   return function(setupOptions){
 
-    var wilhelmCry = null;
     Loader.load(Loader.Audio("assets/audio/WilhelmScream.ogg"), function(audio){
       wilhelmCry = audio;
     });
@@ -103,6 +110,11 @@ define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/p
             var elapsed = Date.now() - startTime;
             entity.position[0] -= Math.max(0, (1000 - elapsed)/8000);
             entity.sceneObject.visible = Math.round(Math.sin(elapsed/40)*.5 + .2) === 0;
+            if(elapsed < 500){
+              entity.forceHitAnim = true;
+            } else {
+              entity.forceHitAnim = false;
+            }
             if(elapsed > 2000){
               entity.sceneObject.visible = true;
               Schedule.event.remove("update", _playerHurtFunction);
