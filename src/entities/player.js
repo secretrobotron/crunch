@@ -5,6 +5,8 @@ define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/p
 
   var SPRITE_JSON = JSON.parse(SPRITE_SRC);
 
+  var SIZE = 4;
+
   GameLogic.EachFrame("Player").push( function(p, elapsedTime) {
     if(!p.collisionPoints.right2.state) {
       p.speed[0] += 0.000002 * elapsedTime;
@@ -27,9 +29,6 @@ define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/p
 
     if (p.position[1] < -1) {
       p.position[1] = 15;
-    }
-
-    if (p.sceneObject.position[1] < 0) {
       if (wilhelmCry) {
         wilhelmCry.cloneNode().play();
       }
@@ -82,23 +81,23 @@ define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/p
       name: "player",
       components: [
         new SpriteComponent({
-          size: 4,
+          size: SIZE,
           sprite: SPRITE_JSON
         }),
       ],
       families: ["Player", "HasCollisionPoints","Physical"],
       collisionPoints: { // TODO fix the collisionPoints positions
-        downA1: [-0.3, -2.0, 0], 
-        downA2: [-0.3, -2.95, 0],
-        downB1: [ 0.3, -2.0, 0], 
-        downB2: [ 0.3, -2.95, 0],
-        right1: [0.4, -0.3, 0],
-        right2: [0.7, -0.3, 0]
+        downA1: [-SIZE*.1, -SIZE/2*.7, 0], 
+        downA2: [-SIZE*.1, -SIZE/2*.95, 0],
+        downB1: [ SIZE*.1, -SIZE/2*.7, 0], 
+        downB2: [ SIZE*.1, -SIZE/2*.95, 0],
+        right1: [SIZE/2*.6, -SIZE/2*.2, 0],
+        right2: [SIZE/2*.7, -SIZE/2*.2, 0]
       },
       speed: [0.15,-0.2,0],
       position: setupOptions.position,
       rotation: setupOptions.rotation,
-      size: [4, 4]
+      size: [SIZE, SIZE]
     });
 
     entity.setAnimation = function(animName) {
