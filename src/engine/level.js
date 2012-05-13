@@ -96,7 +96,7 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
             right2: [0.6, -0.3, 0]
           },
           speed:[0,0,0],
-          size: 7
+          size: 2
         });
         GameLogic.AddGameObject(monsterEntity);
         scene.add(monsterEntity);
