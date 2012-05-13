@@ -1,6 +1,6 @@
 window.dump = window.dump || function(){};
 
-require([ "engine/schedule", "engine/hud",
+require([ "engine/schedule", "engine/menu",
           "engine/graphics", "engine/scene",
           "entities/player",
           "engine/loader",
@@ -9,13 +9,18 @@ require([ "engine/schedule", "engine/hud",
           "engine/level",
           "engine/game-logic",
           "entities/platform",
-          "engine/debug-canvas"
+          "engine/debug-canvas",
+          "engine/menu", "engine/hud"
         ], 
-        function( Schedule, HUD, Graphics, Scene, 
+        function( Schedule, Menu, Graphics, Scene, 
                   PlayerEntity, Loader, Beats, PlaneEntity,
-                  Level, GameLogic, PlatformEntity, DebugCanvas){
+                  Level, GameLogic, PlatformEntity, DebugCanvas,
+                  Menu, HUD ){
 
+  Schedule.start();
   Loader.lock();
+  Menu.show();
+  Menu.showLoadMessage();
 
   var cameraSpeedDistance = 0.2;
 
@@ -34,7 +39,7 @@ require([ "engine/schedule", "engine/hud",
     playerEntity.coins = 0;
     playerEntity.addCoins = function(c) {
       playerEntity.coins += c;
-      document.getElementById("coins").innerHTML = playerEntity.coins;
+      HUD.setCoins(playerEntity.coins);
     }
 
     GameLogic.AddGameObject(playerEntity);
@@ -106,7 +111,6 @@ require([ "engine/schedule", "engine/hud",
 
     CubicVR.setGlobalAmbient([0.3,0.3,0.3]);
 
-
     var cameraIndex = 0;
 
     var firstFrame = true;
@@ -114,10 +118,6 @@ require([ "engine/schedule", "engine/hud",
     Schedule.event.add("intro-complete", function(e){
       Schedule.event.add("update", function(e){
         var dx = e.data.dt / 300;
-        //scene.cubicvr.camera.position[0] += dx;
-        //scene.cubicvr.camera.target[0] += dx;
-        //scene.cubicvr.camera.target = [playerEntity.position[0],9, 0];
-        //scene.cubicvr.camera.position = [playerEntity.position[0], 14, 15];  
         var p = GameLogic.GetFamily("Player")[0];
 
         var cameraY = scene.cubicvr.camera.target[1];
@@ -134,13 +134,14 @@ require([ "engine/schedule", "engine/hud",
           0
         ];
 
-        //pointLight.position[0] += dx;
-        //playerEntity.move(dx);
         if(!firstFrame){
           GameLogic.DoOneFrame();
         }
         firstFrame = false;
       });
+
+      HUD.showStatus();
+      Graphics.show();
     });
     
     return scene;
@@ -149,18 +150,20 @@ require([ "engine/schedule", "engine/hud",
   // Start graphics subsystem
   Graphics.setup({
     success: function(){
-      HUD.showBigMessage("Loading...");
       var mainScene = createTestScene();
       Schedule.event.add("intro-complete", function(e){
         Graphics.addScene(mainScene);
       });
-      Schedule.start();
       Loader.unlock(function(){
-        HUD.hideBigMessage();
+        Menu.hideLoadMessage();
+        Menu.showStartMessage(function(){
+          Menu.hide();
+          Schedule.event.dispatch("intro-complete");
+        });
       });
     },
     failure: function(){
-      HUD.showBigMessage("Startup Error: Please make sure your browser is WebGL-capable.");
+      //HUD.showBigMessage("Startup Error: Please make sure your browser is WebGL-capable.");
     }
   });
 

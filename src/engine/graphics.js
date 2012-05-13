@@ -51,6 +51,10 @@ define(["engine/observe"], function(Observe){
         }, events.failure);
     },
 
+    show: function(){
+      Graphics.canvas.classList.add("fade-in");
+    },
+
     viewport: {
       width: 0,
       height: 0

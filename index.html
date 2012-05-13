@@ -4,6 +4,7 @@
     <title>CRUNCH</title>
     <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
     <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/menu.css" />
     <script type='application/javascript' src='lib/fft.js'></script>
     <script type='application/javascript' src='lib/beatdetektor.js'></script>
     <script type='application/javascript' src='lib/beathelper.js'></script>
@@ -11,11 +12,29 @@
     <script type="text/javascript" src="lib/require.min.js" data-main="src/main"></script>
   </head>
   <body>
-    <canvas id="main-canvas"></canvas>
+    <canvas id="main-canvas" class="can-fade"></canvas>
     <canvas id="debug-canvas" width=500 height=500></canvas>
-    <div id="big-message-wrapper"><div id="big-message"></div></div>
-    <div id="coinsDiv">
+    <div id="coinsDiv" class="can-fade">
       <img src="assets/images/coin.png"/><div>: <span id="coins">0</span></div>
+    </div>
+    <div id="background-container" class="can-fade"></div>
+    <div id="container" class="can-fade">
+      <div id="cube">
+        <div>CRUNCH</div>
+        <div>
+          <h1>For ToJam 2012</h1>
+          <h2>Created By</h2>
+          <div>Nicolas Silva</div>
+          <div>Bobby Richter</div>
+          <div>Benoit Girard</div>
+          <h2>Music By</h2>
+          <div>Someone</div>
+        </div>
+        <div>
+          <div id="cube-load" class="can-fade animate"><span class="text">Loading...</span></div>
+          <div id="cube-start" class="can-fade"><span class="text">Start</span><span class="arrow">&rarr;</span></div>
+        </div>
+      </div>
     </div>
   </body>  
 </html>
