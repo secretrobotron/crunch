@@ -26,18 +26,21 @@ require([ "engine/schedule", "engine/hud",
   });
 */
 
-function beat() {
+  function beat() {
     //console.log("beat");
-}
-function spectrum_callback(spectrum) {
+  }
+  function spectrum_callback(spectrum) {
     //console.log(spectrum);
-}
-function vu_callback(vu) {
+  }
+  function vu_callback(vu) {
     //console.log(vu);
-}
+  }
 
-  new BeatHelper("assets/audio/track.ogg", beat, spectrum_callback);
-  
+  if (navigator.userAgent.indexOf("Firefox")!=-1) {
+    new BeatHelper("assets/audio/track.ogg", beat, spectrum_callback);
+  }
+
+
   DebugCanvas.SetEnabled(false);
 
   function createTestScene(){
