@@ -87,7 +87,7 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
       while (x < setupOptions.goalAtY) {
         var h = 4 + Math.random() * 4;
         var w = 6 + Math.random() * 8;
-        x += w * 2;
+        x += w * 1.3;
         var floorEntity = new PlatformEntity({
           position: [x, setupOptions.levelOrigin[1] + h - EXTEND_PLATFORMS, 0],
           width: w,
@@ -126,8 +126,8 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
     };
 
     GameLogic.OnBoxCollision("Player", "floor").push(function(p, c, e){
-      if(isInsideGround(p)){
-        p.position[1] = c.position[1] + (c.size[1]/2) + (p.size[1]/2) + p.collisionPoints.downA2[1];
+      if(isInsideGround(p) || isOnGround(p)){
+        p.position[1] += 0.07;
         p.speed[1] = 0;
         p.updateBB();
       }
@@ -135,10 +135,10 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
 
     GameLogic.EachFrame("Physical").push( function(p,elapsedTime) {
       // Slow down the elapsedTime
-      elapsedTime = elapsedTime / 20;
-      if (!p.collisionPoints.downA2.state || !p.collisionPoints.downB2.state ){
+      elapsedTime = elapsedTime / 14;
+      if (!isInsideGround(p) && !isOnGround(p)){
         // Gravity
-        p.speed[1] -= 0.03 * elapsedTime;
+        p.speed[1] -= 0.02 * elapsedTime;
         if (p.speed[1] < -0.4) {
           p.speed[1] = -0.4;
         }          

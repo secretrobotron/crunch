@@ -23,7 +23,7 @@ require([ "engine/schedule", "engine/hud",
   });
 */
 
-  var cameraSpeedDistance = 0.0;
+  var cameraSpeedDistance = 0.2;
 
   DebugCanvas.SetEnabled(false);
 
@@ -48,8 +48,8 @@ require([ "engine/schedule", "engine/hud",
 
     var plane = new PlaneEntity({
       size: 10,
-      families : ["Plane"]
-    });
+      families : ["plane"]
+    }, playerEntity);
     GameLogic.AddGameObject(plane);
     scene.add(plane);
 
@@ -99,7 +99,7 @@ require([ "engine/schedule", "engine/hud",
     GameLogic.AddGameObject(playerEntity);
 
     scene.cubicvr.camera.target = [0, 0, 0];
-    scene.cubicvr.camera.position = [0, 8, 20];
+    scene.cubicvr.camera.position = [0, 8, 25];
     scene.cubicvr.camera.setFOV(45);
 
     scene.cubicvr.setSkyBox(new CubicVR.SkyBox({texture: "assets/images/8bit-sky.jpg"}));
