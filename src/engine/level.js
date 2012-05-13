@@ -35,20 +35,6 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
         });
         scene.add(entity);
       }
-      // front
-      for (var i = 0; i < 100; i++) {
-        var entity = new Entity({
-          name: "background",
-          components: [
-            new SpriteComponent({
-              size: 10,
-              sprite: BG_SPRITE_JSON
-            }),
-          ],
-          position: [-10+10*i, 3, 1.5],
-        });
-        scene.add(entity);
-      }
     }
 
     this.buildToScene = function(scene) {

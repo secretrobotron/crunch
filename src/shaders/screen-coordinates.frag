@@ -11,7 +11,8 @@ void main(void) {
   float c = worldCoord.y/uYFactor + uYOffset;
   //c += fract(sin(dot(texCoord.xy ,vec2(12.9898,78.233))) * 43758.5453) * 0.1;
   c = clamp(c, 0.0, 0.7);
-  color.r = color.b = 0.1;
+  color.r = color.b = 0.0;
+  color.b = c /0.5;
   color.g = c;
   color.a = 1.0;
 
