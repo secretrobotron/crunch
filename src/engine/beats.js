@@ -7,9 +7,15 @@ define(["engine/loader"],
       module.spectrum.push(0);
     }
 
+ module.beatEvents = [];
+
     function beat() {
       module.lastBeat = new Date().getTime();
+      for(var i in module.beatEvents) {
+        beatEvents[i]();
+      }
     }
+
     function spectrum_callback(spectrum) {
       module.spectrum = spectrum;
       module.spectrumMax = 0;

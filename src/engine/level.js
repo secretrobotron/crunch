@@ -1,6 +1,6 @@
-define(["./game-logic", "engine/entity", "components/sprite", "entities/platform", "entities/monster", "entities/pigeon", "engine/loader",
+define(["./game-logic", "engine/entity","engine/beats", "components/sprite", "entities/platform", "entities/monster", "entities/pigeon", "engine/loader",
         "text!sprites/background.json", "text!sprites/coin.json", "text!sprites/spikes.json", "text!sprites/bumper.json"], 
-  function(GameLogic, Entity, SpriteComponent, PlatformEntity, MonsterEntity, PigeonEntity, Loader, BG_SPRITE_SRC, COIN_SRC, SPIKE_SRC, BUMPER_SRC){
+  function(GameLogic, Entity, Beats, SpriteComponent, PlatformEntity, MonsterEntity, PigeonEntity, Loader, BG_SPRITE_SRC, COIN_SRC, SPIKE_SRC, BUMPER_SRC){
   return function(setupOptions) {
 
     var BG_SPRITE_JSON = JSON.parse(BG_SPRITE_SRC);
@@ -91,7 +91,7 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
           collectSfx.cloneNode().play();
         }
         coin.collected = true;
-        coin.upVelocity = 0.04;
+        coin.upVelocity = 0.2;
         coin.rotationVelocity = 2*40;
         setTimeout(function(){
           scene.remove(coin); 
@@ -105,7 +105,7 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
     this.spawnBumper = function(scene, x, y) {
       var bump = new Entity({
         name: "bumper",
-        families : ["Bumper", "aHasCollisionPoints", "Physical"],
+        families : ["Bumper", "[removed]HasCollisionPoints", "[removed]Physical"],
         collisionPoints : {
           downA1: [-0.1, -0.1, 0.0],
           downA2: [-0.1, -0.2, 0.0],
@@ -133,7 +133,7 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
     this.buildToScene = function(scene) {
       var x = setupOptions.levelOrigin[0];
       // Make the platforms go lower down
-      var EXTEND_PLATFORMS = 10;
+      var EXTEND_PLATFORMS = 15;
       var RANDOM_Z = 0.05;
       var firstBlock = true;
       while (x < setupOptions.goalAtY) {
@@ -165,9 +165,9 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
         if (Math.random() > 0.8) {
           //this.spawnSpikes(scene, x - 0.8*w + 1.6*w*Math.random(), setupOptions.levelOrigin[1] + h);
         }
-        if (Math.random() > 0.3) {
+        if (Math.random() > 0.95) {
           var bx = x/2 + 10;
-          var by = setupOptions.levelOrigin[1] + 5;
+          var by = setupOptions.levelOrigin[1];
           this.spawnBumper(scene, bx, by);
         }
 
@@ -189,7 +189,7 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
         scene.add(monsterEntity);
       }
 
-      var pigeons = 0;
+      var pigeons = 10;
       var SAFE_ZONE = 5;
       while(pigeons--){
         var pigeonEntity = new PigeonEntity({
@@ -199,6 +199,16 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
         GameLogic.AddGameObject(pigeonEntity);
         scene.add(pigeonEntity);
       }
+
+      Beats.beatEvents.push( function(){
+        var camX = scene.cubicvr.camera.position[0];
+        var pigeonEntity = new PigeonEntity({
+          position: [camX, Math.random()*5 + 7, 0],
+          rotation: [0, 0, 0],
+        });
+        GameLogic.AddGameObject(pigeonEntity);
+        scene.add(pigeonEntity);
+      });
 
 
     };
