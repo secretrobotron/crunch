@@ -5,13 +5,14 @@ require([ "engine/schedule", "engine/hud",
           "entities/player",
           "engine/loader",
           "engine/beats",
+          "entities/plane",
           "engine/level",
           "engine/game-logic",
           "entities/platform",
           "engine/debug-canvas"
         ], 
         function( Schedule, HUD, Graphics, Scene, 
-                  PlayerEntity, Loader, Beats,
+                  PlayerEntity, Loader, Beats, PlaneEntity,
                   Level, GameLogic, PlatformEntity, DebugCanvas){
 
   var DEFAULT_FLOOR_Y = -5;
@@ -68,6 +69,10 @@ require([ "engine/schedule", "engine/hud",
 
     GameLogic.AddGameObject(playerEntity);
     scene.add(playerEntity);
+
+    //var plane = new PlaneEntity({
+    //  size: 1,
+    //});
 
     GameLogic.EachFrame("Player").push( function(p, elapsedTime) {
       elapsedTime=elapsedTime/20;
