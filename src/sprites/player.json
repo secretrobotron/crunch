@@ -15,17 +15,17 @@
       "speed":10
     },
     "jumpUp": {
-      "index":1,
+      "index":8,
       "frameCount":1,
       "speed":10
     },
     "jumpDown": {
-      "index":2,
+      "index":16,
       "frameCount":1,
       "speed":10
     },
     "slide": {
-      "index":3,
+      "index":24,
       "frameCount":1,
       "speed":10
     }

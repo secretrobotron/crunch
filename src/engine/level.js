@@ -1,10 +1,11 @@
 define(["./game-logic", "engine/entity", "components/sprite", "entities/platform", "entities/monster",
-        "text!sprites/background.json", "text!sprites/coin.json"], 
-  function(GameLogic, Entity, SpriteComponent, PlatformEntity, MonsterEntity, BG_SPRITE_SRC, COIN_SRC){
+        "text!sprites/background.json", "text!sprites/coin.json", "text!sprites/spikes.json"], 
+  function(GameLogic, Entity, SpriteComponent, PlatformEntity, MonsterEntity, BG_SPRITE_SRC, COIN_SRC, SPIKE_SRC){
   return function(setupOptions) {
 
     var BG_SPRITE_JSON = JSON.parse(BG_SPRITE_SRC);
     var COIN_JSON = JSON.parse(COIN_SRC);
+    var SPIKE_JSON = JSON.parse(SPIKE_SRC);
 
     setupOptions = setupOptions || {};
 
@@ -21,12 +22,14 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
           ],
           position: [-30+100*i, 15, -100],
         });
+        GameLogic.AddGameObject(entity);
         scene.add(entity);
       }
       // back 2
       for (var i = 0; i < 100; i++) {
         var entity = new Entity({
           name: "background",
+          families : ["beats-z"],
           components: [
             new SpriteComponent({
               size: 100,
@@ -35,11 +38,29 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
           ],
           position: [-10+100*i, 5, -50],
         });
+        entity.original_z = -50;
+        GameLogic.AddGameObject(entity);
         scene.add(entity);
       }
     }
 
-    this.spawnCoint = function(scene, x, y) {
+    this.spawnSpikes = function(scene, x, y) {
+      var spike = new Entity({
+        name: "spike",
+        families : ["spike"],
+        components: [
+          new SpriteComponent({
+            size: 1,
+            sprite: SPIKE_JSON
+          }),
+        ],
+        position: [x, y+y/1.25, 0.1],
+      });
+      GameLogic.AddGameObject(spike);
+      scene.add(spike);
+    }
+
+    this.spawnCoin = function(scene, x, y) {
       var coin = new Entity({
         name: "coin",
         families : ["collectable"],
@@ -52,7 +73,6 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
         position: [x, y+5, 0.1],
       });
       coin.collectedBy = function(player) {
-        console.log("remove");
         GameLogic.RemoveGameObject(coin);
         scene.remove(coin); 
       }
@@ -62,17 +82,22 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
 
     this.buildToScene = function(scene) {
       var x = setupOptions.levelOrigin[0];
+      // Make the platforms go lower down
+      var EXTEND_PLATFORMS = 10;
       while (x < setupOptions.goalAtY) {
         var h = 4 + Math.random() * 4;
         var w = 6 + Math.random() * 8;
         x += w * 2;
         var floorEntity = new PlatformEntity({
-          position: [x, setupOptions.levelOrigin[1] + h, 0],
+          position: [x, setupOptions.levelOrigin[1] + h - EXTEND_PLATFORMS, 0],
           width: w,
-          height: h
+          height: h + EXTEND_PLATFORMS
         });
-        if (Math.random() > 0.3) {
-          this.spawnCoint(scene, x - w + 2*w*Math.random(), setupOptions.levelOrigin[1] + h);
+        if (Math.random() > 0.2) {
+          this.spawnCoin(scene, x - w + 2*w*Math.random(), setupOptions.levelOrigin[1] + h);
+        }
+        if (Math.random() > 0.8) {
+          this.spawnSpikes(scene, x - 0.8*w + 1.6*w*Math.random(), setupOptions.levelOrigin[1] + h);
         }
         GameLogic.AddGameObject(floorEntity);
         scene.add(floorEntity);
@@ -80,16 +105,16 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
 
       this.buildBackground(scene);
 
-      // var monsters = 20;
-      // var SAFE_ZONE = 5;
-      // while(monsters--){
-      //   var monsterEntity = new MonsterEntity({
-      //     position: [SAFE_ZONE + Math.random()*(setupOptions.goalAtY-SAFE_ZONE), 115, 0],
-      //     rotation: [0, 0, 0]
-      //   });
-      //   GameLogic.AddGameObject(monsterEntity);
-      //   scene.add(monsterEntity);
-      // }
+      var monsters = 20;
+      var SAFE_ZONE = 5;
+      while(monsters--){
+        var monsterEntity = new MonsterEntity({
+          position: [SAFE_ZONE + Math.random()*(setupOptions.goalAtY-SAFE_ZONE), 115, 0],
+          rotation: [0, 0, 0],
+        });
+        GameLogic.AddGameObject(monsterEntity);
+        scene.add(monsterEntity);
+      }
     };
 
     var isInsideGround = function(p) {

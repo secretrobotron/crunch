@@ -27,7 +27,7 @@ define(["engine/entity", "components/sprite", "text!sprites/monster.json"],
       speed:[0,0,0],
       position: setupOptions.position,
       rotation: setupOptions.rotation,
-      size: [7, 7]
+      size: [2, 2]
     });
 
     entity.setAnimation = function(animName) {

@@ -246,6 +246,7 @@ define(["engine/schedule", "engine/debug-canvas"], function(Schedule,DebugCanvas
     var elapsedTime = module.elapsedTime = now - module.lastFrameTime;
     if (elapsedTime > 100) {
       // Max frame skip
+      console.log("elapsedTime to high, discarded " + (elapsedTime-100) + "ms");
       elapsedTime = 100;
     }
 

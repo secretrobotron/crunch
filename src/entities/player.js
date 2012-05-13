@@ -6,8 +6,8 @@ define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/p
    GameLogic.EachFrame("Player").push( function(p, elapsedTime) {
     if(!p.collisionPoints.right2.state) {
       p.speed[0] += 0.000004 * elapsedTime;
-      if (p.speed[0] > 0.4)
-        p.speed[0] = 0.4;
+      if (p.speed[0] > 0.6)
+        p.speed[0] = 0.6;
       p.sceneObject.position[0] += p.speed[0];
     } else {
       //speed[0] = 0.8;
@@ -36,24 +36,24 @@ define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/p
     if (isPressed) {
       if (GameLogic.IsGrounded(p)) {
         p.canJump = true;
-        p.jumpForceRemaining = 0.9;
+        p.jumpForceRemaining = 1.0;
       }
 
       if (p.canJump === true) {
-        var force = 0.06 * elapsedTime;
+        var force = 0.1 * elapsedTime;
         if (force > p.jumpForceRemaining) {
           force = p.jumpForceRemaining;
         }
         p.speed[1] += force;
-        p.jumpForceRemaining -= force;
+        p.jumpForceRemaining -= 2*force;
       }
     } else {
       // released key up, don't allow jump up again
       p.canJump = false;
     }
 
-    if (p.speed[1] > 0.3)
-      p.speed[1] = 0.3; // velocity max
+    if (p.speed[1] > 1.3)
+      p.speed[1] = 1.3; // velocity max
 
     p.updateBB();
 
@@ -85,7 +85,7 @@ define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/p
         right1: [0.4, -0.3, 0],
         right2: [0.7, -0.3, 0]
       },
-      speed: [0.1,-0.2,0],
+      speed: [0.2,-0.2,0],
       position: setupOptions.position,
       rotation: setupOptions.rotation,
       size: [3, 3]

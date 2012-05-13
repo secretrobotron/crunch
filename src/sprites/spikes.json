@@ -1,0 +1,23 @@
+{
+  "resource":"assets/images/spikes.png",
+  "numRows": 2,
+  "numCols": 1,
+  "defaultAnimation":"run",
+  "animation" : {
+    "frameCount": 1,
+    "speed": 10,
+    "index": 0
+  },
+  "animations": {
+    "run": {
+      "index":0,
+      "frameCount":1,
+      "speed":10
+    },
+    "spikes": {
+      "index":1,
+      "frameCount":1,
+      "speed":10
+    }
+  }
+}

@@ -4,13 +4,15 @@ require([ "engine/schedule", "engine/hud",
           "engine/graphics", "engine/scene",
           "entities/player",
           "engine/loader",
+          "engine/beats",
+          "entities/plane",
           "engine/level",
           "engine/game-logic",
           "entities/platform",
           "engine/debug-canvas"
         ], 
         function( Schedule, HUD, Graphics, Scene, 
-                  PlayerEntity, Loader, 
+                  PlayerEntity, Loader, Beats, PlaneEntity,
                   Level, GameLogic, PlatformEntity, DebugCanvas){
 
   Loader.lock();
@@ -21,13 +23,25 @@ require([ "engine/schedule", "engine/hud",
     
     var scene = new Scene();
 
+    // Start beathelper
+    Beats.play("assets/audio/track.ogg");
+
     var playerEntity = new PlayerEntity({
       position: [0, 10, 0],
       rotation: [0, 180, 0],
     });
+    playerEntity.coins = 0;
+    playerEntity.addCoins = function(c) {
+      playerEntity.coins += c;
+      document.getElementById("coins").innerHTML = playerEntity.coins;
+    }
 
     GameLogic.AddGameObject(playerEntity);
     scene.add(playerEntity);
+
+    //var plane = new PlaneEntity({
+    //  size: 1,
+    //});
 
     GameLogic.EachFrame("Player").push( function(p, elapsedTime) {
       DebugCanvas.Clear();
@@ -37,12 +51,17 @@ require([ "engine/schedule", "engine/hud",
       }
     });
 
+    GameLogic.EachFrame("beats-z").push( function(b,elapsedTime) {
+      b.sceneObject.position[2] = b.original_z + 10*Beats.spectrumMax;
+    });
+    
     GameLogic.OnBoxCollision("Monster", "Player").push(function(m, p, e){
       p.hurt();
     });
 
     GameLogic.OnBoxCollision("Player", "collectable").push(function(p, c, e){
       c.collectedBy(p);
+      p.addCoins(1);
     });
 
     var testLight = new CubicVR.Light({
@@ -58,7 +77,7 @@ require([ "engine/schedule", "engine/hud",
 
     var level = new Level({
       // Where the levle starts in space
-      levelOrigin: [-20, -4, 0],
+      levelOrigin: [-20, 0, 0],
       // How long the level is
       goalAtY: 600,
     });
@@ -76,6 +95,7 @@ require([ "engine/schedule", "engine/hud",
     scene.cubicvr.setSkyBox(new CubicVR.SkyBox({texture: "assets/images/8bit-sky.jpg"}));
 
     CubicVR.setGlobalAmbient([0.3,0.3,0.3]);
+
 
     var cameraIndex = 0;
 

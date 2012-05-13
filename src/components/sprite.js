@@ -37,8 +37,8 @@ define([  "engine/component", "engine/schedule", "engine/loader",
       mesh.prepare();
     }
 
-    if(__meshes[size]){
-      mesh = __meshes[size];
+    if(__meshes[size] && __meshes[size][spriteDescription.resource]){
+      mesh = __meshes[size][spriteDescription.resource];
     }
     else{
       mesh = new CubicVR.Mesh();
@@ -55,6 +55,7 @@ define([  "engine/component", "engine/schedule", "engine/loader",
         [3, 2, 1, 0]
       ]);
 
+      console.log("Load: " + spriteDescription.resource);
       if(!__materials[spriteDescription.resource]){
         Loader.load(Loader.Image(spriteDescription.resource), function(image){
           var cubicvrTextures = {
@@ -110,7 +111,8 @@ define([  "engine/component", "engine/schedule", "engine/loader",
         compile(__materials[spriteDescription.resource]);
       }
 
-      __meshes[size] = mesh;
+      __meshes[size] = __meshes[size] || {};
+      __meshes[size][spriteDescription.resource] = mesh;
     }
 
     var _sceneObject = _this.sceneObject = new CubicVR.SceneObject(mesh);
