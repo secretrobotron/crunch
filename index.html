@@ -13,10 +13,27 @@
     <script type="text/javascript" src="lib/require.min.js" data-main="src/main"></script>
   </head>
   <body>
+    <div id="game-over" class="can-fade" style="position:fixed;z-index:1000;top: 50%; left: 50%; margin-top: -50px; margin-left: -30px;">
+      <center>
+        <h1>Game over</h1>
+        <span id="score" class="can-fade">Total distance: <a id="metersfinal">1337</a> meters.</span>
+      </center>
+    </div>
     <canvas id="main-canvas" class="can-fade"></canvas>
     <canvas id="debug-canvas" width=500 height=500></canvas>
     <div id="coinsDiv" class="can-fade">
-      <img src="assets/images/coin.png"/><div>: <span id="coins">0</span></div>
+      <img src="assets/images/coin.png"/><div>: <span id="coins">0</span></div><br>
+      Distance: <a id="meters">0</a> meters
+    </div>
+    <div id="distanceContainer" class="can-fade" style="position:fixed;top: 0px;z-index:10;width: 100%">
+      <center>
+        <a style="width: 128px;background-repeat:no-repeat;background-image: url('assets/images/progress.png');">
+          <img id="distance" src="assets/images/lives.png" style="position:relative;width:64px;height:64px;"/>
+        </a>
+      </center>
+    </div>
+    <div id="livesContainer" class="can-fade" style="z-index:10;position:fixed;right:5px">
+      <a id="lives">3 x </a><img src="assets/images/lives.png" style="width:64px;height:64px;"/>
     </div>
     <div id="background-container" class="can-fade"></div>
     <div id="container" class="can-fade">
@@ -28,8 +45,8 @@
           <div>Nicolas Silva</div>
           <div>Bobby Richter</div>
           <div>Benoit Girard</div>
-          <h2>Music By</h2>
-          <div>Someone</div>
+          <h2>Music</h2>
+          <div>MA-8Bit-Song-E</div>
         </div>
         <div>
           <canvas id="cube-fft" width="360" height="360"></canvas>

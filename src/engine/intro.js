@@ -19,7 +19,8 @@ define(["engine/loader", "engine/schedule"], function(Loader, Schedule){
       setTimeout(function(){
         __container.style.display = "none";
         Schedule.event.dispatch("intro-complete");
-      }, 7000);
+      //}, 7000);
+      }, 0);
     }
 
   };

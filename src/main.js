@@ -36,6 +36,7 @@ require([ "engine/schedule", "engine/menu",
     var playerEntity = new PlayerEntity({
       position: [0, 10, 0],
       rotation: [0, 180, 0],
+      lives: 3
     });
     playerEntity.coins = 0;
     playerEntity.addCoins = function(c) {
@@ -55,11 +56,15 @@ require([ "engine/schedule", "engine/menu",
 
     GameLogic.EachFrame("Player").push( function(p, elapsedTime) {
       DebugCanvas.Clear();
+      document.getElementById("distance").style.left = -32 + 128*Math.round(p.position[0])/2000 + "px";
+      document.getElementById("meters").innerHTML = Math.round(p.position[0]);
+      document.getElementById("metersfinal").innerHTML = Math.round(p.position[0]);
       var everyBody = GameLogic.gameObjects.all;
       for(var o = 0; o<everyBody.length; ++o) {
         DebugCanvas.DrawBox(everyBody[o].aabb);
       }
     });
+
 
     GameLogic.EachFrame("beats-z-beat").push( function(b,elapsedTime) {
       if (!Beats.lastBeat)
@@ -76,6 +81,8 @@ require([ "engine/schedule", "engine/menu",
     });
 
     GameLogic.OnBoxCollision("Player", "collectable").push(function(p, c, e){
+      if (c.collected)
+        return;
       c.collectedBy(p);
       p.addCoins(1);
     });
@@ -100,7 +107,7 @@ require([ "engine/schedule", "engine/menu",
       // Where the levle starts in space
       levelOrigin: [-20, 0, 0],
       // How long the level is
-      goalAtY: 600,
+      goalAtY: 2000,
     });
 
     // Transform the setup options into platforms entity
@@ -132,7 +139,13 @@ require([ "engine/schedule", "engine/menu",
     var firstFrame = true;
 
     Schedule.event.add("intro-complete", function(e){
+      var isGameOver = false;
       Schedule.event.add("update", function(e){
+        if (isGameOver)
+          return;
+        Schedule.event.add("game-over", function(e){
+          isGameOver = true;
+        });
         var dx = e.data.dt / 300;
         var p = GameLogic.GetFamily("Player")[0];
 
@@ -168,7 +181,16 @@ require([ "engine/schedule", "engine/menu",
     success: function(){
       var mainScene = createTestScene();
       Schedule.event.add("intro-complete", function(e){
+        document.getElementById("livesContainer").classList.add("fade-in");
+        document.getElementById("distanceContainer").classList.add("fade-in");
         Graphics.addScene(mainScene);
+      });
+      Schedule.event.add("game-over", function(e){
+        document.getElementById("game-over").classList.add("fade-in");
+        setTimeout(function(){
+          document.getElementById("score").classList.add("fade-in");
+        }, 2000);
+        Graphics.removeScene(mainScene);
       });
       Intro.init();
       Loader.unlock(function(){
