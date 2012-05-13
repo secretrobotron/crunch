@@ -46,6 +46,10 @@ require([ "engine/schedule", "engine/menu",
 
     GameLogic.AddGameObject(playerEntity);
     scene.add(playerEntity);
+    Schedule.event.add("game-over", function(e){
+      GameLogic.RemoveGameObject(playerEntity);
+      scene.remove(playerEntity);
+    });
 
     var plane = new PlaneEntity({
       size: 10,
@@ -190,7 +194,7 @@ require([ "engine/schedule", "engine/menu",
         setTimeout(function(){
           document.getElementById("score").classList.add("fade-in");
         }, 2000);
-        Graphics.removeScene(mainScene);
+        //Graphics.removeScene(mainScene);
       });
       Intro.init();
       Loader.unlock(function(){
