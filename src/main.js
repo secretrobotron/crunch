@@ -96,7 +96,7 @@ require([ "engine/schedule", "engine/hud",
     GameLogic.AddGameObject(playerEntity);
 
     scene.cubicvr.camera.target = [0, 0, 0];
-    scene.cubicvr.camera.position = [0, 8, 20];
+    scene.cubicvr.camera.position = [0, 8, 25];
     scene.cubicvr.camera.setFOV(45);
 
     scene.cubicvr.setSkyBox(new CubicVR.SkyBox({texture: "assets/images/8bit-sky.jpg"}));
@@ -113,7 +113,7 @@ require([ "engine/schedule", "engine/hud",
       //scene.cubicvr.camera.position[0] += dx;
       //scene.cubicvr.camera.target[0] += dx;
       scene.cubicvr.camera.target = [playerEntity.position[0],9, 0];
-      scene.cubicvr.camera.position = [playerEntity.position[0], 14, 15];  
+      scene.cubicvr.camera.position = [playerEntity.position[0], 14, 25];  
       //pointLight.position[0] += dx;
       //playerEntity.move(dx);
       if(!firstFrame){

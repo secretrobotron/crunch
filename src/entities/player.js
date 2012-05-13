@@ -7,10 +7,10 @@ define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/p
 
    GameLogic.EachFrame("Player").push( function(p, elapsedTime) {
     if(!p.collisionPoints.right2.state) {
-      p.speed[0] += 0.000004 * elapsedTime;
+      p.speed[0] += 0.00000004 * elapsedTime;
       if (p.speed[0] > 0.6)
         p.speed[0] = 0.6;
-      p.sceneObject.position[0] += p.speed[0];
+      p.position[0] += p.speed[0];
     } else {
       //speed[0] = 0.8;
     }
@@ -31,7 +31,7 @@ define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/p
 
     if (p.sceneObject.position[1] < 0) {
       if (wilhelmCry) {
-        wilhelmCry.cloneNode().play();
+        //wilhelmCry.cloneNode().play();
       }
     }
 
@@ -48,7 +48,7 @@ define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/p
       }
 
       if (p.canJump === true) {
-        var force = 0.1 * elapsedTime;
+        var force = 0.1 * elapsedTime/2;
         if (force > p.jumpForceRemaining) {
           force = p.jumpForceRemaining;
         }
@@ -79,23 +79,23 @@ define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/p
       name: "player",
       components: [
         new SpriteComponent({
-          size: 3,
+          size: 4,
           sprite: SPRITE_JSON
         }),
       ],
       families: ["Player", "HasCollisionPoints","Physical"],
       collisionPoints: { // TODO fix the collisionPoints positions
-        downA1: [-0.3, -0.6, 0], 
-        downA2: [-0.3, -0.85, 0],
-        downB1: [ 0.3, -0.6, 0], 
-        downB2: [ 0.3, -0.85, 0],
+        downA1: [-0.3, -2.55, 0], 
+        downA2: [-0.3, -2.65, 0],
+        downB1: [ 0.3, -2.55, 0], 
+        downB2: [ 0.3, -2.65, 0],
         right1: [0.4, -0.3, 0],
         right2: [0.7, -0.3, 0]
       },
-      speed: [0.2,-0.2,0],
+      speed: [0.15,-0.2,0],
       position: setupOptions.position,
       rotation: setupOptions.rotation,
-      size: [3, 3]
+      size: [4, 4]
     });
 
     entity.setAnimation = function(animName) {
