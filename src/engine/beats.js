@@ -1,5 +1,5 @@
-define([],
-  function(){
+define(["engine/loader"],
+  function(Loader){
     var module = {};
     module.spectrum = [];
     module.spectrumMax = 0;
@@ -26,6 +26,11 @@ define([],
     module.play = function(track) {
       if (navigator.userAgent.indexOf("Firefox")!=-1) {
         new BeatHelper(track, beat, spectrum_callback);
+      }
+      else if(Loader.IsAudioAvailable()){
+        Loader.load(Loader.Audio(track), function(audio){
+          audio.play();
+        });
       }
     };
 
