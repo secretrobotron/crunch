@@ -41,8 +41,8 @@ require([ "engine/schedule", "engine/hud",
         downA2: [-0.3, -0.85, 0],
         downB1: [ 0.3, -0.6, 0], 
         downB2: [ 0.3, -0.85, 0],
-        right1: [0.5, -0.3, 0],
-        right2: [0.6, -0.3, 0]
+        right1: [0.4, -0.3, 0],
+        right2: [0.7, -0.3, 0]
       },
       speed:[0,0.5,0],
       size: 3
