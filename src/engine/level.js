@@ -1,6 +1,6 @@
-define(["./game-logic", "engine/entity", "components/sprite", "entities/platform", "entities/monster", "entities/pigeon",
+define(["./game-logic", "engine/entity","engine/beats", "components/sprite", "entities/platform", "entities/monster", "entities/pigeon",
         "text!sprites/background.json", "text!sprites/coin.json", "text!sprites/spikes.json", "text!sprites/bumper.json"], 
-  function(GameLogic, Entity, SpriteComponent, PlatformEntity, MonsterEntity, PigeonEntity, BG_SPRITE_SRC, COIN_SRC, SPIKE_SRC, BUMPER_SRC){
+  function(GameLogic, Entity, Beats, SpriteComponent, PlatformEntity, MonsterEntity, PigeonEntity, BG_SPRITE_SRC, COIN_SRC, SPIKE_SRC, BUMPER_SRC){
   return function(setupOptions) {
 
     var BG_SPRITE_JSON = JSON.parse(BG_SPRITE_SRC);
@@ -179,7 +179,7 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
         scene.add(monsterEntity);
       }
 
-      var pigeons = 0;
+      var pigeons = 10;
       var SAFE_ZONE = 5;
       while(pigeons--){
         var pigeonEntity = new PigeonEntity({
@@ -189,6 +189,16 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
         GameLogic.AddGameObject(pigeonEntity);
         scene.add(pigeonEntity);
       }
+
+      Beats.beatEvents.push( function(){
+        var camX = scene.cubicvr.camera.position[0];
+        var pigeonEntity = new PigeonEntity({
+          position: [camX, Math.random()*5 + 7, 0],
+          rotation: [0, 0, 0],
+        });
+        GameLogic.AddGameObject(pigeonEntity);
+        scene.add(pigeonEntity);
+      });
 
 
     };

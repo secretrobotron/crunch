@@ -3,9 +3,17 @@ define(["engine/entity", "engine/game-logic", "components/sprite", "text!sprites
 
   var SPRITE_JSON = JSON.parse(SPRITE_SRC);
 
-  var SIZE = 7;
+  var SIZE = 3.1;
+
+
+  GameLogic.EachFrame("Flying").push(function(p,elapsedTime){
+    p.position[0] -= elapsedTime/100;
+    p.aabb[0][0] -= elapsedTime/100;
+    p.aabb[1][0] -= elapsedTime/100;
+  });
 
   return function(setupOptions){
+
 
     setupOptions = setupOptions || {};
 
@@ -17,7 +25,7 @@ define(["engine/entity", "engine/game-logic", "components/sprite", "text!sprites
           sprite: SPRITE_JSON
         }),
       ],
-      families : ["Monster", "HasCollisionPoints", "Flying"],
+      families : ["Monster", "Flying"],
       collisionPoints: { // TODO fix the collisionPoints positions
         downA1: [-SIZE*.1, -SIZE/2*.9, 0], 
         downA2: [-SIZE*.1, -SIZE/2*.95, 0],

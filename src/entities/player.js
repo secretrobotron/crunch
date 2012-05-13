@@ -23,8 +23,12 @@ define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/p
       p.setAnimation("jumpUp");
     }
 
-    if(GameLogic.IsGrounded(p)) {
+    if(GameLogic.IsGrounded(p) && !p.forceHitAnim) {
       p.setAnimation("run");
+    }
+
+    if(p.forceHitAnim) {
+      p.setAnimation("hit");
     }
 
     if (p.position[1] < -1) {
