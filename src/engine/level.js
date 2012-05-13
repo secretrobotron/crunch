@@ -1,6 +1,6 @@
-define(["./game-logic", "engine/entity", "components/sprite", "entities/platform", "entities/monster",
+define(["./game-logic", "engine/entity", "components/sprite", "entities/platform", "entities/monster", "entities/pigeon",
         "text!sprites/background.json", "text!sprites/coin.json", "text!sprites/spikes.json"], 
-  function(GameLogic, Entity, SpriteComponent, PlatformEntity, MonsterEntity, BG_SPRITE_SRC, COIN_SRC, SPIKE_SRC){
+  function(GameLogic, Entity, SpriteComponent, PlatformEntity, MonsterEntity, PigeonEntity, BG_SPRITE_SRC, COIN_SRC, SPIKE_SRC){
   return function(setupOptions) {
 
     var BG_SPRITE_JSON = JSON.parse(BG_SPRITE_SRC);
@@ -118,6 +118,19 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
         GameLogic.AddGameObject(monsterEntity);
         scene.add(monsterEntity);
       }
+
+      var pigeons = 20;
+      var SAFE_ZONE = 5;
+      while(pigeons--){
+        var pigeonEntity = new PigeonEntity({
+          position: [SAFE_ZONE + Math.random()*(setupOptions.goalAtY-SAFE_ZONE), Math.random()*3 + 8, 0],
+          rotation: [0, 0, 0],
+        });
+        GameLogic.AddGameObject(pigeonEntity);
+        scene.add(pigeonEntity);
+      }
+
+
     };
 
     var isInsideGround = function(p) {

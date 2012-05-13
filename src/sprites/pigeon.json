@@ -1,13 +1,8 @@
 {
   "resource":"assets/images/pigeon.png",
-  "numRows": 8,
-  "numCols": 8,
-  "defaultAnimation":"run",
-  "animation" : {
-    "frameCount": 2,
-    "speed": 4,
-    "index": 2
-  },
+  "numRows": 2,
+  "numCols": 2,
+  "defaultAnimation": "left",
   "animations": {
     "right": {
       "index":0,
