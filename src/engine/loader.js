@@ -3,6 +3,16 @@ define(["engine/event"], function(Event){
   var __currentPool = null;
   var __dummyFunc = function(){};
 
+  var __audioAvailable = true;
+
+  try {
+    var testAudio = new Audio();
+    audio.load();
+  } catch (e) {
+    __audioAvailable = false;
+  }
+
+
   function __loadItems(items, callback){
     var toLoad = items.length,
         loaded = 0,
@@ -46,6 +56,9 @@ define(["engine/event"], function(Event){
   }
 
   var Loader = {
+    IsAudioAvailable: function() {
+      return __audioAvailable;
+    },
 
     Audio: function(url, callback){
       callback = callback || __dummyFunc;

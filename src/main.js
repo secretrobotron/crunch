@@ -117,6 +117,7 @@ require([ "engine/schedule", "engine/hud",
       //scene.cubicvr.camera.target[0] += dx;
       //scene.cubicvr.camera.target = [playerEntity.position[0],9, 0];
       //scene.cubicvr.camera.position = [playerEntity.position[0], 14, 15];  
+      var p = GameLogic.GetFamily("Player")[0];
       scene.cubicvr.camera.target = [p.sceneObject.position[0]+cameraSpeedDistance*23, 7.5+cameraSpeedDistance*30, 0];
       scene.cubicvr.camera.position = [p.sceneObject.position[0]+cameraSpeedDistance*10, 8.5+cameraSpeedDistance*40, 7 + cameraSpeedDistance*70];  
       
