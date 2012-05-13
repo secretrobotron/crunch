@@ -4,18 +4,19 @@ define(["engine/entity", "engine/game-logic", "components/sprite", "engine/sched
   var SPRITE_JSON = JSON.parse(SPRITE_SRC);
 
   return function(setupOptions){
-    return;
     setupOptions = setupOptions || {};
 
+    console.log("Size: " + setupOptions.size);
     var entity = new Entity({
       name: "plane",
+      families: setupOptions.families,
       components: [
         new SpriteComponent({
           size: setupOptions.size,
           sprite: SPRITE_JSON
         }),
       ],
-      families: setupOptions.families,
+      position: [0, 10, -70]
     });
 
     return entity;

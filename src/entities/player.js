@@ -69,10 +69,12 @@ define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/p
 
   return function(setupOptions){
 
-    Loader.load(Loader.Audio("assets/audio/WilhelmScream.ogg"), function(audio){
-      wilhelmCry = audio;
-    });
-
+    if( Loader.IsAudioAvailable() ) {
+      Loader.load(Loader.Audio("assets/audio/WilhelmScream.ogg"), function(audio){
+        wilhelmCry = audio;
+      });
+    }
+    
     setupOptions = setupOptions || {};
 
     var entity = new Entity({
