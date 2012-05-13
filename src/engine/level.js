@@ -22,12 +22,14 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
           ],
           position: [-30+100*i, 15, -100],
         });
+        GameLogic.AddGameObject(entity);
         scene.add(entity);
       }
       // back 2
       for (var i = 0; i < 100; i++) {
         var entity = new Entity({
           name: "background",
+          families : ["beats-z"],
           components: [
             new SpriteComponent({
               size: 100,
@@ -36,6 +38,8 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
           ],
           position: [-10+100*i, 5, -50],
         });
+        entity.original_z = -50;
+        GameLogic.AddGameObject(entity);
         scene.add(entity);
       }
     }
@@ -56,7 +60,7 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
       scene.add(spike);
     }
 
-    this.spawnCoint = function(scene, x, y) {
+    this.spawnCoin = function(scene, x, y) {
       var coin = new Entity({
         name: "coin",
         families : ["collectable"],
@@ -78,18 +82,22 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
 
     this.buildToScene = function(scene) {
       var x = setupOptions.levelOrigin[0];
+      // Make the platforms go lower down
+      var EXTEND_PLATFORMS = 10;
       while (x < setupOptions.goalAtY) {
         var h = 2 + Math.random() * 2;
         var w = 3 + Math.random() * 4;
         x += w * 2;
         var floorEntity = new PlatformEntity({
-          position: [x, setupOptions.levelOrigin[1] + h, 0],
+          position: [x, setupOptions.levelOrigin[1] + h - EXTEND_PLATFORMS, 0],
           families : setupOptions.floorFamilies,
           width: w,
-          height: h
+          height: h + EXTEND_PLATFORMS
         });
-        if (Math.random() > 0.0 || true) {
-          //this.spawnCoint(scene, x - w + 2*w*Math.random(), setupOptions.levelOrigin[1] + h);
+        if (Math.random() > 0.2) {
+          this.spawnCoin(scene, x - w + 2*w*Math.random(), setupOptions.levelOrigin[1] + h);
+        }
+        if (Math.random() > 0.8) {
           this.spawnSpikes(scene, x - 0.8*w + 1.6*w*Math.random(), setupOptions.levelOrigin[1] + h);
         }
         GameLogic.AddGameObject(floorEntity);

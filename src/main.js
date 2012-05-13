@@ -4,13 +4,14 @@ require([ "engine/schedule", "engine/hud",
           "engine/graphics", "engine/scene",
           "entities/player",
           "engine/loader",
+          "engine/beats",
           "engine/level",
           "engine/game-logic",
           "entities/platform",
           "engine/debug-canvas"
         ], 
         function( Schedule, HUD, Graphics, Scene, 
-                  PlayerEntity, Loader, 
+                  PlayerEntity, Loader, Beats,
                   Level, GameLogic, PlatformEntity, DebugCanvas){
 
   var DEFAULT_FLOOR_Y = -5;
@@ -26,26 +27,15 @@ require([ "engine/schedule", "engine/hud",
   });
 */
 
-  function beat() {
-    //console.log("beat");
-  }
-  function spectrum_callback(spectrum) {
-    //console.log(spectrum);
-  }
-  function vu_callback(vu) {
-    //console.log(vu);
-  }
-
-  if (navigator.userAgent.indexOf("Firefox")!=-1) {
-    new BeatHelper("assets/audio/track.ogg", beat, spectrum_callback);
-  }
-
-  cameraSpeedDistance = 0;
+  var cameraSpeedDistance = 0.0;
 
   DebugCanvas.SetEnabled(false);
 
   function createTestScene(){
     var scene = new Scene();
+
+    // Start beathelper
+    Beats.play("assets/audio/track.ogg");
 
     var playerEntity = new PlayerEntity({
       position: [0, 12, 0],
@@ -82,9 +72,9 @@ require([ "engine/schedule", "engine/hud",
     GameLogic.EachFrame("Player").push( function(p, elapsedTime) {
       elapsedTime=elapsedTime/20;
       if(!p.collisionPoints.right2.state) {
-        p.speed[0] += 0.0001 * elapsedTime;
-        if (p.speed[0] > 0.6)
-          p.speed[0] = 0.6;
+        p.speed[0] += 0.00008 * elapsedTime;
+        if (p.speed[0] > 0.8)
+          p.speed[0] = 0.8;
         p.sceneObject.position[0] += p.speed[0] * elapsedTime;
       } else {
         //speed[0] = 0.8;
@@ -113,10 +103,10 @@ require([ "engine/schedule", "engine/hud",
         p.sceneObject.position[1] = 15;
       }
 
-      cameraSpeedDistance += (p.speed[0] - cameraSpeedDistance)/3.0; 
+      cameraSpeedDistance += (p.speed[0] - cameraSpeedDistance)/10.0; 
 
-      scene.cubicvr.camera.target = [p.sceneObject.position[0]+cameraSpeedDistance*20, 9, 0];
-      scene.cubicvr.camera.position = [p.sceneObject.position[0]+cameraSpeedDistance*15, 14+cameraSpeedDistance*10, 8 + cameraSpeedDistance*50];  
+      scene.cubicvr.camera.target = [p.sceneObject.position[0]+cameraSpeedDistance*23, 7.5+cameraSpeedDistance*30, 0];
+      scene.cubicvr.camera.position = [p.sceneObject.position[0]+cameraSpeedDistance*10, 8.5+cameraSpeedDistance*40, 7 + cameraSpeedDistance*70];  
       //scene.cubicvr.camera.position = [p.sceneObject.position[0], 14+Math.sin(p.sceneObject.position[0]*0.1)*3, 15];
       if (p.sceneObject.position[1] < 0) {
         if (wilhelmCry) {
@@ -153,6 +143,9 @@ require([ "engine/schedule", "engine/hud",
 
     } );
 
+    GameLogic.EachFrame("beats-z").push( function(b,elapsedTime) {
+      b.sceneObject.position[2] = b.original_z + 10*Beats.spectrumMax;
+    });
     GameLogic.EachFrame("Physical").push( function(p,elapsedTime) {
       // Slow down the elapsedTime
       elapsedTime = elapsedTime / 20;
@@ -219,6 +212,7 @@ require([ "engine/schedule", "engine/hud",
     scene.cubicvr.setSkyBox(new CubicVR.SkyBox({texture: "assets/images/8bit-sky.jpg"}));
 
     CubicVR.setGlobalAmbient([0.3,0.3,0.3]);
+
 
     var cameraIndex = 0;
 
