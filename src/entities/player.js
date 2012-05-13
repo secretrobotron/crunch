@@ -33,7 +33,7 @@ define(["engine/entity", "components/sprite", "engine/schedule", "text!sprites/p
           return function(e){
             var elapsed = Date.now() - startTime;
             entity.sceneObject.position[0] -= Math.max(0, (1000 - elapsed)/8000);
-            entity.sceneObject.visible = Math.round(Math.sin(elapsed/20)*.5 + .5) === 0;
+            entity.sceneObject.visible = Math.round(Math.sin(elapsed/40)*.5 + .2) === 0;
             if(elapsed > 2000){
               entity.sceneObject.visible = true;
               Schedule.event.remove("update", _playerHurtFunction);

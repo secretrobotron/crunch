@@ -1,5 +1,5 @@
 {
-  "resource":"assets/images/background.png",
+  "resource":"assets/images/coin.png",
   "numRows": 1,
   "numCols": 1,
   "defaultAnimation":"run",

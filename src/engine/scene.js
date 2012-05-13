@@ -23,7 +23,7 @@ define(["./event", "./graphics"], function(Event, Graphics){
 
     this.remove = function(obj){
       obj.scene = null;
-      cubicvrScene.unbind(obj.sceneObject);
+      cubicvrScene.remove(obj.sceneObject);
       _this.event.dispatch("entity-removed", obj);
     };
 
