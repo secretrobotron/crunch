@@ -55,6 +55,7 @@ require([ "engine/schedule", "engine/menu",
 
     GameLogic.EachFrame("Player").push( function(p, elapsedTime) {
       DebugCanvas.Clear();
+      document.getElementById("meters").innerHTML = Math.round(p.position[0]);
       var everyBody = GameLogic.gameObjects.all;
       for(var o = 0; o<everyBody.length; ++o) {
         DebugCanvas.DrawBox(everyBody[o].aabb);
@@ -95,7 +96,7 @@ require([ "engine/schedule", "engine/menu",
       // Where the levle starts in space
       levelOrigin: [-20, 0, 0],
       // How long the level is
-      goalAtY: 600,
+      goalAtY: 2000,
     });
 
     // Transform the setup options into platforms entity
