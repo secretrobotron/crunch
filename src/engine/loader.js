@@ -38,6 +38,7 @@ define(["engine/event"], function(Event){
     Event(this);
 
     this.push = function(item, callback){
+      console.log(item.url);
       _items.push(item);
       _this.event.add("loaded", function(e){
         callback(e.data);

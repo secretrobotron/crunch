@@ -46,3 +46,26 @@ html, body{
 .fade-in{
   opacity: 1;
 }
+
+#debug-canvas{
+  visibility: hidden;
+  position: absolute;
+  left: 0;
+  top: 0px;
+  border: 2px solid red;
+  z-index: 9000;
+}
+
+#coinsDiv{
+  position:absolute;
+  left:0;
+  top:0px;
+}
+
+#coinsDiv > div{
+  position: absolute;
+  top: 20px;
+  left: 60px;
+  width: 32px;
+  height: 32px;
+}

@@ -12,8 +12,10 @@
   </head>
   <body>
     <canvas id="main-canvas"></canvas>
-    <canvas id="debug-canvas" width=500 height=500 style="visibility: hidden; position:absolute; left:0; top:0px; border: 2px solid red; z-index:9000"></canvas>
+    <canvas id="debug-canvas" width=500 height=500></canvas>
     <div id="big-message-wrapper"><div id="big-message"></div></div>
-    <div id="coinsDiv" style="position:absolute; left:0; top:0px;"><img src="assets/images/coin.png" style="position:absolute; top:-2px; width: 32px; height: 32px"></img></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <a id="coins">0</a></a>
+    <div id="coinsDiv">
+      <img src="assets/images/coin.png"/><div>: <span id="coins">0</span></div>
+    </div>
   </body>  
 </html>

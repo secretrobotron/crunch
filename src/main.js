@@ -17,12 +17,6 @@ require([ "engine/schedule", "engine/hud",
 
   Loader.lock();
 
-  var wilhelmCry = null;
-/*  Loader.load(Loader.Audio("assets/audio/WilhelmScream.ogg"), function(audio){
-    wilhelmCry = audio;
-  });
-*/
-
   var cameraSpeedDistance = 0.2;
 
   DebugCanvas.SetEnabled(false);
@@ -117,34 +111,36 @@ require([ "engine/schedule", "engine/hud",
 
     var firstFrame = true;
 
-    Schedule.event.add("update", function(e){
-      var dx = e.data.dt / 300;
-      //scene.cubicvr.camera.position[0] += dx;
-      //scene.cubicvr.camera.target[0] += dx;
-      //scene.cubicvr.camera.target = [playerEntity.position[0],9, 0];
-      //scene.cubicvr.camera.position = [playerEntity.position[0], 14, 15];  
-      var p = GameLogic.GetFamily("Player")[0];
+    Schedule.event.add("intro-complete", function(e){
+      Schedule.event.add("update", function(e){
+        var dx = e.data.dt / 300;
+        //scene.cubicvr.camera.position[0] += dx;
+        //scene.cubicvr.camera.target[0] += dx;
+        //scene.cubicvr.camera.target = [playerEntity.position[0],9, 0];
+        //scene.cubicvr.camera.position = [playerEntity.position[0], 14, 15];  
+        var p = GameLogic.GetFamily("Player")[0];
 
-      var cameraY = scene.cubicvr.camera.target[1];
+        var cameraY = scene.cubicvr.camera.target[1];
 
-      scene.cubicvr.camera.position = [
-        p.sceneObject.position[0] + cameraSpeedDistance*10, 
-        14.5,
-        10 + cameraSpeedDistance*70
-      ];
-      
-      scene.cubicvr.camera.target = [
-        p.sceneObject.position[0] + cameraSpeedDistance*23, 
-        cameraY - (cameraY - playerEntity.sceneObject.position[1])*0.08,
-        0
-      ];
+        scene.cubicvr.camera.position = [
+          p.sceneObject.position[0] + cameraSpeedDistance*10, 
+          14.5,
+          10 + cameraSpeedDistance*70
+        ];
+        
+        scene.cubicvr.camera.target = [
+          p.sceneObject.position[0] + cameraSpeedDistance*23, 
+          cameraY - (cameraY - playerEntity.sceneObject.position[1])*0.08,
+          0
+        ];
 
-      //pointLight.position[0] += dx;
-      //playerEntity.move(dx);
-      if(!firstFrame){
-        GameLogic.DoOneFrame();
-      }
-      firstFrame = false;
+        //pointLight.position[0] += dx;
+        //playerEntity.move(dx);
+        if(!firstFrame){
+          GameLogic.DoOneFrame();
+        }
+        firstFrame = false;
+      });
     });
     
     return scene;
@@ -154,7 +150,10 @@ require([ "engine/schedule", "engine/hud",
   Graphics.setup({
     success: function(){
       HUD.showBigMessage("Loading...");
-      Graphics.addScene(createTestScene());
+      var mainScene = createTestScene();
+      Schedule.event.add("intro-complete", function(e){
+        Graphics.addScene(mainScene);
+      });
       Schedule.start();
       Loader.unlock(function(){
         HUD.hideBigMessage();
