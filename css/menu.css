@@ -37,20 +37,24 @@
   transition          : transform 2s ease-in-out;
 
   -webkit-transition-delay: 2s;
+  -moz-transition-delay: 2s;
+  -o-transition-delay: 2s;
+  -ms-transition-delay: 2s;
 
   -webkit-transform-style : preserve-3d;
   -moz-transform-style    : preserve-3d;
   -o-transform-style      : preserve-3d;
   -ms-transform-style     : preserve-3d;
   transform-style         : preserve-3d;
+
 }
 
 #cube.animate{
-  -ms-transform: rotateX(60deg) rotateY(60deg);
-  -o-transform: rotateX(60deg) rotateY(60deg);
+  -ms-transform: rotateX(60deg) rotateZ(-45deg);
+  -o-transform: rotateX(60deg) rotateZ(-45deg);
   -webkit-transform: rotateX(60deg) rotateZ(-45deg);
-  -moz-transform: rotateX(60deg) rotateY(60deg);
-  transform: rotateX(60deg) rotateY(60deg);
+  -moz-transform: rotateX(60deg) rotateZ(-45deg);
+  transform: rotateX(60deg) rotateZ(-45deg);
 }
 
 #cube>div {
@@ -69,13 +73,19 @@
   -ms-transform     : translateZ(200px);
   transform         : translateZ(200px);
   font-size: 380px;
-  background: -moz-linear-gradient(-45deg,  rgba(255,48,25,1) 0%, rgba(207,4,4,0.3) 55%, rgba(207,4,4,0) 79%); /* FF3.6+ */
+  background: -moz-linear-gradient(45deg,  rgba(255,48,25,1) 0%, rgba(207,4,4,0.3) 55%, rgba(207,4,4,0) 79%); /* FF3.6+ */
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(255,48,25,1)), color-stop(55%,rgba(207,4,4,0.3)), color-stop(79%,rgba(207,4,4,0))); /* Chrome,Safari4+ */
   background: -webkit-linear-gradient(45deg,  rgba(255,48,25,1) 0%,rgba(207,4,4,0.3) 55%,rgba(207,4,4,0) 79%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(-45deg,  rgba(255,48,25,1) 0%,rgba(207,4,4,0.3) 55%,rgba(207,4,4,0) 79%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(-45deg,  rgba(255,48,25,1) 0%,rgba(207,4,4,0.3) 55%,rgba(207,4,4,0) 79%); /* IE10+ */
-  background: linear-gradient(-45deg,  rgba(255,48,25,1) 0%,rgba(207,4,4,0.3) 55%,rgba(207,4,4,0) 79%); /* W3C */
+  background: -o-linear-gradient(45deg,  rgba(255,48,25,1) 0%,rgba(207,4,4,0.3) 55%,rgba(207,4,4,0) 79%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(45deg,  rgba(255,48,25,1) 0%,rgba(207,4,4,0.3) 55%,rgba(207,4,4,0) 79%); /* IE10+ */
+  background: linear-gradient(45deg,  rgba(255,48,25,1) 0%,rgba(207,4,4,0.3) 55%,rgba(207,4,4,0) 79%); /* W3C */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff3019', endColorstr='#00cf0404',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+#cube-fft{
+  width: 380px;
+  height: 380px;
+  position: absolute;
 }
 
 #cube>div:nth-child(1):hover {
@@ -99,10 +109,10 @@
 
 #cube>div:nth-child(2) {
   -webkit-transform : rotateX(-90deg) rotateY(-90deg) translateZ(200px) translateX(-330px) translateY(327px);
-  -moz-transform    : rotateY(-90deg) translateZ(200px);
-  -o-transform      : rotateY(-90deg) translateZ(200px);
-  -ms-transform     : rotateY(-90deg) translateZ(200px);
-  transform         : rotateY(-90deg) translateZ(200px);
+  -moz-transform    : rotateX(-90deg) rotateY(-90deg) translateZ(200px) translateX(-330px) translateY(327px);
+  -o-transform      : rotateX(-90deg) rotateY(-90deg) translateZ(200px) translateX(-330px) translateY(327px);
+  -ms-transform     : rotateX(-90deg) rotateY(-90deg) translateZ(200px) translateX(-330px) translateY(327px);
+  transform         : rotateX(-90deg) rotateY(-90deg) translateZ(200px) translateX(-330px) translateY(327px);
   background: -moz-linear-gradient(-135deg,  rgba(255,48,25,1) 0%, rgba(207,4,4,0.3) 55%, rgba(207,4,4,0) 79%); /* FF3.6+ */
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(255,48,25,1)), color-stop(55%,rgba(207,4,4,0.3)), color-stop(79%,rgba(207,4,4,0))); /* Chrome,Safari4+ */
   background: -webkit-linear-gradient(-135deg,  rgba(255,48,25,1) 0%,rgba(207,4,4,0.3) 55%,rgba(207,4,4,0) 79%); /* Chrome10+,Safari5.1+ */

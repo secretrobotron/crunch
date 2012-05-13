@@ -8,7 +8,7 @@ define(["dat/gui/GUI"], function(DatGUI){
   var __coinsContainer = document.getElementById("coinsDiv");
 
   var __datgui = new DatGUI();
-
+  DatGUI.toggleHide();
   return {
     datgui: __datgui,
 
