@@ -28,6 +28,7 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
       for (var i = 0; i < 100; i++) {
         var entity = new Entity({
           name: "background",
+          families : ["beats-z"],
           components: [
             new SpriteComponent({
               size: 100,
@@ -36,6 +37,8 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
           ],
           position: [-10+100*i, 5, -50],
         });
+        entity.original_z = -50;
+        GameLogic.AddGameObject(entity);
         scene.add(entity);
       }
     }

@@ -4,13 +4,14 @@ require([ "engine/schedule", "engine/hud",
           "engine/graphics", "engine/scene",
           "entities/player",
           "engine/loader",
+          "engine/beats",
           "engine/level",
           "engine/game-logic",
           "entities/platform",
           "engine/debug-canvas"
         ], 
         function( Schedule, HUD, Graphics, Scene, 
-                  PlayerEntity, Loader, 
+                  PlayerEntity, Loader, Beats,
                   Level, GameLogic, PlatformEntity, DebugCanvas){
 
   var DEFAULT_FLOOR_Y = -5;
@@ -26,26 +27,14 @@ require([ "engine/schedule", "engine/hud",
   });
 */
 
-  function beat() {
-    //console.log("beat");
-  }
-  function spectrum_callback(spectrum) {
-    //console.log(spectrum);
-  }
-  function vu_callback(vu) {
-    //console.log(vu);
-  }
-
-  if (navigator.userAgent.indexOf("Firefox")!=-1) {
-    new BeatHelper("assets/audio/track.ogg", beat, spectrum_callback);
-  }
-
-
   DebugCanvas.SetEnabled(false);
 
   function createTestScene(){
     
     var scene = new Scene();
+
+    // Start beathelper
+    Beats.play("assets/audio/track.ogg");
 
     var playerEntity = new PlayerEntity({
       position: [0, 12, 0],
@@ -59,7 +48,7 @@ require([ "engine/schedule", "engine/hud",
         right1: [0.4, -0.3, 0],
         right2: [0.7, -0.3, 0]
       },
-      speed:[0.1,-0.2,0],
+      speed:[0.2,-0.2,0],
       size: 3
     });
     playerEntity.coins = 0;
@@ -148,6 +137,9 @@ require([ "engine/schedule", "engine/hud",
 
     } );
 
+    GameLogic.EachFrame("beats-z").push( function(b,elapsedTime) {
+      b.sceneObject.position[2] = b.original_z + 10*Beats.spectrum[4];
+    });
     GameLogic.EachFrame("Physical").push( function(p,elapsedTime) {
       // Slow down the elapsedTime
       elapsedTime = elapsedTime / 20;
@@ -214,6 +206,7 @@ require([ "engine/schedule", "engine/hud",
     scene.cubicvr.setSkyBox(new CubicVR.SkyBox({texture: "assets/images/8bit-sky.jpg"}));
 
     CubicVR.setGlobalAmbient([0.3,0.3,0.3]);
+
 
     var cameraIndex = 0;
 
