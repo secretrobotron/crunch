@@ -1,7 +1,26 @@
-define(["./game-logic", "entities/platform", "entities/monster"], function(GameLogic, PlatformEntity, MonsterEntity){
+define(["./game-logic", "engine/entity", "components/sprite", "entities/platform", "entities/monster", "text!sprites/background.json"], 
+  function(GameLogic, Entity, SpriteComponent, PlatformEntity, MonsterEntity, BG_SPRITE_SRC){
   return function(setupOptions) {
 
+    var BG_SPRITE_JSON = JSON.parse(BG_SPRITE_SRC);
+
     setupOptions = setupOptions || {};
+
+    this.buildBackground = function(scene) {
+      for (var i = 0; i < 100; i++) {
+        var entity = new Entity({
+          name: "background",
+          components: [
+            new SpriteComponent({
+              size: 100,
+              sprite: BG_SPRITE_JSON
+            }),
+          ],
+          position: [-10+101*i, -10, -100],
+        });
+        scene.add(entity);
+      }
+    }
 
     this.buildToScene = function(scene) {
       var x = setupOptions.levelOrigin[0];
@@ -18,6 +37,8 @@ define(["./game-logic", "entities/platform", "entities/monster"], function(GameL
         GameLogic.AddGameObject(floorEntity);
         scene.add(floorEntity);
       }
+
+      this.buildBackground(scene);
 
       var monsters = 20;
       var SAFE_ZONE = 5;
