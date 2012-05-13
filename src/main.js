@@ -123,7 +123,7 @@ require([ "engine/schedule", "engine/hud",
 
       scene.cubicvr.camera.position = [
         p.sceneObject.position[0] + cameraSpeedDistance*10, 
-        16.5, 
+        14.5,
         10 + cameraSpeedDistance*70
       ];
       
