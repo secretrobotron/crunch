@@ -7,6 +7,7 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
     setupOptions = setupOptions || {};
 
     this.buildBackground = function(scene) {
+      // back
       for (var i = 0; i < 100; i++) {
         var entity = new Entity({
           name: "background",
@@ -16,7 +17,35 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
               sprite: BG_SPRITE_JSON
             }),
           ],
-          position: [-10+100*i, -10, -100],
+          position: [-30+100*i, 15, -100],
+        });
+        scene.add(entity);
+      }
+      // back 2
+      for (var i = 0; i < 100; i++) {
+        var entity = new Entity({
+          name: "background",
+          components: [
+            new SpriteComponent({
+              size: 100,
+              sprite: BG_SPRITE_JSON
+            }),
+          ],
+          position: [-10+100*i, 5, -50],
+        });
+        scene.add(entity);
+      }
+      // front
+      for (var i = 0; i < 100; i++) {
+        var entity = new Entity({
+          name: "background",
+          components: [
+            new SpriteComponent({
+              size: 10,
+              sprite: BG_SPRITE_JSON
+            }),
+          ],
+          position: [-10+10*i, 3, 1.5],
         });
         scene.add(entity);
       }

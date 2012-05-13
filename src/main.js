@@ -60,8 +60,8 @@ require([ "engine/schedule", "engine/hud",
     scene.add(playerEntity);
 
     GameLogic.EachFrame("Player").push( function(p, elapsedTime) {
+      elapsedTime=elapsedTime/20;
       if(!p.collisionPoints.right2.state) {
-        elapsedTime=elapsedTime/20;
         p.sceneObject.position[0] += p.speed[0] * elapsedTime;
         p.speed[0] += 0.0004 * elapsedTime;
       } else {

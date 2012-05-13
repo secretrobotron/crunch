@@ -1,5 +1,5 @@
 {
-  "resource":"assets/images/backgroundSqure.png",
+  "resource":"assets/images/background.png",
   "numRows": 1,
   "numCols": 1,
   "defaultAnimation":"run",
