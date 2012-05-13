@@ -105,7 +105,7 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
     this.spawnBumper = function(scene, x, y) {
       var bump = new Entity({
         name: "bumper",
-        families : ["Bumper", "Physical"],
+        families : ["Bumper", "aHasCollisionPoints", "Physical"],
         collisionPoints : {
           downA1: [-0.1, -0.1, 0.0],
           downA2: [-0.1, -0.2, 0.0],
@@ -125,7 +125,6 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
       });
       bump.bumpTheShitOf = function(someEntity,elapsedTime) {
         someEntity.speed[1] = 2.0; 
-        console.log("Bump!");
       }
       GameLogic.AddGameObject(bump);
       scene.add(bump);
@@ -164,13 +163,12 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
           this.spawnCoin(scene, x - w + 2*w*Math.random(), setupOptions.levelOrigin[1] + h);
         }
         if (Math.random() > 0.8) {
-          this.spawnSpikes(scene, x - 0.8*w + 1.6*w*Math.random(), setupOptions.levelOrigin[1] + h);
+          //this.spawnSpikes(scene, x - 0.8*w + 1.6*w*Math.random(), setupOptions.levelOrigin[1] + h);
         }
         if (Math.random() > 0.3) {
           var bx = x/2 + 10;
           var by = setupOptions.levelOrigin[1] + 5;
           this.spawnBumper(scene, bx, by);
-          console.log("bumper: "+bx+" "+by );
         }
 
         GameLogic.AddGameObject(floorEntity);
@@ -215,13 +213,13 @@ define(["./game-logic", "engine/entity", "components/sprite", "entities/platform
 
     GameLogic.OnBoxCollision("Physical", "floor").push(function(p, c, e){
       if(isInsideGround(p) || isOnGround(p)){
-        if(!p.collisionPoints.right2.state){
+        //if(!p.collisionPoints.right2.state){
           p.position[1] = c.position[1] + c.size[1]/2 - p.collisionPoints.downA1[1];
           if(p.speed[1] < 0){
             p.speed[1] = 0;  
           }
           p.updateBB();
-        }
+        //}
       }
     });
 

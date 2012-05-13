@@ -1,6 +1,8 @@
 define(["engine/schedule", "engine/debug-canvas"], function(Schedule,DebugCanvas){
 
+  var KEY_SPACE = 32;
   var KEY_UP = 38;
+  var KEY_W = 87;
 
   var module = {
       // lists of the game objects 
@@ -246,7 +248,7 @@ define(["engine/schedule", "engine/debug-canvas"], function(Schedule,DebugCanvas
     var elapsedTime = module.elapsedTime = now - module.lastFrameTime;
     if (elapsedTime > 100) {
       // Max frame skip
-      console.log("elapsedTime to high, discarded " + (elapsedTime-100) + "ms");
+      //console.log("elapsedTime to high, discarded " + (elapsedTime-100) + "ms");
       elapsedTime = 100;
     }
 
@@ -256,6 +258,8 @@ define(["engine/schedule", "engine/debug-canvas"], function(Schedule,DebugCanvas
     ProcessBoxCollisions(elapsedTime);
     ProcessEachFrame(elapsedTime);
     ProcessKeyEachFrame(KEY_UP, elapsedTime);
+    //ProcessKeyEachFrame(KEY_SPACE, elapsedTime);
+    //ProcessKeyEachFrame(KEY_W, elapsedTime);
 
     //if (module.logic.eachFrame) {
     //  module.logic.eachFrame.forEach(function(callback) {

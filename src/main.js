@@ -152,7 +152,7 @@ require([ "engine/schedule", "engine/menu",
         });
         var dx = e.data.dt / 300;
         var p = GameLogic.GetFamily("Player")[0];
-
+        cameraSpeedDistance += (p.speed[0] - cameraSpeedDistance)/10;
         var cameraY = scene.cubicvr.camera.target[1];
 
         scene.cubicvr.camera.position = [
