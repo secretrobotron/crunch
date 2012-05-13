@@ -10,12 +10,13 @@ require([ "engine/schedule", "engine/menu",
           "engine/game-logic",
           "entities/platform",
           "engine/debug-canvas",
-          "engine/menu", "engine/hud"
+          "engine/menu", "engine/hud",
+          "engine/intro"
         ], 
         function( Schedule, Menu, Graphics, Scene, 
                   PlayerEntity, Loader, Beats, PlaneEntity,
                   Level, GameLogic, PlatformEntity, DebugCanvas,
-                  Menu, HUD ){
+                  Menu, HUD, Intro ){
 
   Schedule.start();
   Loader.lock();
@@ -164,11 +165,12 @@ require([ "engine/schedule", "engine/menu",
       Schedule.event.add("intro-complete", function(e){
         Graphics.addScene(mainScene);
       });
+      Intro.init();
       Loader.unlock(function(){
         Menu.hideLoadMessage();
         Menu.showStartMessage(function(){
           Menu.hide();
-          Schedule.event.dispatch("intro-complete");
+          Intro.play();
         });
       });
     },
