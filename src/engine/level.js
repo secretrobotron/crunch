@@ -238,9 +238,10 @@ define(["./game-logic", "engine/entity","engine/beats", "components/sprite", "en
       }
 
       Beats.beatEvents.push( function(){
+		if(Math.random() > 0.05) return;
         var camX = scene.cubicvr.camera.position[0];
         var pigeonEntity = new PigeonEntity({
-          position: [camX, Math.random()*5 + 7, 0],
+          position: [camX+40, Math.random()*5 + 7, 0],
           rotation: [0, 0, 0],
         });
         GameLogic.AddGameObject(pigeonEntity);

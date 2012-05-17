@@ -12,7 +12,7 @@ define(["engine/loader"],
     function beat() {
       module.lastBeat = new Date().getTime();
       for(var i in module.beatEvents) {
-        beatEvents[i]();
+        module.beatEvents[i]();
       }
     }
 
