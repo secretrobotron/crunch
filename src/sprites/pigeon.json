@@ -2,7 +2,7 @@
   "resource":"assets/images/pigeon.png",
   "numRows": 2,
   "numCols": 2,
-  "defaultAnimation": "left",
+  "defaultAnimation": "right",
   "animations": {
     "right": {
       "index":0,
